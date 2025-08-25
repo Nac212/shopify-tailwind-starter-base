@@ -67,6 +67,58 @@
         "padding_bottom": 0
       }
     },
+    "17561463147afa74e3": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_948f8db_AVe97g": {
+          "type": "ai_gen_block_948f8db",
+          "settings": {
+            "headline": "Shop Our Collections",
+            "subline": "Discover our curated selection of premium products",
+            "headline_size": 32,
+            "subline_size": 16,
+            "headline_color": "#000000",
+            "subline_color": "#666666",
+            "headline_spacing": 10,
+            "header_spacing": 40,
+            "hover_lift": 8,
+            "columns_tablet": "2",
+            "columns_mobile": "1",
+            "grid_gap": 0,
+            "section_padding": 40,
+            "box_height": 400,
+            "border_radius": 0,
+            "card_background": "#ffffff",
+            "overlay_opacity": 40,
+            "overlay_text_color": "#ffffff",
+            "content_padding": 20,
+            "text_alignment": "left",
+            "card_headline_font": "helvetica_n4",
+            "card_headline_size": 24,
+            "card_subheadline_font": "helvetica_n4",
+            "card_subheadline_size": 14,
+            "collection_1": "earrings",
+            "image_1": "shopify://shop_images/TwistedCordHoopEarrings-Showcase2.jpg",
+            "card_headline_1": "",
+            "card_subheadline_1": "",
+            "collection_2": "",
+            "card_headline_2": "",
+            "card_subheadline_2": "",
+            "collection_3": "",
+            "card_headline_3": "",
+            "card_subheadline_3": "",
+            "collection_4": "",
+            "card_headline_4": "",
+            "card_subheadline_4": ""
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_948f8db_AVe97g"
+      ],
+      "settings": {}
+    },
     "rich_text": {
       "type": "rich-text",
       "blocks": {
@@ -241,16 +293,63 @@
         "padding_top": 40,
         "padding_bottom": 52
       }
+    },
+    "four_collection_banner_iUWMwV": {
+      "type": "four-collection-banner",
+      "blocks": {
+        "collection_item_FBUQnE": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "",
+            "headline": "Headline",
+            "subline": "Subline"
+          }
+        },
+        "collection_item_PUghjY": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "",
+            "headline": "Headline",
+            "subline": "Subline"
+          }
+        },
+        "collection_item_FMVPVD": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "",
+            "headline": "Headline",
+            "subline": "Subline"
+          }
+        },
+        "collection_item_3wVgwe": {
+          "type": "collection_item",
+          "settings": {
+            "collection": "",
+            "headline": "Headline",
+            "subline": "Subline"
+          }
+        }
+      },
+      "block_order": [
+        "collection_item_FBUQnE",
+        "collection_item_PUghjY",
+        "collection_item_FMVPVD",
+        "collection_item_3wVgwe"
+      ],
+      "name": "Four Collection Banner",
+      "settings": {}
     }
   },
   "order": [
     "image_banner",
     "custom_liquid_8X6qXm",
+    "17561463147afa74e3",
     "rich_text",
     "featured_collection",
     "collage",
     "video",
     "multicolumn",
-    "custom_liquid_fr4BWC"
+    "custom_liquid_fr4BWC",
+    "four_collection_banner_iUWMwV"
   ]
 }
