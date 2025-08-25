@@ -1,0 +1,189 @@
+{{ 'section-four-collection-banner.css' | asset_url | stylesheet_tag }}
+
+<div class="four-collection-banner-section">
+  <div class="page-width">
+    <div class="four-collection-grid">
+      {%- for block in section.blocks -%}
+        {%- assign collection = collections[block.settings.collection] -%}
+        {%- if collection.empty? -%}
+          {%- if block.settings.image != blank -%}
+            <div class="collection-item empty-collection">
+              <div class="image-container">
+                {{ block.settings.image | image_url: width: 1000 | image_tag }}
+              </div>
+              <div class="text-container">
+                <span class="subline">{{ block.settings.subline }}</span>
+                <h3 class="headline">{{ block.settings.headline }}</h3>
+              </div>
+            </div>
+          {%- else -%}
+            <div class="collection-item placeholder-item">
+              <div class="image-container">
+                <div class="placeholder-svg">
+                  {{ 'image' | placeholder_svg_tag }}
+                </div>
+              </div>
+              <div class="text-container">
+                <span class="subline">{{ block.settings.subline }}</span>
+                <h3 class="headline">{{ block.settings.headline }}</h3>
+              </div>
+            </div>
+          {%- endif -%}
+        {%- else -%}
+          <a href="{{ collection.url }}" class="collection-item">
+            <div class="image-container">
+              {%- if block.settings.image != blank -%}
+                {{ block.settings.image | image_url: width: 1000 | image_tag }}
+              {%- else -%}
+                {%- if collection.image -%}
+                  {{ collection.image | image_url: width: 1000 | image_tag }}
+                {%- else -%}
+                  {%- assign first_product = collection.products.first -%}
+                  {%- if first_product -%}
+                    {{ first_product.featured_media | image_url: width: 1000 | image_tag }}
+                  {%- else -%}
+                    <div class="placeholder-svg">
+                      {{ 'image' | placeholder_svg_tag }}
+                    </div>
+                  {%- endif -%}
+                {%- endif -%}
+              {%- endif -%}
+            </div>
+            <div class="text-container">
+              <span class="subline">{{ block.settings.subline }}</span>
+              <h3 class="headline">{{ block.settings.headline }}</h3>
+            </div>
+          </a>
+        {%- endif -%}
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<style>
+  .four-collection-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px; /* Adjust as needed for spacing between items */
+    margin-bottom: 25px;
+  }
+
+  .collection-item {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    text-decoration: none;
+  }
+
+  .collection-item .image-container {
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .collection-item .image-container img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform 0.5s ease-in-out;
+  }
+
+  .collection-item:hover .image-container img {
+    transform: scale(1.05); /* Zoom effect on hover */
+  }
+
+  .collection-item .text-container {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    color: #fff;
+    transition: transform 0.3s ease-in-out;
+    z-index: 2;
+  }
+  
+  .collection-item:hover .text-container {
+    transform: translateY(-10px); /* Lift effect on hover */
+  }
+
+  .collection-item .subline,
+  .collection-item .headline {
+    margin: 0;
+  }
+
+  .collection-item .subline {
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
+
+  .collection-item .headline {
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  /* Mobile view */
+  @media (max-width: 768px) {
+    .four-collection-grid {
+      flex-direction: column;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Four Collection Banner",
+  "tag": "section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "collection_item",
+      "name": "Collection",
+      "limit": 4,
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select collection"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image (optional)",
+          "info": "Overrides the collection's featured image"
+        },
+        {
+          "type": "text",
+          "id": "headline",
+          "label": "Headline",
+          "default": "Headline"
+        },
+        {
+          "type": "text",
+          "id": "subline",
+          "label": "Subline",
+          "default": "Subline"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Four Collection Banner",
+      "category": "Collection",
+      "blocks": [
+        {
+          "type": "collection_item"
+        },
+        {
+          "type": "collection_item"
+        },
+        {
+          "type": "collection_item"
+        },
+        {
+          "type": "collection_item"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}
