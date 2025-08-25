@@ -57,6 +57,16 @@
         "show_text_below": false
       }
     },
+    "custom_liquid_8X6qXm": {
+      "type": "custom-liquid",
+      "name": "t:sections.custom-liquid.presets.name",
+      "settings": {
+        "custom_liquid": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Brand Scroller</title>\n    <style>\n        /*\n          The main container for the scrolling items.\n          - `overflow-x: scroll` enables horizontal scrolling.\n          - `white-space: nowrap` ensures logos stay on a single line.\n          - `scroll-snap-type` is set to `x mandatory` for snapping behavior.\n          - `scrollbar-width: none` hides the scrollbar in Firefox.\n          - `-ms-overflow-style: none` hides the scrollbar in IE and Edge.\n        */\n        .scroller-container {\n            overflow-x: scroll;\n            white-space: nowrap;\n            display: flex;\n            align-items: center;\n            padding: 2rem 0; /* Vertical padding */\n            scroll-snap-type: x mandatory;\n            -webkit-overflow-scrolling: touch; /* Improves scrolling on iOS */\n            scrollbar-width: none; /* For Firefox */\n            -ms-overflow-style: none;  /* For IE and Edge */\n        }\n        \n        /* Hides the scrollbar for WebKit browsers (Chrome, Safari) */\n        .scroller-container::-webkit-scrollbar {\n            display: none;\n        }\n\n        /*\n          A wrapper for each logo.\n          - `scroll-snap-align: center` snaps each logo to the center of the container.\n        */\n        .brand-logo-wrapper {\n            display: inline-block;\n            margin: 0 4rem; /* Adds horizontal margin/spacing */\n            flex-shrink: 0;\n            scroll-snap-align: center;\n        }\n\n        /*\n          Individual brand logos.\n          - `height` and `width` are fixed to ensure uniform sizing.\n          - `object-fit: contain` prevents distortion.\n          - `filter: grayscale` makes them black and white.\n          - `transition` adds a smooth effect on hover.\n        */\n        .brand-logo-list img {\n            height: 7rem; /* Increased logo height for a bigger size */\n            width: 15rem; /* Fixed width to ensure uniform spacing and prevent stacking */\n            object-fit: contain;\n            filter: grayscale(100%);\n            transition: filter 0.3s ease;\n        }\n\n        /* Hover effect to show the logo in color */\n        .brand-logo-list img:hover {\n            filter: grayscale(0%);\n        }\n    </style>\n</head>\n<body>\n\n    <!-- Main brand scroller section -->\n    <section>\n        <div class=\"scroller-container\">\n            <!-- Logos repeated once for a smoother loop effect if using JS to auto-scroll -->\n            <div class=\"brand-logo-list\">\n                <div class=\"brand-logo-wrapper\">\n                    <img src=\"https://cdn.shopify.com/s/files/1/0822/5711/7519/files/gempages_558209203332711667-e853a0cb-ce68-46c1-9f25-8e924a0e4e08.svg?v=1742249255\" alt=\"Brand Logo 1\">\n                </div>\n                <div class=\"brand-logo-wrapper\">\n                    <img src=\"https://cdn.shopify.com/s/files/1/0822/5711/7519/files/gempages_558209203332711667-4cd42af1-7b19-42e9-afb7-668adc0fdbc7.svg?v=1742249254\" alt=\"Brand Logo 2\">\n                </div>\n                <div class=\"brand-logo-wrapper\">\n                    <img src=\"https://cdn.shopify.com/s/files/1/0822/5711/7519/files/gempages_558209203332711667-1167677f-a45f-4c19-be3c-9c611aba9b3c.svg?v=1742249254\" alt=\"Brand Logo 3\">\n                </div>\n                <div class=\"brand-logo-wrapper\">\n                    <img src=\"https://cdn.shopify.com/s/files/1/0822/5711/7519/files/gempages_558209203332711667-6e4f5f1c-fcf1-43b6-bc7a-ad74b4800cd1.svg?v=1742249254\" alt=\"Brand Logo 4\">\n                </div>\n                <div class=\"brand-logo-wrapper\">\n                    <img src=\"https://cdn.shopify.com/s/files/1/0822/5711/7519/files/gempages_558209203332711667-b20be269-deaa-4247-a8d2-b633aa3d4cfc.svg?v=1742249254\" alt=\"Brand Logo 5\">\n                </div>\n                <div class=\"brand-logo-wrapper\">\n                    <img src=\"https://cdn.shopify.com/s/files/1/0822/5711/7519/files/gempages_558209203332711667-0fae0e8a-0414-41dc-ad84-7664bbdb9e6b.svg?v=1742249254\" alt=\"Brand Logo 6\">\n                </div>\n            </div>\n        </div>\n    </section>\n\n</body>\n</html>",
+        "color_scheme": "",
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
+    },
     "rich_text": {
       "type": "rich-text",
       "blocks": {
@@ -235,6 +245,7 @@
   },
   "order": [
     "image_banner",
+    "custom_liquid_8X6qXm",
     "rich_text",
     "featured_collection",
     "collage",
