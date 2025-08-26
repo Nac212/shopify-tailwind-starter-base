@@ -1,24 +1,29 @@
-{% comment %}
+{% doc %}
   @prompt
-  Create a scrollable product carousel section for a Shopify page.
+    Create a scrollable product carousel section for a Shopify page.
+    
+    The section should have a customizable heading (e.g., "TRENDING PIECES") with a customizable font and color. The heading font must default to 'Bebas Neue'.
+    
+    The carousel should display a maximum of four product cards at a time on desktop and be fully scrollable on all devices. Include a dot or line-based pagination system below the product cards to indicate progress through the carousel. This scrolling widget visual must be present on both desktop and mobile views.
+    
+    The product cards should have a customizable amount of white space between them. Each card should display the product image, title, and price. The product title and price fonts must default to 'Poppins'. The regular price should default to black. If there is a sale price, the regular price must be crossed out and displayed on the left side, with the sale price on the right side in red. A small, customizable "ON SALE" badge should be displayed on the product image.
+    
+    The section should include settings for a store owner to:
+    
+    Choose a specific collection to pull products from.
+    
+    Alternatively, manually select individual products to display. Ensure this functionality is fully working and reliable.
+    
+    Customize the font, size, and centering of the section heading.
+    
+    Customize the font, size, and centering of the product titles and prices.
+    
+    Customize the amount of white space between the product cards.
+    
+    Ensure the section is fully responsive. On mobile, the layout must display two full columns with a third column partially visible on the right, indicating to the user that they can scroll to see more products. The functionality and visual appearance must be consistent across all devices., the manual product selection doesnt work, and the collection page doesn't work when you choose one - no products are being showcased
 
-  The section should have a customizable heading (e.g., "TRENDING PIECES") with a customizable font and color. The heading font must default to 'Bebas Neue'.
-
-  The carousel should display a maximum of four product cards at a time on desktop and be fully scrollable on all devices. Include a dot or line-based pagination system below the product cards to indicate progress through the carousel. This scrolling widget visual must be present on both desktop and mobile views.
-
-  The product cards should have a customizable amount of white space between them. Each card should display the product image, title, and price. The product title and price fonts must default to 'Poppins'. The regular price should default to black. If there is a sale price, the regular price must be crossed out and displayed on the left side, with the sale price on the right side in red. A small, customizable "ON SALE" badge should be displayed on the product image.
-
-  The section should include settings for a store owner to:
-  Choose a specific collection to pull products from.
-  Alternatively, manually select individual products to display. Ensure this functionality is fully working and reliable.
-  Customize the font, size, and centering of the section heading.
-  Customize the font, size, and centering of the product titles and prices.
-  Customize the amount of white space between the product cards.
-
-  Ensure the section is fully responsive. On mobile, the layout must display two full columns with a third column partially visible on the right, indicating to the user that they can scroll to see more products. The functionality and visual appearance must be consistent across all devices.
-{% endcomment %}
-
-{% assign ai_gen_id = section.id | replace: '_', '' | downcase %}
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
 
 {% style %}
   .ai-product-carousel-{{ ai_gen_id }} {
@@ -27,11 +32,13 @@
   }
 
   .ai-product-carousel__heading-{{ ai_gen_id }} {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: {{ section.settings.heading_size }}px;
-    color: {{ section.settings.heading_color }};
+    font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+    font-weight: {{ block.settings.heading_font.weight }};
+    font-style: {{ block.settings.heading_font.style }};
+    font-size: {{ block.settings.heading_size }}px;
+    color: {{ block.settings.heading_color }};
     margin: 0 0 30px 0;
-    {% if section.settings.heading_center %}
+    {% if block.settings.heading_center %}
       text-align: center;
     {% else %}
       text-align: left;
@@ -41,12 +48,11 @@
   .ai-product-carousel__container-{{ ai_gen_id }} {
     position: relative;
     width: 100%;
-    overflow: hidden;
   }
 
   .ai-product-carousel__track-{{ ai_gen_id }} {
     display: flex;
-    gap: {{ section.settings.card_spacing }}px;
+    gap: {{ block.settings.card_spacing }}px;
     overflow-x: auto;
     scroll-behavior: smooth;
     scrollbar-width: none;
@@ -60,7 +66,7 @@
 
   .ai-product-carousel__card-{{ ai_gen_id }} {
     flex: 0 0 auto;
-    width: calc((100% - ({{ section.settings.card_spacing }}px * 3)) / 4);
+    width: calc((100% - ({{ block.settings.card_spacing }}px * 3)) / 4);
     min-width: 200px;
   }
 
@@ -84,26 +90,43 @@
     transform: scale(1.05);
   }
 
+  .ai-product-carousel__image-placeholder-{{ ai_gen_id }} {
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-product-carousel__image-placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
   .ai-product-carousel__sale-badge-{{ ai_gen_id }} {
     position: absolute;
     top: 8px;
     left: 8px;
-    background-color: {{ section.settings.sale_badge_color }};
+    background-color: {{ block.settings.sale_badge_color }};
     color: white;
     padding: 4px 8px;
-    font-size: {{ section.settings.sale_badge_size }}px;
+    font-size: {{ block.settings.sale_badge_size }}px;
     font-weight: 600;
     border-radius: 4px;
     z-index: 2;
   }
 
   .ai-product-carousel__title-{{ ai_gen_id }} {
-    font-family: 'Poppins', sans-serif;
-    font-size: {{ section.settings.product_title_size }}px;
-    color: {{ section.settings.product_title_color }};
+    font-family: {{ block.settings.product_font.family }}, {{ block.settings.product_font.fallback_families }};
+    font-weight: {{ block.settings.product_font.weight }};
+    font-style: {{ block.settings.product_font.style }};
+    font-size: {{ block.settings.product_title_size }}px;
+    color: {{ block.settings.product_title_color }};
     margin: 0 0 8px 0;
     line-height: 1.3;
-    {% if section.settings.product_text_center %}
+    {% if block.settings.product_text_center %}
       text-align: center;
     {% else %}
       text-align: left;
@@ -111,30 +134,30 @@
   }
 
   .ai-product-carousel__price-{{ ai_gen_id }} {
-    font-family: 'Poppins', sans-serif;
-    font-size: {{ section.settings.product_price_size }}px;
+    font-family: {{ block.settings.product_font.family }}, {{ block.settings.product_font.fallback_families }};
+    font-weight: {{ block.settings.product_font.weight }};
+    font-style: {{ block.settings.product_font.style }};
+    font-size: {{ block.settings.product_price_size }}px;
     margin: 0;
-    display: flex;
-    {% if section.settings.product_text_center %}
-      justify-content: center;
+    {% if block.settings.product_text_center %}
+      text-align: center;
     {% else %}
-      justify-content: left;
+      text-align: left;
     {% endif %}
-    align-items: baseline;
-    gap: 8px;
   }
-  
+
   .ai-product-carousel__price-regular-{{ ai_gen_id }} {
-    color: {{ section.settings.regular_price_color }};
+    color: {{ block.settings.regular_price_color }};
   }
 
   .ai-product-carousel__price-sale-{{ ai_gen_id }} {
-    color: {{ section.settings.sale_price_color }};
+    color: {{ block.settings.sale_price_color }};
+    margin-left: 8px;
   }
-  
+
   .ai-product-carousel__price-compare-{{ ai_gen_id }} {
     text-decoration: line-through;
-    color: {{ section.settings.regular_price_color }};
+    color: {{ block.settings.regular_price_color }};
     opacity: 0.7;
   }
 
@@ -144,17 +167,18 @@
     align-items: center;
     gap: 8px;
     margin-top: 20px;
-    width: 100%;
-    height: 8px;
-    border-radius: 4px;
-    background-color: #f0f0f0;
   }
-  
-  .ai-product-carousel__pagination-bar-{{ ai_gen_id }} {
-    height: 100%;
+
+  .ai-product-carousel__dot-{{ ai_gen_id }} {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #ccc;
+    transition: background-color 0.3s ease;
+  }
+
+  .ai-product-carousel__dot-{{ ai_gen_id }}.active {
     background-color: #333;
-    border-radius: 4px;
-    transition: width 0.3s ease;
   }
 
   .ai-product-carousel__link-{{ ai_gen_id }} {
@@ -177,80 +201,90 @@
 
   @media screen and (max-width: 768px) {
     .ai-product-carousel__card-{{ ai_gen_id }} {
-      width: calc((100% - {{ section.settings.card_spacing }}px) / 2.3);
+      width: calc((100% - {{ block.settings.card_spacing }}px) / 2.3);
+      min-width: 140px;
+    }
+
+    .ai-product-carousel__heading-{{ ai_gen_id }} {
+      font-size: {{ block.settings.heading_size | times: 0.8 }}px;
+    }
+
+    .ai-product-carousel__title-{{ ai_gen_id }} {
+      font-size: {{ block.settings.product_title_size | times: 0.9 }}px;
+    }
+
+    .ai-product-carousel__price-{{ ai_gen_id }} {
+      font-size: {{ block.settings.product_price_size | times: 0.9 }}px;
     }
   }
 
   @media screen and (max-width: 480px) {
     .ai-product-carousel__card-{{ ai_gen_id }} {
-      width: calc((100% - {{ section.settings.card_spacing }}px) / 2.2);
+      width: calc((100% - {{ block.settings.card_spacing }}px) / 2.2);
+      min-width: 120px;
     }
   }
 {% endstyle %}
 
-<div class="ai-product-carousel-{{ ai_gen_id }}" data-section-id="{{ section.id }}">
-  {% if section.settings.heading != blank %}
-    <h2 class="ai-product-carousel__heading-{{ ai_gen_id }}">{{ section.settings.heading }}</h2>
+<product-carousel-{{ ai_gen_id }} class="ai-product-carousel-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% if block.settings.heading != blank %}
+    <h2 class="ai-product-carousel__heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
   {% endif %}
 
   {% liquid
     assign products_to_show = blank
     
-    if section.settings.manual_products.size > 0
-      assign products_to_show = section.settings.manual_products
-    elsif section.settings.collection != blank
-      assign products_to_show = collections[section.settings.collection].products
+    if block.settings.manual_products.size > 0
+      assign products_to_show = block.settings.manual_products
+    elsif block.settings.collection != blank
+      assign products_to_show = collections[block.settings.collection].products
     endif
   %}
 
   {% if products_to_show.size > 0 %}
     <div class="ai-product-carousel__container-{{ ai_gen_id }}">
       <div class="ai-product-carousel__track-{{ ai_gen_id }}" data-track>
-        {% for product in products_to_show %}
-          {% if product.available %}
-            <div class="ai-product-carousel__card-{{ ai_gen_id }}">
-              <a href="{{ product.url }}" class="ai-product-carousel__link-{{ ai_gen_id }}">
-                <div class="ai-product-carousel__image-container-{{ ai_gen_id }}">
-                  {% if product.featured_image %}
-                    <img
-                      src="{{ product.featured_image | image_url: width: 400 }}"
-                      alt="{{ product.featured_image.alt | escape }}"
-                      class="ai-product-carousel__image-{{ ai_gen_id }}"
-                      loading="lazy"
-                      width="400"
-                      height="400"
-                    >
-                  {% else %}
-                    <div class="ai-product-carousel__image-placeholder-{{ ai_gen_id }}">
-                      {{ 'product-1' | placeholder_svg_tag }}
-                    </div>
-                  {% endif %}
+        {% for product in products_to_show limit: 20 %}
+          <div class="ai-product-carousel__card-{{ ai_gen_id }}"><a href="{{ product.url }}" class="ai-product-carousel__link-{{ ai_gen_id }}">
+              <div class="ai-product-carousel__image-container-{{ ai_gen_id }}">
+                {% if product.featured_image %}
+                  <img
+                    src="{{ product.featured_image | image_url: width: 400 }}"
+                    alt="{{ product.featured_image.alt | escape }}"
+                    class="ai-product-carousel__image-{{ ai_gen_id }}"
+                    loading="lazy"
+                    width="400"
+                    height="400"
+                  >
+                {% else %}
+                  <div class="ai-product-carousel__image-placeholder-{{ ai_gen_id }}">
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
 
-                  {% if product.compare_at_price > product.price %}
-                    <div class="ai-product-carousel__sale-badge-{{ ai_gen_id }}">
-                      {{ section.settings.sale_badge_text }}
-                    </div>
-                  {% endif %}
-                </div>
+                {% if product.compare_at_price > product.price %}
+                  <div class="ai-product-carousel__sale-badge-{{ ai_gen_id }}">
+                    {{ block.settings.sale_badge_text }}
+                  </div>
+                {% endif %}
+              </div>
 
-                <h3 class="ai-product-carousel__title-{{ ai_gen_id }}">{{ product.title }}</h3>
+              <h3 class="ai-product-carousel__title-{{ ai_gen_id }}">{{ product.title }}</h3>
 
-                <div class="ai-product-carousel__price-{{ ai_gen_id }}">
-                  {% if product.compare_at_price > product.price %}
-                    <span class="ai-product-carousel__price-compare-{{ ai_gen_id }}">{{ product.compare_at_price | money }}</span>
-                    <span class="ai-product-carousel__price-sale-{{ ai_gen_id }}">{{ product.price | money }}</span>
-                  {% else %}
-                    <span class="ai-product-carousel__price-regular-{{ ai_gen_id }}">{{ product.price | money }}</span>
-                  {% endif %}
-                </div>
-              </a>
-            </div>
-          {% endif %}
+              <div class="ai-product-carousel__price-{{ ai_gen_id }}">
+                {% if product.compare_at_price > product.price %}
+                  <span class="ai-product-carousel__price-compare-{{ ai_gen_id }}">{{ product.compare_at_price | money }}</span>
+                  <span class="ai-product-carousel__price-sale-{{ ai_gen_id }}">{{ product.price | money }}</span>
+                {% else %}
+                  <span class="ai-product-carousel__price-regular-{{ ai_gen_id }}">{{ product.price | money }}</span>
+                {% endif %}
+              </div>
+            </a>
+          </div>
         {% endfor %}
       </div>
-      <div class="ai-product-carousel__pagination-{{ ai_gen_id }}" data-pagination>
-        <div class="ai-product-carousel__pagination-bar-{{ ai_gen_id }}"></div>
-      </div>
+
+      <div class="ai-product-carousel__pagination-{{ ai_gen_id }}" data-pagination></div>
     </div>
   {% else %}
     <div class="ai-product-carousel__empty-state-{{ ai_gen_id }}">
@@ -258,7 +292,117 @@
       <p>Select a collection or add products manually to display them in this carousel.</p>
     </div>
   {% endif %}
-</div>
+</product-carousel-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class ProductCarousel{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.track = null;
+        this.pagination = null;
+        this.cards = [];
+        this.currentPage = 0;
+        this.cardsPerPage = 4;
+        this.totalPages = 0;
+      }
+
+      connectedCallback() {
+        this.track = this.querySelector('[data-track]');
+        this.pagination = this.querySelector('[data-pagination]');
+        
+        if (!this.track) return;
+
+        this.cards = Array.from(this.track.children);
+        this.calculatePages();
+        this.setupPagination();
+        this.setupScrollListener();
+        this.updatePagination();
+      }
+
+      calculatePages() {
+        const containerWidth = this.track.offsetWidth;
+        const cardWidth = this.cards[0]?.offsetWidth || 200;
+        const gap = {{ block.settings.card_spacing }};
+        
+        if (window.innerWidth <= 768) {
+          this.cardsPerPage = 2.3;
+        } else {
+          this.cardsPerPage = Math.floor((containerWidth + gap) / (cardWidth + gap));
+          this.cardsPerPage = Math.min(this.cardsPerPage, 4);
+        }
+        
+        this.totalPages = Math.ceil(this.cards.length / this.cardsPerPage);
+      }
+
+      setupPagination() {
+        if (!this.pagination || this.totalPages <= 1) {
+          if (this.pagination) this.pagination.style.display = 'none';
+          return;
+        }
+
+        this.pagination.innerHTML = '';
+        
+        for (let i = 0; i < this.totalPages; i++) {
+          const dot = document.createElement('div');
+          dot.className = 'ai-product-carousel__dot-{{ ai_gen_id }}';
+          dot.addEventListener('click', () => this.goToPage(i));
+          this.pagination.appendChild(dot);
+        }
+      }
+
+      setupScrollListener() {
+        let scrollTimeout;
+        
+        this.track.addEventListener('scroll', () => {
+          clearTimeout(scrollTimeout);
+          scrollTimeout = setTimeout(() => {
+            this.updateCurrentPage();
+            this.updatePagination();
+          }, 100);
+        });
+      }
+
+      updateCurrentPage() {
+        const scrollLeft = this.track.scrollLeft;
+        const cardWidth = this.cards[0]?.offsetWidth || 200;
+        const gap = {{ block.settings.card_spacing }};
+        const pageWidth = (cardWidth + gap) * this.cardsPerPage;
+        
+        this.currentPage = Math.round(scrollLeft / pageWidth);
+        this.currentPage = Math.max(0, Math.min(this.currentPage, this.totalPages - 1));
+      }
+
+      updatePagination() {
+        if (!this.pagination) return;
+        
+        const dots = this.pagination.children;
+        for (let i = 0; i < dots.length; i++) {
+          dots[i].classList.toggle('active', i === this.currentPage);
+        }
+      }
+
+      goToPage(pageIndex) {
+        if (pageIndex < 0 || pageIndex >= this.totalPages) return;
+        
+        const cardWidth = this.cards[0]?.offsetWidth || 200;
+        const gap = {{ block.settings.card_spacing }};
+        const pageWidth = (cardWidth + gap) * this.cardsPerPage;
+        const scrollLeft = pageIndex * pageWidth;
+        
+        this.track.scrollTo({
+          left: scrollLeft,
+          behavior: 'smooth'
+        });
+        
+        this.currentPage = pageIndex;
+        this.updatePagination();
+      }
+    }
+
+    customElements.define('product-carousel-{{ ai_gen_id }}', ProductCarousel{{ ai_gen_id }});
+  })();
+</script>
 
 {% schema %}
 {
@@ -273,6 +417,12 @@
       "id": "heading",
       "label": "Heading",
       "default": "TRENDING PIECES"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading font",
+      "default": "bebas_neue_n4"
     },
     {
       "type": "range",
@@ -314,6 +464,12 @@
     {
       "type": "header",
       "content": "Product styling"
+    },
+    {
+      "type": "font_picker",
+      "id": "product_font",
+      "label": "Product font",
+      "default": "poppins_n4"
     },
     {
       "type": "range",
