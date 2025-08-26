@@ -55,11 +55,20 @@
 /* --- START: Custom code for Mobile Header Height Reduction (V2) --- */
 @media screen and (max-width: 989px) {
   .header {
-    /* Forcefully remove vertical padding and min-height from the main bar */
-    padding-top: 0 !important;
-    padding-bottom: 0 !important;
-    min-height: 0 !important;
-  }
+  /* Forcefully remove vertical padding and min-height */
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  min-height: 0 !important;
+
+  /* NEW: Add flexbox to push content to the edges */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  /* NEW: Reduce side padding */
+  padding-left: 1.5rem !important;
+  padding-right: 1.5rem !important;
+}
 
   /* NEW: Forcefully control the padding around the logo itself */
   .header .header__heading-link {
