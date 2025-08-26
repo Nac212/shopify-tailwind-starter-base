@@ -52,16 +52,22 @@
 }
 /* --- END: Custom code for PRYA header layout (Aggressive Height Reduction) --- */
 
-/* --- START: Custom code for Mobile Header Height Reduction --- */
+/* --- START: Custom code for Mobile Header Height Reduction (V2) --- */
 @media screen and (max-width: 989px) {
   .header {
-    /* Forcefully set a new, smaller padding and remove min-height */
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
+    /* Forcefully remove vertical padding and min-height from the main bar */
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
     min-height: 0 !important;
   }
+
+  /* NEW: Forcefully control the padding around the logo itself */
+  .header .header__heading-link {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+  }
 }
-/* --- END: Custom code for Mobile Header Height Reduction --- */
+/* --- END: Custom code for Mobile Header Height Reduction (V2) --- */
   header-drawer {
     justify-self: start;
     margin-left: -1.2rem;
