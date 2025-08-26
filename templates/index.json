@@ -67,6 +67,10 @@
         "padding_bottom": 0
       }
     },
+    "1756241219fbed0124": {
+      "type": "_blocks",
+      "settings": {}
+    },
     "1756235048663a7ff7": {
       "type": "_blocks",
       "blocks": {
@@ -441,6 +445,7 @@
   "order": [
     "image_banner",
     "custom_liquid_8X6qXm",
+    "1756241219fbed0124",
     "1756235048663a7ff7",
     "rich_text",
     "featured_collection",
