@@ -83,7 +83,7 @@
             "card_shadow_x": 0,
             "card_shadow_y": 2,
             "card_shadow_blur": 8,
-            "card_shadow_color": "rgba(0,0,0,0.1)",
+            "card_shadow_color": "#0000001a",
             "seasonal_message": "",
             "seasonal_start_date": "",
             "seasonal_end_date": "",
@@ -184,58 +184,6 @@
       },
       "block_order": [
         "ai_gen_block_5820fa6_Bgh9yX"
-      ],
-      "settings": {}
-    },
-    "17561463147afa74e3": {
-      "type": "_blocks",
-      "blocks": {
-        "ai_gen_block_948f8db_AVe97g": {
-          "type": "ai_gen_block_948f8db",
-          "settings": {
-            "headline": "Shop Our Collections",
-            "subline": "Discover our curated selection of premium products",
-            "headline_size": 32,
-            "subline_size": 16,
-            "headline_color": "#000000",
-            "subline_color": "#666666",
-            "headline_spacing": 10,
-            "header_spacing": 40,
-            "hover_lift": 8,
-            "columns_tablet": "2",
-            "columns_mobile": "1",
-            "grid_gap": 0,
-            "section_padding": 40,
-            "box_height": 400,
-            "border_radius": 0,
-            "card_background": "#ffffff",
-            "overlay_opacity": 40,
-            "overlay_text_color": "#121212",
-            "content_padding": 8,
-            "text_alignment": "left",
-            "card_headline_font": "helvetica_n4",
-            "card_headline_size": 24,
-            "card_subheadline_font": "helvetica_n4",
-            "card_subheadline_size": 14,
-            "collection_1": "earrings",
-            "image_1": "shopify://shop_images/TwistedCordHoopEarrings-Showcase2.jpg",
-            "card_headline_1": "Gold",
-            "card_subheadline_1": "",
-            "collection_2": "drop-earrings",
-            "card_headline_2": "",
-            "card_subheadline_2": "",
-            "collection_3": "",
-            "card_headline_3": "",
-            "card_subheadline_3": "",
-            "collection_4": "",
-            "card_headline_4": "",
-            "card_subheadline_4": ""
-          },
-          "blocks": {}
-        }
-      },
-      "block_order": [
-        "ai_gen_block_948f8db_AVe97g"
       ],
       "settings": {}
     },
@@ -464,7 +412,6 @@
     "image_banner",
     "custom_liquid_8X6qXm",
     "1756235048663a7ff7",
-    "17561463147afa74e3",
     "rich_text",
     "featured_collection",
     "collage",
