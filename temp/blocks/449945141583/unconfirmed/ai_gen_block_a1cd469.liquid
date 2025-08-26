@@ -1,6 +1,821 @@
+{% doc %}
+  @prompt
+    Create a full-width, four-column collection banner section.
+    
+    The columns should be equally sized with a small gutter for white space between them. Each column should display a customizable collection and have a full-bleed image or an optional background video.
+    
+    Display a text overlay in the bottom-left corner of each column. This text overlay should have a sub-body text element positioned directly above a main headline element. Both text elements should have customizable font, size, and color.
+    
+    The entire collection block should remain static, with no hover effect on the image or container. However, when a user hovers over the text overlay, both the sub-body text and the headline should slightly lift up in a smooth animation.
+    
+    Include settings for each column to allow the user to:
+    
+    Select a specific collection to link to.
+    
+    Upload a custom image or video for the background.
+    
+    Customize the font, size, and color of both the sub-body text and the headline.
+    
+    In addition, add the following features:
+    
+    Card Styling: Add a setting to introduce a subtle border, rounded corners, and a shadow effect to each collection card.
+    
+    Alternate Layouts: Include settings to choose different desktop layouts, such as 2-column or 3-column.
+    
+    Dynamic Content: Add the ability for the block to automatically display a featured product from a selected collection.
+    
+    Seasonal Banners: Integrate a setting that allows the entire block to display a specific banner or message for promotions based on a date range.
+    
+    Ensure the section is fully responsive, with options to display the collections in 1, 2, or 3 rows on mobile devices.
+
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-collection-banner-{{ ai_gen_id }} {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ai-collection-banner__seasonal-{{ ai_gen_id }} {
+    background-color: {{ block.settings.seasonal_bg_color }};
+    color: {{ block.settings.seasonal_text_color }};
+    text-align: center;
+    padding: 12px 20px;
+    font-size: 14px;
+    margin-bottom: 0;
+  }
+
+  .ai-collection-banner__container-{{ ai_gen_id }} {
+    display: grid;
+    gap: {{ block.settings.gutter_size }}px;
+    width: 100%;
+    {% if block.settings.desktop_layout == '2' %}
+      grid-template-columns: repeat(2, 1fr);
+    {% elsif block.settings.desktop_layout == '3' %}
+      grid-template-columns: repeat(3, 1fr);
+    {% else %}
+      grid-template-columns: repeat(4, 1fr);
+    {% endif %}
+  }
+
+  .ai-collection-banner__column-{{ ai_gen_id }} {
+    position: relative;
+    aspect-ratio: 4/5;
+    overflow: hidden;
+    {% if block.settings.enable_card_styling %}
+      border: {{ block.settings.card_border_width }}px solid {{ block.settings.card_border_color }};
+      border-radius: {{ block.settings.card_border_radius }}px;
+      box-shadow: {{ block.settings.card_shadow_x }}px {{ block.settings.card_shadow_y }}px {{ block.settings.card_shadow_blur }}px {{ block.settings.card_shadow_color }};
+    {% endif %}
+  }
+
+  .ai-collection-banner__media-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .ai-collection-banner__placeholder-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #f4f4f4;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .ai-collection-banner__placeholder-{{ ai_gen_id }} svg {
+    width: 60%;
+    height: 60%;
+    opacity: 0.3;
+  }
+
+  .ai-collection-banner__overlay-{{ ai_gen_id }} {
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    z-index: 2;
+    transition: transform 0.3s ease;
+  }
+
+  .ai-collection-banner__column-{{ ai_gen_id }}:hover .ai-collection-banner__overlay-{{ ai_gen_id }} {
+    transform: translateY(-8px);
+  }
+
+  .ai-collection-banner__sub-text-{{ ai_gen_id }} {
+    margin: 0 0 8px 0;
+    line-height: 1.2;
+  }
+
+  .ai-collection-banner__headline-{{ ai_gen_id }} {
+    margin: 0;
+    line-height: 1.2;
+  }
+
+  .ai-collection-banner__link-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    text-decoration: none;
+  }
+
+  .ai-collection-banner__product-{{ ai_gen_id }} {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    z-index: 2;
+  }
+
+  @media screen and (max-width: 989px) {
+    .ai-collection-banner__container-{{ ai_gen_id }} {
+      {% if block.settings.mobile_layout == '1' %}
+        grid-template-columns: 1fr;
+      {% elsif block.settings.mobile_layout == '2' %}
+        grid-template-columns: repeat(2, 1fr);
+      {% else %}
+        grid-template-columns: repeat(3, 1fr);
+      {% endif %}
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-collection-banner__container-{{ ai_gen_id }} {
+      {% if block.settings.mobile_layout == '1' %}
+        grid-template-columns: 1fr;
+      {% elsif block.settings.mobile_layout == '2' %}
+        grid-template-columns: repeat(2, 1fr);
+      {% else %}
+        grid-template-columns: 1fr;
+      {% endif %}
+    }
+
+    .ai-collection-banner__overlay-{{ ai_gen_id }} {
+      bottom: 15px;
+      left: 15px;
+    }
+  }
+{% endstyle %}
+
+<collection-banner-{{ ai_gen_id }} class="ai-collection-banner-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  {% assign current_date = 'now' | date: '%Y-%m-%d' %}
+  {% assign start_date = block.settings.seasonal_start_date %}
+  {% assign end_date = block.settings.seasonal_end_date %}
+  
+  {% if block.settings.seasonal_message != blank and start_date != blank and end_date != blank %}
+    {% if current_date >= start_date and current_date <= end_date %}
+      <div class="ai-collection-banner__seasonal-{{ ai_gen_id }}">
+        {{ block.settings.seasonal_message }}
+      </div>
+    {% endif %}
+  {% endif %}<div class="ai-collection-banner__container-{{ ai_gen_id }}">
+    {% for i in (1..4) %}
+      {% liquid
+        assign collection_key = 'collection_' | append: i
+        assign image_key = 'image_' | append: i
+        assign video_key = 'video_' | append: i
+        assign sub_text_key = 'sub_text_' | append: i
+        assign headline_key = 'headline_' | append: i
+        assign sub_font_key = 'sub_font_' | append: i
+        assign sub_size_key = 'sub_size_' | append: i
+        assign sub_color_key = 'sub_color_' | append: i
+        assign headline_font_key = 'headline_font_' | append: i
+        assign headline_size_key = 'headline_size_' | append: i
+        assign headline_color_key = 'headline_color_' | append: i
+        assign show_product_key = 'show_product_' | append: i
+
+        assign collection = block.settings[collection_key]
+        assign custom_image = block.settings[image_key]
+        assign custom_video = block.settings[video_key]
+        assign sub_text = block.settings[sub_text_key]
+        assign headline = block.settings[headline_key]
+        assign sub_font = block.settings[sub_font_key]
+        assign sub_size = block.settings[sub_size_key]
+        assign sub_color = block.settings[sub_color_key]
+        assign headline_font = block.settings[headline_font_key]
+        assign headline_size = block.settings[headline_size_key]
+        assign headline_color = block.settings[headline_color_key]
+        assign show_product = block.settings[show_product_key]
+      %}
+
+      {% if block.settings.desktop_layout == '2' and i > 2 %}
+        {% break %}
+      {% elsif block.settings.desktop_layout == '3' and i > 3 %}
+        {% break %}
+      {% endif %}
+
+      <div class="ai-collection-banner__column-{{ ai_gen_id }}">
+        {% if collection %}
+          <a href="{{ collection.url }}" class="ai-collection-banner__link-{{ ai_gen_id }}" aria-label="View {{ collection.title }} collection"></a>
+        {% endif %}
+
+        {% if custom_video %}
+          <video
+            class="ai-collection-banner__media-{{ ai_gen_id }}"
+            autoplay
+            muted
+            loop
+            playsinline
+          >
+            <source src="{{ custom_video }}" type="video/mp4">
+          </video>
+        {% elsif custom_image %}
+          <img
+            src="{{ custom_image | image_url: width: 800 }}"
+            alt="{{ custom_image.alt | escape }}"
+            class="ai-collection-banner__media-{{ ai_gen_id }}"
+            loading="lazy"
+            width="{{ custom_image.width }}"
+            height="{{ custom_image.height }}"
+          >
+        {% elsif collection and collection.featured_image %}
+          <img
+            src="{{ collection.featured_image | image_url: width: 800 }}"
+            alt="{{ collection.featured_image.alt | escape }}"
+            class="ai-collection-banner__media-{{ ai_gen_id }}"
+            loading="lazy"
+            width="{{ collection.featured_image.width }}"
+            height="{{ collection.featured_image.height }}"
+          >
+        {% else %}
+          <div class="ai-collection-banner__placeholder-{{ ai_gen_id }}">
+            {{ 'collection-apparel-1' | placeholder_svg_tag }}
+          </div>
+        {% endif %}
+
+        {% if show_product and collection and collection.products.size > 0 %}
+          {% assign featured_product = collection.products.first %}
+          <div class="ai-collection-banner__product-{{ ai_gen_id }}">
+            {{ featured_product.price | money }}
+          </div>
+        {% endif %}<div class="ai-collection-banner__overlay-{{ ai_gen_id }}">
+          {% if sub_text != blank %}
+            <p
+              class="ai-collection-banner__sub-text-{{ ai_gen_id }}"
+              style="
+                font-family: {{ sub_font.family }}, {{ sub_font.fallback_families }};
+                font-weight: {{ sub_font.weight }};
+                font-size: {{ sub_size }}px;
+                color: {{ sub_color }};
+              "
+            >
+              {{ sub_text }}
+            </p>
+          {% endif %}
+
+          {% if headline != blank %}
+            <h3
+              class="ai-collection-banner__headline-{{ ai_gen_id }}"
+              style="
+                font-family: {{ headline_font.family }}, {{ headline_font.fallback_families }};
+                font-weight: {{ headline_font.weight }};
+                font-size: {{ headline_size }}px;
+                color: {{ headline_color }};
+              "
+            >
+              {{ headline }}
+            </h3>
+          {% elsif collection %}
+            <h3
+              class="ai-collection-banner__headline-{{ ai_gen_id }}"
+              style="
+                font-family: {{ headline_font.family }}, {{ headline_font.fallback_families }};
+                font-weight: {{ headline_font.weight }};
+                font-size: {{ headline_size }}px;
+                color: {{ headline_color }};
+              "
+            >
+              {{ collection.title }}
+            </h3>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</collection-banner-{{ ai_gen_id }}>
+
+<script>
+(function() {
+  class CollectionBanner{{ ai_gen_id }} extends HTMLElement {
+    constructor() {
+      super();
+    }
+
+    connectedCallback() {
+      this.videos = this.querySelectorAll('video');
+      this.setupVideoPlayback();
+    }
+
+    setupVideoPlayback() {
+      this.videos.forEach(video => {
+        video.addEventListener('loadeddata', () => {
+          video.play().catch(() => {
+            console.log('Video autoplay failed');
+          });
+        });
+      });
+    }
+  }
+
+  customElements.define('collection-banner-{{ ai_gen_id }}', CollectionBanner{{ ai_gen_id }});
+})();
+</script>
+
 {% schema %}
- {
-   "name": "AI_Block",
-   "tag": "shopify-ai-generated-block"
- }
+{
+  "name": "Collection banner",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "desktop_layout",
+      "label": "Desktop columns",
+      "options": [
+        {
+          "value": "2",
+          "label": "2 columns"
+        },
+        {
+          "value": "3",
+          "label": "3 columns"
+        },
+        {
+          "value": "4",
+          "label": "4 columns"
+        }
+      ],
+      "default": "4"
+    },
+    {
+      "type": "select",
+      "id": "mobile_layout",
+      "label": "Mobile columns",
+      "options": [
+        {
+          "value": "1",
+          "label": "1 column"
+        },
+        {
+          "value": "2",
+          "label": "2 columns"
+        }
+      ],
+      "default": "1"
+    },
+    {
+      "type": "range",
+      "id": "gutter_size",
+      "min": 0,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Gutter size",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Card styling"
+    },
+    {
+      "type": "checkbox",
+      "id": "enable_card_styling",
+      "label": "Enable card styling",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "card_border_width",
+      "min": 0,
+      "max": 5,
+      "step": 1,
+      "unit": "px",
+      "label": "Border width",
+      "default": 1
+    },
+    {
+      "type": "color",
+      "id": "card_border_color",
+      "label": "Border color",
+      "default": "#e0e0e0"
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Border radius",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "card_shadow_x",
+      "min": -10,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Shadow X offset",
+      "default": 0
+    },
+    {
+      "type": "range",
+      "id": "card_shadow_y",
+      "min": -10,
+      "max": 10,
+      "step": 1,
+      "unit": "px",
+      "label": "Shadow Y offset",
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "card_shadow_blur",
+      "min": 0,
+      "max": 20,
+      "step": 2,
+      "unit": "px",
+      "label": "Shadow blur",
+      "default": 8
+    },
+    {
+      "type": "color",
+      "id": "card_shadow_color",
+      "label": "Shadow color",
+      "default": "rgba(0,0,0,0.1)"
+    },
+    {
+      "type": "header",
+      "content": "Seasonal banner"
+    },
+    {
+      "type": "richtext",
+      "id": "seasonal_message",
+      "label": "Seasonal message"
+    },
+    {
+      "type": "text",
+      "id": "seasonal_start_date",
+      "label": "Start date",
+      "info": "Format: YYYY-MM-DD"
+    },
+    {
+      "type": "text",
+      "id": "seasonal_end_date",
+      "label": "End date",
+      "info": "Format: YYYY-MM-DD"
+    },
+    {
+      "type": "color",
+      "id": "seasonal_bg_color",
+      "label": "Background color",
+      "default": "#f0f0f0"
+    },
+    {
+      "type": "color",
+      "id": "seasonal_text_color",
+      "label": "Text color",
+      "default": "#333333"
+    },
+    {
+      "type": "header",
+      "content": "Column 1"
+    },
+    {
+      "type": "collection",
+      "id": "collection_1",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_1",
+      "label": "Custom image"
+    },
+    {
+      "type": "url",
+      "id": "video_1",
+      "label": "Video URL"
+    },
+    {
+      "type": "text",
+      "id": "sub_text_1",
+      "label": "Sub text"
+    },
+    {
+      "type": "text",
+      "id": "headline_1",
+      "label": "Headline"
+    },
+    {
+      "type": "font_picker",
+      "id": "sub_font_1",
+      "label": "Sub text font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "sub_size_1",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Sub text size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "sub_color_1",
+      "label": "Sub text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "font_picker",
+      "id": "headline_font_1",
+      "label": "Headline font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "headline_size_1",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Headline size",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "headline_color_1",
+      "label": "Headline color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_1",
+      "label": "Show featured product price",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Column 2"
+    },
+    {
+      "type": "collection",
+      "id": "collection_2",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_2",
+      "label": "Custom image"
+    },
+    {
+      "type": "url",
+      "id": "video_2",
+      "label": "Video URL"
+    },
+    {
+      "type": "text",
+      "id": "sub_text_2",
+      "label": "Sub text"
+    },
+    {
+      "type": "text",
+      "id": "headline_2",
+      "label": "Headline"
+    },
+    {
+      "type": "font_picker",
+      "id": "sub_font_2",
+      "label": "Sub text font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "sub_size_2",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Sub text size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "sub_color_2",
+      "label": "Sub text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "font_picker",
+      "id": "headline_font_2",
+      "label": "Headline font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "headline_size_2",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Headline size",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "headline_color_2",
+      "label": "Headline color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_2",
+      "label": "Show featured product price",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Column 3"
+    },
+    {
+      "type": "collection",
+      "id": "collection_3",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_3",
+      "label": "Custom image"
+    },
+    {
+      "type": "url",
+      "id": "video_3",
+      "label": "Video URL"
+    },
+    {
+      "type": "text",
+      "id": "sub_text_3",
+      "label": "Sub text"
+    },
+    {
+      "type": "text",
+      "id": "headline_3",
+      "label": "Headline"
+    },
+    {
+      "type": "font_picker",
+      "id": "sub_font_3",
+      "label": "Sub text font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "sub_size_3",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Sub text size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "sub_color_3",
+      "label": "Sub text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "font_picker",
+      "id": "headline_font_3",
+      "label": "Headline font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "headline_size_3",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Headline size",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "headline_color_3",
+      "label": "Headline color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_3",
+      "label": "Show featured product price",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Column 4"
+    },
+    {
+      "type": "collection",
+      "id": "collection_4",
+      "label": "Collection"
+    },
+    {
+      "type": "image_picker",
+      "id": "image_4",
+      "label": "Custom image"
+    },
+    {
+      "type": "url",
+      "id": "video_4",
+      "label": "Video URL"
+    },
+    {
+      "type": "text",
+      "id": "sub_text_4",
+      "label": "Sub text"
+    },
+    {
+      "type": "text",
+      "id": "headline_4",
+      "label": "Headline"
+    },
+    {
+      "type": "font_picker",
+      "id": "sub_font_4",
+      "label": "Sub text font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "sub_size_4",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Sub text size",
+      "default": 14
+    },
+    {
+      "type": "color",
+      "id": "sub_color_4",
+      "label": "Sub text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "font_picker",
+      "id": "headline_font_4",
+      "label": "Headline font",
+      "default": "helvetica_n4"
+    },
+    {
+      "type": "range",
+      "id": "headline_size_4",
+      "min": 16,
+      "max": 48,
+      "step": 2,
+      "unit": "px",
+      "label": "Headline size",
+      "default": 24
+    },
+    {
+      "type": "color",
+      "id": "headline_color_4",
+      "label": "Headline color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_product_4",
+      "label": "Show featured product price",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection banner"
+    }
+  ],
+  "tag": null
+}
 {% endschema %}
