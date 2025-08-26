@@ -189,7 +189,7 @@
             "heading_size": 32,
             "heading_color": "#000000",
             "heading_center": true,
-            "collection": "",
+            "collection": "drop-earrings",
             "manual_products": [
               "gold-pave-huggie-earrings",
               "luxe-pearl-and-crystal-drop-earrings",
@@ -197,12 +197,12 @@
               "twisted-cord-hoop-earrings"
             ],
             "product_font": "poppins_n4",
-            "product_title_size": 16,
+            "product_title_size": 12,
             "product_price_size": 14,
             "product_title_color": "#000000",
             "regular_price_color": "#000000",
             "sale_price_color": "#ff0000",
-            "product_text_center": false,
+            "product_text_center": true,
             "sale_badge_text": "ON SALE",
             "sale_badge_color": "#ff0000",
             "sale_badge_size": 12,
