@@ -205,9 +205,7 @@
 {%- if section.settings.menu != blank -%}
   <div class="header__icons-left mobile-only">
     {% render 'header-drawer' %}
-  <div class="desktop-only">
-    {% render 'header-search', input_id: 'Search-In-Modal' %}
-</div>
+    {% render 'header-search', input_id: 'Search-In-Modal-Mobile' %}
   </div>
 {%- endif -%}
 
@@ -311,7 +309,9 @@
           </localization-form>
         {%- endif -%}
       </div>
-      {% render 'header-search', input_id: 'Search-In-Modal' %}
+      <div class="desktop-only">
+  {% render 'header-search', input_id: 'Search-In-Modal' %}
+</div>
 
       {%- if shop.customer_accounts_enabled -%}
         <a
