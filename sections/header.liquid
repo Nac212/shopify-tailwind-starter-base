@@ -13,6 +13,27 @@
 
 
 <style>
+
+  /* --- START: Custom code for PRYA header layout --- */
+@media screen and (min-width: 990px) {
+  .header.header--middle-left {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .header--middle-left .header__heading {
+    margin: 0; /* Remove any default margins */
+  }
+
+  .header--middle-left nav.header__inline-menu {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 2rem; /* Add some space so menu isn't flush with logo */
+    padding-right: 2rem; /* Add some space so menu isn't flush with icons */
+  }
+}
+/* --- END: Custom code for PRYA header layout --- */
   header-drawer {
     justify-self: start;
     margin-left: -1.2rem;
