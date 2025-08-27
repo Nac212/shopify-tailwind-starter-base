@@ -87,134 +87,182 @@
         >
           {%- assign product_form_id = 'product-form-' | append: section.id -%}
 
-{%- assign tab_blocks = section.blocks | where: 'type', 'tab_item' -%}          
-          {%- for block in section.blocks -%}
-            {%- case block.type -%}
-              {%- when '@app' -%}
-                {% render block %}
-              {%- when 'text' -%}
-                {%- when 'tab_item' -%}
-  {%- if tab_blocks.size > 0 and tabs_rendered == false -%}
-    <div class="product-tabs-container" {{ block.shopify_attributes }}>
-      <style>
-        .product-tabs-container { width: 100%; font-family: 'Poppins', sans-serif; color: #333; margin: 2rem 0; }
-        .tab-headers { display: flex; justify-content: flex-start; align-items: center; border-bottom: 1px solid #ddd; overflow-x: auto; white-space: nowrap; }
-        .tab-header { cursor: pointer; padding: 1rem 1.5rem; font-size: 0.9rem; text-transform: uppercase; font-weight: 500; letter-spacing: 0.05em; transition: color 0.2s ease, border-color 0.2s ease; border-bottom: 2px solid transparent; }
-        .tab-header.active { color: #000; border-color: #000; }
-        .tab-content-container { padding: 2rem 1.5rem; border: 1px solid #e0e0e0; border-top: none; }
-        .tab-content { display: none; line-height: 1.6; font-size: 1rem; }
-        .tab-content.active { display: block; }
-      </style>
+{%- assign tab_blocks = section.blocks | where: 'type', 'tab_item' -%}
+{%- assign tabs_rendered = false -%}
 
-      <div class="tab-headers">
-        {%- for tab_block in tab_blocks -%}
-          <div class="tab-header {% if forloop.first %}active{% endif %}" data-tab="{{ tab_block.id }}">{{ tab_block.settings.tab_header }}</div>
-        {%- endfor -%}
+{%- for block in section.blocks -%}
+  {%- case block.type -%}
+    {%- when '@app' -%}
+      {% render block %}
+
+    {%- when 'text' -%}
+      <p
+        class="product__text inline-richtext{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}"
+        {{ block.shopify_attributes }}
+      >
+        {{- block.settings.text -}}
+      </p>
+
+    {%- when 'title' -%}
+      {%- style -%}
+        {{ block.settings.title_font | font_face }}
+        #ProductInfo-{{ section.id }} .product__title h1,
+        #ProductInfo-{{ section.id }} .product__title a {
+          font-family: {{ block.settings.title_font.family }}, {{ block.settings.title_font.fallback_families }};
+          font-style: {{ block.settings.title_font.style }};
+          font-weight: {{ block.settings.title_font.weight }};
+          font-size: {{ block.settings.title_font_size }}px;
+        }
+        @media screen and (max-width: 749px) {
+          #ProductInfo-{{ section.id }} .product__title h1,
+          #ProductInfo-{{ section.id }} .product__title a {
+            font-size: {{ block.settings.title_font_size_mobile }}px;
+          }
+        }
+      {%- endstyle -%}
+      <div class="product__title" {{ block.shopify_attributes }}>
+        <h1>{{ product.title | escape }}</h1>
+        <a href="{{ product.url }}" class="product__title">
+          <h2 class="h1">
+            {{ product.title | escape }}
+          </h2>
+        </a>
       </div>
-      <div class="tab-content-container">
-        {%- for tab_block in tab_blocks -%}
-          <div class="tab-content {% if forloop.first %}active{% endif %}" data-tab-content="{{ tab_block.id }}">{{ tab_block.settings.tab_content }}</div>
-        {%- endfor -%}
+
+    {%- when 'price' -%}
+      <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
+        {%- render 'price', product: product, use_variant: true, show_badges: true, price_class: 'price--large' -%}
       </div>
-    </div>
+      {%- if product.quantity_price_breaks_configured? -%}
+        <div class="volume-pricing-note" id="Volume-Note-{{ section.id }}">
+          <span>{{ 'products.product.volume_pricing.note' | t }}</span>
+        </div>
+      {%- endif -%}
+      {%- if cart.taxes_included or cart.duties_included or shop.shipping_policy.body != blank -%}
+        <div class="product__tax caption rte">
+          {%- if cart.duties_included and cart.taxes_included -%}
+            {{ 'products.product.duties_and_taxes_included' | t }}
+          {%- elsif cart.taxes_included -%}
+            {{ 'products.product.taxes_included' | t }}
+          {%- elsif cart.duties_included -%}
+            {{ 'products.product.duties_included' | t }}
+          {%- endif -%}
+          {%- if shop.shipping_policy.body != blank -%}
+            {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}
+          {%- endif -%}
+        </div>
+      {%- endif -%}
+      <div {{ block.shopify_attributes }}>
+        {%- assign product_form_installment_id = 'product-form-installment-' | append: section.id -%}
+        {%- form 'product', product, id: product_form_installment_id, class: 'installment caption-large' -%}
+          <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+          {{ form | payment_terms }}
+        {%- endform -%}
+      </div>
 
-    <script>
-      (function() {
-        const container = document.querySelector('[data-section-id="{{ section.id }}"] .product-tabs-container');
-        if (!container || container.dataset.initialized) return;
-        container.dataset.initialized = true;
-
-        const tabHeaders = container.querySelectorAll('.tab-header');
-        const tabContents = container.querySelectorAll('.tab-content');
-
-        tabHeaders.forEach(header => {
-          header.addEventListener('click', () => {
-            tabHeaders.forEach(h => h.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
-
-            header.classList.add('active');
-
-            const tabId = header.dataset.tab;
-            const targetContent = container.querySelector(`.tab-content[data-tab-content="${tabId}"]`);
-            if (targetContent) targetContent.classList.add('active');
-          });
-        });
-      })();
-    </script>
-    {%- assign tabs_rendered = true -%}
-  {%- endif -%}
-                <p
-                  class="product__text inline-richtext{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}"
-                  {{ block.shopify_attributes }}
-                >
-                  {{- block.settings.text -}}
-                </p>
-{%- when 'title' -%}
-  {%- style -%}
-    {{ block.settings.title_font | font_face }}
-
-    #ProductInfo-{{ section.id }} .product__title h1,
-    #ProductInfo-{{ section.id }} .product__title a {
-      font-family: {{ block.settings.title_font.family }}, {{ block.settings.title_font.fallback_families }};
-      font-style: {{ block.settings.title_font.style }};
-      font-weight: {{ block.settings.title_font.weight }};
-      font-size: {{ block.settings.title_font_size }}px;
-    }
-
-    @media screen and (max-width: 749px) {
-      #ProductInfo-{{ section.id }} .product__title h1,
-      #ProductInfo-{{ section.id }} .product__title a {
-        font-size: {{ block.settings.title_font_size_mobile }}px;
-      }
-    }
-  {%- endstyle -%}
-
-  <div class="product__title" {{ block.shopify_attributes }}>
-    <h1>{{ product.title | escape }}</h1>
-    <a href="{{ product.url }}" class="product__title">
-      <h2 class="h1">
-        {{ product.title | escape }}
-      </h2>
-    </a>
-  </div>
-
-  
-              {%- when 'price' -%}
-                <div id="price-{{ section.id }}" role="status" {{ block.shopify_attributes }}>
-                  {%- render 'price',
-                    product: product,
-                    use_variant: true,
-                    show_badges: true,
-                    price_class: 'price--large'
-                  -%}
-                </div>
-                {%- if product.quantity_price_breaks_configured? -%}
-                  <div class="volume-pricing-note" id="Volume-Note-{{ section.id }}">
-                    <span>{{ 'products.product.volume_pricing.note' | t }}</span>
-                  </div>
-                {%- endif -%}
-                {%- if cart.taxes_included or cart.duties_included or shop.shipping_policy.body != blank -%}
-                  <div class="product__tax caption rte">
-                    {%- if cart.duties_included and cart.taxes_included -%}
-                      {{ 'products.product.duties_and_taxes_included' | t }}
-                    {%- elsif cart.taxes_included -%}
-                      {{ 'products.product.taxes_included' | t }}
-                    {%- elsif cart.duties_included -%}
-                      {{ 'products.product.duties_included' | t }}
-                    {%- endif -%}
-                    {%- if shop.shipping_policy.body != blank -%}
-                      {{ 'products.product.shipping_policy_html' | t: link: shop.shipping_policy.url }}
-                    {%- endif -%}
-                  </div>
-                {%- endif -%}
-                <div {{ block.shopify_attributes }}>
-                  {%- assign product_form_installment_id = 'product-form-installment-' | append: section.id -%}
-                  {%- form 'product', product, id: product_form_installment_id, class: 'installment caption-large' -%}
-                    <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
-                    {{ form | payment_terms }}
-                  {%- endform -%}
-                </div>
-              {%- when 'inventory' -%}
+    {%- when 'inventory' -%}
+      <p
+        class="product__inventory{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}{% if product.selected_or_first_available_variant.inventory_management != 'shopify' %} visibility-hidden{% endif %}"
+        {{ block.shopify_attributes }}
+        id="Inventory-{{ section.id }}"
+        role="status"
+      >
+        {%- if product.selected_or_first_available_variant.inventory_management == 'shopify' -%}
+          {%- if product.selected_or_first_available_variant.inventory_quantity > 0 -%}
+            {%- if product.selected_or_first_available_variant.inventory_quantity <= block.settings.inventory_threshold -%}
+              <span class="svg-wrapper" style="color: rgb(238, 148, 65)">{{- 'icon-inventory-status.svg' | inline_asset_content -}}</span>
+              {%- if block.settings.show_inventory_quantity -%}
+                {{- 'products.product.inventory_low_stock_show_count' | t: quantity: product.selected_or_first_available_variant.inventory_quantity -}}
+              {%- else -%}
+                {{- 'products.product.inventory_low_stock' | t -}}
+              {%- endif -%}
+            {%- else -%}
+              <span class="svg-wrapper" style="color: rgb(62, 214, 96)">{{- 'icon-inventory-status.svg' | inline_asset_content -}}</span>
+              {%- if block.settings.show_inventory_quantity -%}
+                {{- 'products.product.inventory_in_stock_show_count' | t: quantity: product.selected_or_first_available_variant.inventory_quantity -}}
+              {%- else -%}
+                {{- 'products.product.inventory_in_stock' | t -}}
+              {%- endif -%}
+            {%- endif -%}
+          {%- else -%}
+            {%- if product.selected_or_first_available_variant.inventory_policy == 'continue' -%}
+              <span class="svg-wrapper" style="color: rgb(62, 214, 96)">{{- 'icon-inventory-status.svg' | inline_asset_content -}}</span>
+              {{- 'products.product.inventory_out_of_stock_continue_selling' | t -}}
+            {%- else -%}
+              <span class="svg-wrapper" style="color: rgb(200, 200, 200)">{{- 'icon-inventory-status.svg' | inline_asset_content -}}</span>
+              {{- 'products.product.inventory_out_of_stock' | t -}}
+            {%- endif -%}
+          {%- endif -%}
+        {%- endif -%}
+      </p>
+      
+    {%- when 'description' -%}
+       {% comment %} I am moving the description block here to show the correct order {% endcomment %}
+      {%- if product.description != blank -%}
+        <div class="product__description rte" {{ block.shopify_attributes }}>
+          {{ product.description }}
+        </div>
+      {%- endif -%}
+      
+    {%- when 'buy_buttons' -%}
+      {%- render 'buy-buttons',
+            block: block,
+            product: product,
+            product_form_id: product_form_id,
+            section_id: section.id,
+            show_pickup_availability: true 
+      -%}
+      
+    {%- when 'tab_item' -%}
+      {%- if tab_blocks.size > 0 and tabs_rendered == false -%}
+        <div class="product-tabs-container" {{ block.shopify_attributes }}>
+          <style>
+            .product-tabs-container { width: 100%; font-family: 'Poppins', sans-serif; color: #333; margin: 2rem 0; }
+            .tab-headers { display: flex; justify-content: flex-start; align-items: center; border-bottom: 1px solid #ddd; overflow-x: auto; white-space: nowrap; }
+            .tab-header { cursor: pointer; padding: 1rem 1.5rem; font-size: 0.9rem; text-transform: uppercase; font-weight: 500; letter-spacing: 0.05em; transition: color 0.2s ease, border-color 0.2s ease; border-bottom: 2px solid transparent; }
+            .tab-header.active { color: #000; border-color: #000; }
+            .tab-content-container { padding: 2rem 1.5rem; border: 1px solid #e0e0e0; border-top: none; }
+            .tab-content { display: none; line-height: 1.6; font-size: 1rem; }
+            .tab-content.active { display: block; }
+          </style>
+    
+          <div class="tab-headers">
+            {%- for tab_block in tab_blocks -%}
+              <div class="tab-header {% if forloop.first %}active{% endif %}" data-tab="{{ tab_block.id }}">{{ tab_block.settings.tab_header }}</div>
+            {%- endfor -%}
+          </div>
+          <div class="tab-content-container">
+            {%- for tab_block in tab_blocks -%}
+              <div class="tab-content {% if forloop.first %}active{% endif %}" data-tab-content="{{ tab_block.id }}">{{ tab_block.settings.tab_content }}</div>
+            {%- endfor -%}
+          </div>
+        </div>
+    
+        <script>
+          (function() {
+            const container = document.querySelector('[data-section-id="{{ section.id }}"] .product-tabs-container');
+            if (!container || container.dataset.initialized) return;
+            container.dataset.initialized = true;
+    
+            const tabHeaders = container.querySelectorAll('.tab-header');
+            const tabContents = container.querySelectorAll('.tab-content');
+            
+            tabHeaders.forEach(header => {
+              header.addEventListener('click', () => {
+                tabHeaders.forEach(h => h.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                
+                header.classList.add('active');
+                
+                const tabId = header.dataset.tab;
+                const targetContent = container.querySelector(`.tab-content[data-tab-content="${tabId}"]`);
+                if (targetContent) targetContent.classList.add('active');
+              });
+            });
+          })();
+        </script>
+        {%- assign tabs_rendered = true -%}
+      {%- endif -%}
                 <p
                   class="product__inventory{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}{% if product.selected_or_first_available_variant.inventory_management != 'shopify' %} visibility-hidden{% endif %}"
                   {{ block.shopify_attributes }}
