@@ -1,7 +1,8 @@
 {% comment %}
   This code block was updated to:
   1. Fix the mobile click issue, making the entire product card a link to the product page.
-  2. Replace the single "swipe hint" arrow with two functional, tappable navigation arrows on mobile.
+  2. Implement a progress bar-style pagination indicator for the mobile image slider.
+  3. Remove the tappable navigation arrows from mobile.
 {% endcomment %}
 
 {% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
@@ -116,11 +117,12 @@
     font-size: 16px;
   }
 
+  /* Updated styles for pagination indicator */
   .ai-product-grid__swipe-indicator-{{ ai_gen_id }} {
     position: absolute;
-    bottom: 8px;
-    left: 50%;
-    transform: translateX(-50%);
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
     display: flex;
     gap: 4px;
     z-index: 3;
@@ -129,51 +131,16 @@
   }
 
   .ai-product-grid__swipe-dot-{{ ai_gen_id }} {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
+    flex: 1; /* Make all bars share space equally */
+    height: 2.5px;
     background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 2px;
     transition: background-color 0.3s ease;
   }
 
   .ai-product-grid__swipe-dot-{{ ai_gen_id }}.active {
     background-color: rgba(255, 255, 255, 1);
   }
-
-  /* New styles for navigation arrows */
-  .ai-product-grid__nav-arrow-{{ ai_gen_id }} {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(255, 255, 255, 0.6);
-    border-radius: 50%;
-    display: none; /* Hidden by default, shown on mobile */
-    align-items: center;
-    justify-content: center;
-    z-index: 4;
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-
-  .ai-product-grid__nav-arrow-{{ ai_gen_id }}:hover {
-    background-color: rgba(255, 255, 255, 0.9);
-  }
-
-  .ai-product-grid__nav-arrow-{{ ai_gen_id }} svg {
-    width: 16px;
-    height: 16px;
-    color: #333;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  .ai-product-grid__nav-arrow--prev-{{ ai_gen_id }} { left: 10px; }
-  .ai-product-grid__nav-arrow--next-{{ ai_gen_id }} { right: 10px; }
 
   @media screen and (min-width: 750px) {
     {% if block.settings.show_hover_image %}
@@ -212,10 +179,6 @@
 
     .ai-product-grid__image-container-{{ ai_gen_id }}[data-has-multiple-images] .ai-product-grid__swipe-indicator-{{ ai_gen_id }} {
       opacity: 1;
-    }
-
-    .ai-product-grid__image-container-{{ ai_gen_id }}[data-has-multiple-images] .ai-product-grid__nav-arrow-{{ ai_gen_id }} {
-      display: flex;
     }
   }
 {% endstyle %}
@@ -272,13 +235,6 @@
                           data-dot-index="{{ forloop.index0 }}"
                         ></div>
                       {% endfor %}
-                    </div>
-                    
-                    <div class="ai-product-grid__nav-arrow-{{ ai_gen_id }} ai-product-grid__nav-arrow--prev-{{ ai_gen_id }}" data-direction="prev">
-                      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                    </div>
-                    <div class="ai-product-grid__nav-arrow-{{ ai_gen_id }} ai-product-grid__nav-arrow--next-{{ ai_gen_id }}" data-direction="next">
-                      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
                     </div>
                   {% endif %}
                 {% else %}
@@ -367,30 +323,8 @@
       const imageContainers = this.querySelectorAll('[data-has-multiple-images]');
       
       imageContainers.forEach(container => {
-        // Keep the touch/swipe events
         container.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
         container.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: true });
-
-        // --- New code for the arrows ---
-        const productId = container.dataset.productId;
-        const arrows = container.querySelectorAll('.ai-product-grid__nav-arrow-{{ ai_gen_id }}');
-
-        arrows.forEach(arrow => {
-            arrow.addEventListener('click', (e) => {
-                if (!this.isMobile) return;
-
-                e.preventDefault();
-                e.stopPropagation();
-
-                const direction = e.currentTarget.dataset.direction;
-                if (direction === 'next') {
-                    this.nextImage(container, productId);
-                } else {
-                    this.previousImage(container, productId);
-                }
-            });
-        });
-        // --- End of new code ---
       });
     }
 
@@ -412,8 +346,6 @@
       if (!this.productImages[productId] || this.productImages[productId].length <= 1) return;
       
       if (Math.abs(swipeDistance) > this.minSwipeDistance) {
-        container.setAttribute('data-swiped', 'true');
-        
         if (swipeDistance > 0) {
           this.previousImage(container, productId);
         } else {
@@ -579,7 +511,7 @@
       "id": "show_hover_image",
       "label": "Show second image on hover (desktop only)",
       "default": true,
-      "info": "Shows the second product image when hovering on desktop. Mobile uses swipe/tap to cycle through all images."
+      "info": "Shows the second product image when hovering on desktop. Mobile uses swipe to cycle through all images."
     },
     {
       "type": "range",
