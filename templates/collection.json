@@ -19,6 +19,8 @@
         "title_bottom_margin": 0,
         "description_font": "sans-serif",
         "description_size": 12,
+        "mobile_title_size": 28,
+        "mobile_description_size": 12,
         "show_collection_image": false,
         "color_scheme": "scheme-1"
       }
