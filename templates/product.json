@@ -23,7 +23,8 @@
           "type": "title",
           "settings": {
             "title_font": "poppins_n4",
-            "title_font_size": 22
+            "title_font_size": 22,
+            "title_font_size_mobile": 19
           }
         },
         "caption": {
