@@ -211,7 +211,8 @@
                       {%- endif -%}
                     {%- endif -%}
                   {%- endif -%}
-                </p>{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}{% if product.selected_or_first_available_variant.inventory_management != 'shopify' %} visibility-hidden{% endif %}"
+                </p>
+                {% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}{% if product.selected_or_first_available_variant.inventory_management != 'shopify' %} visibility-hidden{% endif %}"
         {{ block.shopify_attributes }}
         id="Inventory-{{ section.id }}"
         role="status"
