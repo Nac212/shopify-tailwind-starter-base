@@ -87,6 +87,7 @@
         >
           {%- assign product_form_id = 'product-form-' | append: section.id -%}
 
+{%- assign tab_blocks = section.blocks | where: 'type', 'tab_item' -%}          
           {%- for block in section.blocks -%}
             {%- case block.type -%}
               {%- when '@app' -%}
