@@ -65,20 +65,13 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: relative;
+  
 
   /* NEW: Reduce side padding */
   padding-left: 1rem !important;
   padding-right: 1rem !important;
 }
-  /* New rule to perfectly center the logo */
-.header .header__heading {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 100%; /* Add this line */
-  text-align: center; /* Add this line */
+
 }
   /* NEW: Forcefully control the padding around the logo itself */
   .header .header__heading-link {
@@ -101,6 +94,7 @@
     display: flex;
     align-items: center;
     gap: 0rem; /* Adjusts space between menu and search */
+    flex: 1; /* Add this line */
   }
 }
 
