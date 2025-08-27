@@ -1,8 +1,8 @@
 {% comment %}
-  This code block has been reverted to the version with:
-  1. Clickable product images on all devices.
-  2. Functional left and right navigation arrows on mobile for products with multiple images.
-  3. All pagination indicator code has been removed.
+  This code block was updated for mobile to:
+  1. Ensure clicking/tapping the image navigates to the product page.
+  2. Allow users to swipe left/right on the image to see other photos.
+  3. Remove the tappable navigation arrows.
 {% endcomment %}
 
 {% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
@@ -117,41 +117,6 @@
     font-size: 16px;
   }
 
-  /* Styles for navigation arrows */
-  .ai-product-grid__nav-arrow-{{ ai_gen_id }} {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(255, 255, 255, 0.6);
-    border-radius: 50%;
-    display: none; /* Hidden by default, shown on mobile */
-    align-items: center;
-    justify-content: center;
-    z-index: 4;
-    width: 32px;
-    height: 32px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-  }
-
-  .ai-product-grid__nav-arrow-{{ ai_gen_id }}:hover {
-    background-color: rgba(255, 255, 255, 0.9);
-  }
-
-  .ai-product-grid__nav-arrow-{{ ai_gen_id }} svg {
-    width: 16px;
-    height: 16px;
-    color: #333;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 2.5;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-  }
-
-  .ai-product-grid__nav-arrow--prev-{{ ai_gen_id }} { left: 10px; }
-  .ai-product-grid__nav-arrow--next-{{ ai_gen_id }} { right: 10px; }
-
   @media screen and (min-width: 750px) {
     {% if block.settings.show_hover_image %}
       .ai-product-grid__link-{{ ai_gen_id }}:hover .ai-product-grid__image--primary-{{ ai_gen_id }} {
@@ -185,10 +150,6 @@
 
     .ai-product-grid__price-{{ ai_gen_id }} {
       font-size: {{ block.settings.price_font_size_mobile }}px;
-    }
-
-    .ai-product-grid__image-container-{{ ai_gen_id }}[data-has-multiple-images] .ai-product-grid__nav-arrow-{{ ai_gen_id }} {
-      display: flex;
     }
   }
 {% endstyle %}
@@ -235,15 +196,6 @@
                       height="{{ product.images[1].height }}"
                       data-image-index="1"
                     >
-                  {% endif %}
-                  
-                  {% if product.images.size > 1 %}
-                    <div class="ai-product-grid__nav-arrow-{{ ai_gen_id }} ai-product-grid__nav-arrow--prev-{{ ai_gen_id }}" data-direction="prev">
-                      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                    </div>
-                    <div class="ai-product-grid__nav-arrow-{{ ai_gen_id }} ai-product-grid__nav-arrow--next-{{ ai_gen_id }}" data-direction="next">
-                      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                    </div>
                   {% endif %}
                 {% else %}
                   <div class="ai-product-grid__image-placeholder-{{ ai_gen_id }}">
@@ -331,29 +283,9 @@
       const imageContainers = this.querySelectorAll('[data-has-multiple-images]');
       
       imageContainers.forEach(container => {
-        // Touch/swipe events
+        // Only add swipe listeners if a product has multiple images
         container.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
         container.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: true });
-
-        // Arrow click events
-        const productId = container.dataset.productId;
-        const arrows = container.querySelectorAll('.ai-product-grid__nav-arrow-{{ ai_gen_id }}');
-
-        arrows.forEach(arrow => {
-            arrow.addEventListener('click', (e) => {
-                if (!this.isMobile) return;
-
-                e.preventDefault();
-                e.stopPropagation();
-
-                const direction = e.currentTarget.dataset.direction;
-                if (direction === 'next') {
-                    this.nextImage(container, productId);
-                } else {
-                    this.previousImage(container, productId);
-                }
-            });
-        });
       });
     }
 
@@ -375,6 +307,9 @@
       if (!this.productImages[productId] || this.productImages[productId].length <= 1) return;
       
       if (Math.abs(swipeDistance) > this.minSwipeDistance) {
+        // Prevent the click event from firing after a swipe
+        container.closest('a').addEventListener('click', e => e.preventDefault(), { once: true });
+
         if (swipeDistance > 0) {
           this.previousImage(container, productId);
         } else {
