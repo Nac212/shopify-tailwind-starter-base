@@ -3772,8 +3772,11 @@ details-disclosure > details {
   display: none;
 }
 
+/* --- Style for Product Option Labels (Size, Quantity, etc.) --- */
 .product-form__input label {
+  font-family: 'Poppins', sans-serif;
   text-transform: uppercase;
-  font-family: 'Poppins', sans-serif; /* Fallback to a generic sans-serif if Poppins isn't available */
-  letter-spacing: 0.10em; /* Optional: adds a little spacing for better readability in uppercase */
+  letter-spacing: 0.05em;
+  font-weight: 700; /* Makes the font bold */
+  color: #000000;   /* Sets the text color to black */
 }
