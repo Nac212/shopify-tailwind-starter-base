@@ -101,7 +101,31 @@
 {%- when 'title' -%}
   {%- style -%}
     {{ block.settings.title_font | font_face }}
+
+    #ProductInfo-{{ section.id }} .product__title h1,
+    #ProductInfo-{{ section.id }} .product__title a {
+      font-family: {{ block.settings.title_font.family }}, {{ block.settings.title_font.fallback_families }};
+      font-style: {{ block.settings.title_font.style }};
+      font-weight: {{ block.settings.title_font.weight }};
+      font-size: {{ block.settings.title_font_size }}px;
+    }
+
+    @media screen and (max-width: 749px) {
+      #ProductInfo-{{ section.id }} .product__title h1,
+      #ProductInfo-{{ section.id }} .product__title a {
+        font-size: {{ block.settings.title_font_size_mobile }}px;
+      }
+    }
   {%- endstyle -%}
+
+  <div class="product__title" {{ block.shopify_attributes }}>
+    <h1>{{ product.title | escape }}</h1>
+    <a href="{{ product.url }}" class="product__title">
+      <h2 class="h1">
+        {{ product.title | escape }}
+      </h2>
+    </a>
+  </div>
 
   <div
     class="product__title"
