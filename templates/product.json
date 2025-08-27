@@ -58,7 +58,11 @@
         },
         "description": {
           "type": "description",
-          "settings": {}
+          "settings": {
+            "description_font": "helvetica_n4",
+            "description_font_size": 17,
+            "description_font_size_mobile": 13
+          }
         },
         "custom_liquid_gqRyCT": {
           "type": "custom_liquid",
