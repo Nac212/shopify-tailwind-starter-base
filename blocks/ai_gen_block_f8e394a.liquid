@@ -117,7 +117,7 @@
     font-size: 16px;
   }
 
-  /* Updated styles for pagination indicator */
+  /* Corrected styles for pagination indicator */
   .ai-product-grid__swipe-indicator-{{ ai_gen_id }} {
     position: absolute;
     bottom: 10px;
@@ -126,11 +126,10 @@
     display: none;
     gap: 4px;
     z-index: 3;
-    transition: opacity 0.3s ease;
   }
 
   .ai-product-grid__swipe-dot-{{ ai_gen_id }} {
-    flex: 1; /* Make all bars share space equally */
+    flex: 1;
     height: 2.5px;
     background-color: rgba(255, 255, 255, 0.5);
     border-radius: 2px;
@@ -176,8 +175,9 @@
       font-size: {{ block.settings.price_font_size_mobile }}px;
     }
 
+    /* This rule now correctly uses 'display: flex' */
     .ai-product-grid__image-container-{{ ai_gen_id }}[data-has-multiple-images] .ai-product-grid__swipe-indicator-{{ ai_gen_id }} {
-      opacity: flex;
+      display: flex;
     }
   }
 {% endstyle %}
