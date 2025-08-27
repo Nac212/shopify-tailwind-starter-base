@@ -3686,13 +3686,15 @@ details-disclosure > details {
 /* -- Sub-collection Tag Navigation (Refined) -- */
 .collection-tags__nav {
   display: flex;
-  justify-content: flex-start; /* <-- Changed to align items to the left for scrolling */
+  justify-content: flex-start;
   align-items: baseline;
-  flex-wrap: nowrap; /* <-- Changed to prevent wrapping to a new line */
-  overflow-x: auto; /* <-- Added to allow horizontal scrolling */
+  flex-wrap: nowrap;
+  overflow-x: auto;
   gap: 35px;
   margin: 20px 0;
-  padding-bottom: 10px; /* <-- Reduced from 15px to tighten the gap */
+  padding-top: 10px; /* <-- Added padding to create space above the tags */
+  padding-bottom: 10px;
+  border-top: 1px solid #e0e0e0; /* <-- New top divider added here */
   border-bottom: 1px solid #e0e0e0;
 
   /* --- Hides the scrollbar for a cleaner look --- */
@@ -3709,28 +3711,7 @@ details-disclosure > details {
   font-family: 'Poppins', sans-serif;
   font-size: 1.1rem;
   text-transform: capitalize;
-  color: #6c6c6c;
-  font-weight: 400;
-  text-decoration: none;
-  padding-bottom: 5px;
-  border-bottom: 2px solid transparent;
-  transition: all 0.2s ease-in-out;
-}
-
-.collection-tags__link:hover {
-  color: #000000;
-}
-
-.collection-tags__link.active {
-  color: #000000;
-  font-weight: 600;
-  border-bottom-color: #000000;
-}
-
-.collection-tags__link {
-  font-family: 'Poppins', sans-serif;
-  font-size: 1.1rem;
-  text-transform: capitalize; /* <-- This makes each tag start with a capital letter */
+  white-space: nowrap; /* <-- Added to keep "View All" on a single line */
   color: #6c6c6c;
   font-weight: 400;
   text-decoration: none;
