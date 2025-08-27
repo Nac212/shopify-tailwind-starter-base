@@ -1,12 +1,9 @@
-{% doc %}
-  @prompt
-    Create a full-width, four-column product grid section.
-    
-    The columns should be equally sized with a small gutter for white space between them and have a full-bleed image, with the option to customise the image aspect ratio. The text for the product name and price should be fully customisable. Font, size, left placement, right placement, centred., i need the option to display a collection. I also need the option to choose how many products I'd like to showcase on one page, and on mobile/tablet, on portrait for the image aspect ratio, some of the images are cropped. Can we include a feature that will fit the image into the portrait container?, can we lastly add the option to customise the font and price size too for the mobile version, can we make poppins the default font.
-    
-    also make the mobile font size able to go below 10 please. Possibly starting from 2 in intervals of 2, can we fix the collection products to show. I only have 4 products on my store, but when i change the slider to show 2, it continues to show 4. Please ensure this works, lastly, add an option to show an additional image on hover. A smooth transition effect on hover please., keep the hover on desktop, but enable a swipe feature for additional images on mobile please, can we add a swipe feature to the mobile view. I do not want a hover on the mobile section when additional images are available. I need an arrow indicating that you can swipe to see the additional image(s) on each specific product when extra images are available
+{% comment %}
+  This code block was updated to:
+  1. Fix the mobile click issue, making the entire product card a link to the product page.
+  2. Replace the single "swipe hint" arrow with two functional, tappable navigation arrows on mobile.
+{% endcomment %}
 
-{% enddoc %}
 {% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
 
 {% style %}
@@ -143,38 +140,40 @@
     background-color: rgba(255, 255, 255, 1);
   }
 
-  .ai-product-grid__swipe-arrow-{{ ai_gen_id }} {
+  /* New styles for navigation arrows */
+  .ai-product-grid__nav-arrow-{{ ai_gen_id }} {
     position: absolute;
     top: 50%;
-    right: 12px;
     transform: translateY(-50%);
-    width: 24px;
-    height: 24px;
-    background-color: rgba(0, 0, 0, 0.6);
+    background-color: rgba(255, 255, 255, 0.6);
     border-radius: 50%;
-    display: none;
+    display: none; /* Hidden by default, shown on mobile */
     align-items: center;
     justify-content: center;
     z-index: 4;
-    animation: ai-swipe-pulse-{{ ai_gen_id }} 2s infinite;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
   }
 
-  .ai-product-grid__swipe-arrow-{{ ai_gen_id }} svg {
-    width: 12px;
-    height: 12px;
-    color: white;
+  .ai-product-grid__nav-arrow-{{ ai_gen_id }}:hover {
+    background-color: rgba(255, 255, 255, 0.9);
   }
 
-  @keyframes ai-swipe-pulse-{{ ai_gen_id }} {
-    0%, 100% {
-      opacity: 0.7;
-      transform: translateY(-50%) scale(1);
-    }
-    50% {
-      opacity: 1;
-      transform: translateY(-50%) scale(1.1);
-    }
+  .ai-product-grid__nav-arrow-{{ ai_gen_id }} svg {
+    width: 16px;
+    height: 16px;
+    color: #333;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
   }
+
+  .ai-product-grid__nav-arrow--prev-{{ ai_gen_id }} { left: 10px; }
+  .ai-product-grid__nav-arrow--next-{{ ai_gen_id }} { right: 10px; }
 
   @media screen and (min-width: 750px) {
     {% if block.settings.show_hover_image %}
@@ -215,12 +214,8 @@
       opacity: 1;
     }
 
-    .ai-product-grid__image-container-{{ ai_gen_id }}[data-has-multiple-images] .ai-product-grid__swipe-arrow-{{ ai_gen_id }} {
+    .ai-product-grid__image-container-{{ ai_gen_id }}[data-has-multiple-images] .ai-product-grid__nav-arrow-{{ ai_gen_id }} {
       display: flex;
-    }
-
-    .ai-product-grid__image-container-{{ ai_gen_id }}[data-swiped] .ai-product-grid__swipe-arrow-{{ ai_gen_id }} {
-      display: none;
     }
   }
 {% endstyle %}
@@ -279,10 +274,11 @@
                       {% endfor %}
                     </div>
                     
-                    <div class="ai-product-grid__swipe-arrow-{{ ai_gen_id }}">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <polyline points="9,18 15,12 9,6"></polyline>
-                      </svg>
+                    <div class="ai-product-grid__nav-arrow-{{ ai_gen_id }} ai-product-grid__nav-arrow--prev-{{ ai_gen_id }}" data-direction="prev">
+                      <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                    </div>
+                    <div class="ai-product-grid__nav-arrow-{{ ai_gen_id }} ai-product-grid__nav-arrow--next-{{ ai_gen_id }}" data-direction="next">
+                      <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"></polyline></svg>
                     </div>
                   {% endif %}
                 {% else %}
@@ -371,9 +367,30 @@
       const imageContainers = this.querySelectorAll('[data-has-multiple-images]');
       
       imageContainers.forEach(container => {
+        // Keep the touch/swipe events
         container.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: true });
         container.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: true });
-        
+
+        // --- New code for the arrows ---
+        const productId = container.dataset.productId;
+        const arrows = container.querySelectorAll('.ai-product-grid__nav-arrow-{{ ai_gen_id }}');
+
+        arrows.forEach(arrow => {
+            arrow.addEventListener('click', (e) => {
+                if (!this.isMobile) return;
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                const direction = e.currentTarget.dataset.direction;
+                if (direction === 'next') {
+                    this.nextImage(container, productId);
+                } else {
+                    this.previousImage(container, productId);
+                }
+            });
+        });
+        // --- End of new code ---
       });
     }
 
@@ -386,20 +403,6 @@
       if (!this.isMobile) return;
       this.touchEndX = e.changedTouches[0].screenX;
       this.handleSwipe(e.currentTarget);
-    }
-
-    handleMobileClick(e) {
-      if (!this.isMobile) return;
-      
-      const container = e.currentTarget;
-      const productId = container.dataset.productId;
-      
-      if (this.productImages[productId] && this.productImages[productId].length > 1) {
-        e.preventDefault();
-        e.stopPropagation();
-        this.nextImage(container, productId);
-        container.setAttribute('data-swiped', 'true');
-      }
     }
 
     handleSwipe(container) {
