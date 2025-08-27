@@ -3771,3 +3771,9 @@ details-disclosure > details {
 .product-form__submit.add-to-cart-custom::after {
   display: none;
 }
+
+.product-form__input label {
+  text-transform: uppercase;
+  font-family: 'Poppins', sans-serif; /* Fallback to a generic sans-serif if Poppins isn't available */
+  letter-spacing: 0.05em; /* Optional: adds a little spacing for better readability in uppercase */
+}
