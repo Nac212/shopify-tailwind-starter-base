@@ -31,7 +31,7 @@
         "ai_gen_block_f8e394a_8aVqJF": {
           "type": "ai_gen_block_f8e394a",
           "settings": {
-            "collection": "bracelets-bangles",
+            "collection": "{{ closest.collection }}",
             "products_to_show": 16,
             "columns_desktop": 4,
             "columns_tablet": 2,
