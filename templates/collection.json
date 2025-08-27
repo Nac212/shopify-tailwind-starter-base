@@ -9,6 +9,19 @@
  */
 {
   "sections": {
+    "banner": {
+      "type": "main-collection-banner",
+      "settings": {
+        "show_collection_description": true,
+        "text_alignment": "left",
+        "title_font": "bebas_neue_n4",
+        "title_size": 34,
+        "description_font": "sans-serif",
+        "description_size": 12,
+        "show_collection_image": false,
+        "color_scheme": "scheme-1"
+      }
+    },
     "1756302626fcef5bd3": {
       "type": "_blocks",
       "blocks": {
@@ -46,14 +59,6 @@
         "ai_gen_block_f8e394a_8aVqJF"
       ],
       "settings": {}
-    },
-    "banner": {
-      "type": "main-collection-banner",
-      "settings": {
-        "show_collection_description": true,
-        "show_collection_image": false,
-        "color_scheme": "scheme-1"
-      }
     },
     "product-grid": {
       "type": "main-collection-product-grid",
