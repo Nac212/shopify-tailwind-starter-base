@@ -797,29 +797,43 @@
         }
       ]
     },
+{
+  "type": "title",
+  "name": "t:sections.main-product.blocks.title.name",
+  "limit": 1,
+  "settings": [
     {
-      "type": "title",
-      "name": "t:sections.main-product.blocks.title.name",
-      "limit": 1,
-      "settings": [
-        {
-          "type": "font_picker",
-          "id": "title_font",
-          "label": "Title font",
-          "default": "helvetica_n4"
-        },
-        {
-          "type": "range",
-          "id": "title_font_size",
-          "min": 16,
-          "max": 60,
-          "step": 1,
-          "unit": "px",
-          "label": "Title font size",
-          "default": 32
-        }
-      ]
+      "type": "font_picker",
+      "id": "title_font",
+      "label": "Font",
+      "default": "helvetica_n4"
     },
+    {
+      "type": "header",
+      "content": "Font Size"
+    },
+    {
+      "type": "range",
+      "id": "title_font_size",
+      "min": 16,
+      "max": 60,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop",
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "title_font_size_mobile",
+      "min": 16,
+      "max": 40,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile",
+      "default": 24
+    }
+  ]
+},
     {
       "type": "price",
       "name": "t:sections.main-product.blocks.price.name",
