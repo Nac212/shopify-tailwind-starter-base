@@ -108,7 +108,6 @@
       --font-title-family: {{ block.settings.title_font.family }}, {{ block.settings.title_font.fallback_families }};
       --font-title-style: {{ block.settings.title_font.style }};
       --font-title-weight: {{ block.settings.title_font.weight }};
-      font-size: {{ block.settings.title_font_size }}px;
     "
   >
     <h1
@@ -116,6 +115,7 @@
         font-family: var(--font-title-family);
         font-style: var(--font-title-style);
         font-weight: var(--font-title-weight);
+        font-size: {{ block.settings.title_font_size }}px;
       "
     >
       {{ product.title | escape }}
@@ -127,6 +127,7 @@
         font-family: var(--font-title-family);
         font-style: var(--font-title-style);
         font-weight: var(--font-title-weight);
+        font-size: {{ block.settings.title_font_size }}px;
       "
     >
       <h2 class="h1">
