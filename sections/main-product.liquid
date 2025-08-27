@@ -93,6 +93,56 @@
               {%- when '@app' -%}
                 {% render block %}
               {%- when 'text' -%}
+                {%- when 'tab_item' -%}
+  {%- if tab_blocks.size > 0 and tabs_rendered == false -%}
+    <div class="product-tabs-container" {{ block.shopify_attributes }}>
+      <style>
+        .product-tabs-container { width: 100%; font-family: 'Poppins', sans-serif; color: #333; margin: 2rem 0; }
+        .tab-headers { display: flex; justify-content: flex-start; align-items: center; border-bottom: 1px solid #ddd; overflow-x: auto; white-space: nowrap; }
+        .tab-header { cursor: pointer; padding: 1rem 1.5rem; font-size: 0.9rem; text-transform: uppercase; font-weight: 500; letter-spacing: 0.05em; transition: color 0.2s ease, border-color 0.2s ease; border-bottom: 2px solid transparent; }
+        .tab-header.active { color: #000; border-color: #000; }
+        .tab-content-container { padding: 2rem 1.5rem; border: 1px solid #e0e0e0; border-top: none; }
+        .tab-content { display: none; line-height: 1.6; font-size: 1rem; }
+        .tab-content.active { display: block; }
+      </style>
+
+      <div class="tab-headers">
+        {%- for tab_block in tab_blocks -%}
+          <div class="tab-header {% if forloop.first %}active{% endif %}" data-tab="{{ tab_block.id }}">{{ tab_block.settings.tab_header }}</div>
+        {%- endfor -%}
+      </div>
+      <div class="tab-content-container">
+        {%- for tab_block in tab_blocks -%}
+          <div class="tab-content {% if forloop.first %}active{% endif %}" data-tab-content="{{ tab_block.id }}">{{ tab_block.settings.tab_content }}</div>
+        {%- endfor -%}
+      </div>
+    </div>
+
+    <script>
+      (function() {
+        const container = document.querySelector('[data-section-id="{{ section.id }}"] .product-tabs-container');
+        if (!container || container.dataset.initialized) return;
+        container.dataset.initialized = true;
+
+        const tabHeaders = container.querySelectorAll('.tab-header');
+        const tabContents = container.querySelectorAll('.tab-content');
+
+        tabHeaders.forEach(header => {
+          header.addEventListener('click', () => {
+            tabHeaders.forEach(h => h.classList.remove('active'));
+            tabContents.forEach(c => c.classList.remove('active'));
+
+            header.classList.add('active');
+
+            const tabId = header.dataset.tab;
+            const targetContent = container.querySelector(`.tab-content[data-tab-content="${tabId}"]`);
+            if (targetContent) targetContent.classList.add('active');
+          });
+        });
+      })();
+    </script>
+    {%- assign tabs_rendered = true -%}
+  {%- endif -%}
                 <p
                   class="product__text inline-richtext{% if block.settings.text_style == 'uppercase' %} caption-with-letter-spacing{% elsif block.settings.text_style == 'subtitle' %} subtitle{% endif %}"
                   {{ block.shopify_attributes }}
