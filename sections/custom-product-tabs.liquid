@@ -1,0 +1,153 @@
+<style>
+  .product-tabs-section {
+    width: 100%;
+    font-family: 'Poppins', sans-serif; /* Changed to Poppins */
+    color: #333;
+    border-top: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    margin: 2rem 0;
+    padding: 0 1rem;
+  }
+  .product-tabs-section h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .tab-headers {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .tab-header {
+    cursor: pointer;
+    padding: 1rem 1.5rem;
+    font-size: 0.9rem;
+    text-transform: uppercase; /* Capitalized */
+    font-weight: 500;
+    letter-spacing: 0.05em;
+    transition: color 0.2s ease, border-color 0.2s ease;
+    border-bottom: 2px solid transparent;
+  }
+  .tab-header.active {
+    color: #000;
+    border-color: #000;
+  }
+  .tab-content-container {
+    padding: 2rem 1.5rem;
+    background-color: #f9f9f9;
+  }
+  .tab-content {
+    display: none;
+    line-height: 1.6;
+    font-size: 1rem;
+  }
+  .tab-content.active {
+    display: block;
+  }
+</style>
+
+<div class="page-width">
+  {%- if section.settings.heading != blank -%}
+    <h2>{{ section.settings.heading | escape }}</h2>
+  {%- endif -%}
+
+  <div class="tab-widget-container">
+    <div class="tab-headers">
+      {%- for block in section.blocks -%}
+        <div 
+          class="tab-header {% if forloop.first %}active{% endif %}" 
+          data-tab="{{ block.id }}"
+        >
+          {{ block.settings.tab_header }}
+        </div>
+      {%- endfor -%}
+    </div>
+    
+    <div class="tab-content-container">
+      {%- for block in section.blocks -%}
+        <div 
+          class="tab-content {% if forloop.first %}active{% endif %}" 
+          data-tab-content="{{ block.id }}"
+        >
+          {{ block.settings.tab_content }}
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const sectionId = 'shopify-section-{{ section.id }}';
+    const sectionElement = document.getElementById(sectionId);
+    
+    if (!sectionElement) return;
+
+    const tabHeaders = sectionElement.querySelectorAll('.tab-header');
+    const tabContents = sectionElement.querySelectorAll('.tab-content');
+    
+    tabHeaders.forEach(header => {
+      header.addEventListener('click', () => {
+        tabHeaders.forEach(h => h.classList.remove('active'));
+        tabContents.forEach(c => c.classList.remove('active'));
+        
+        header.classList.add('active');
+        
+        const tabId = header.dataset.tab;
+        const targetContent = sectionElement.querySelector(`.tab-content[data-tab-content="${tabId}"]`);
+        if (targetContent) {
+          targetContent.classList.add('active');
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+
+{% schema %}
+{
+  "name": "Product Tabs",
+  "tag": "section",
+  "class": "product-tabs-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "More Information"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "tab_item",
+      "name": "Tab",
+      "settings": [
+        {
+          "type": "text",
+          "id": "tab_header",
+          "label": "Tab Header",
+          "default": "Details & Care"
+        },
+        {
+          "type": "richtext",
+          "id": "tab_content",
+          "label": "Tab Content",
+          "default": "<p>Add your content for this tab here. You can use bold, italics, and links.</p>"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Product Tabs"
+    }
+  ]
+}
+{% endschema %}
