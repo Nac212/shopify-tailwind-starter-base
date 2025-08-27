@@ -16,6 +16,7 @@
         "text_alignment": "left",
         "title_font": "bebas_neue_n4",
         "title_size": 34,
+        "title_bottom_margin": 0,
         "description_font": "sans-serif",
         "description_size": 12,
         "show_collection_image": false,
