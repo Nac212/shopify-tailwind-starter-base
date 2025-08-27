@@ -68,14 +68,21 @@
         "tab_item_zMTLBY": {
           "type": "tab_item",
           "settings": {
-            "tab_header": "Details",
+            "tab_header": "Delivery & RETURNS",
             "tab_content": "<p>shipping</p>"
           }
         },
         "tab_item_YTUJqA": {
           "type": "tab_item",
           "settings": {
-            "tab_header": "Food",
+            "tab_header": "CARE",
+            "tab_content": "<p>Content for this tab.</p>"
+          }
+        },
+        "tab_item_Pnpi6M": {
+          "type": "tab_item",
+          "settings": {
+            "tab_header": "FALIENNE GUARANTEE",
             "tab_content": "<p>Content for this tab.</p>"
           }
         },
@@ -141,6 +148,7 @@
         "description",
         "tab_item_zMTLBY",
         "tab_item_YTUJqA",
+        "tab_item_Pnpi6M",
         "custom_liquid_gqRyCT",
         "collapsible-row-0",
         "collapsible-row-1",
