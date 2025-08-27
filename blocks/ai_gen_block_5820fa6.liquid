@@ -1,34 +1,8 @@
-{% doc %}
-  @prompt
-    Create a full-width, four-column collection banner section.
-    
-    The columns should be equally sized with a small gutter for white space between them. Each column should display a customizable collection and have a full-bleed image or an optional background video.
-    
-    Display a text overlay in the bottom-left corner of each column. This text overlay should have a sub-body text element positioned directly above a main headline element. Both text elements should have customizable font, size, and color.
-    
-    The entire collection block should remain static, with no hover effect on the image or container. However, when a user hovers over the text overlay, both the sub-body text and the headline should slightly lift up in a smooth animation.
-    
-    Include settings for each column to allow the user to:
-    
-    Select a specific collection to link to.
-    
-    Upload a custom image or video for the background.
-    
-    Customize the font, size, and color of both the sub-body text and the headline.
-    
-    In addition, add the following features:
-    
-    Card Styling: Add a setting to introduce a subtle border, rounded corners, and a shadow effect to each collection card.
-    
-    Alternate Layouts: Include settings to choose different desktop layouts, such as 2-column or 3-column.
-    
-    Dynamic Content: Add the ability for the block to automatically display a featured product from a selected collection.
-    
-    Seasonal Banners: Integrate a setting that allows the entire block to display a specific banner or message for promotions based on a date range.
-    
-    Ensure the section is fully responsive, with options to display the collections in 1, 2, or 3 rows on mobile devices., some fonts like bebas neue on the collection headline/subline text will not change colour, and sometimes not allow other fonts to show. Only some fonts show. Can we implement something that allows us to freely use any font within shopify, can the seasonal banner also have customisable text, as well as having a countdown timer. Theres currently a date range which doesnt do anything, Ensure the font selectors are fully functional and apply the selected fonts correctly in the theme editor.
+{% comment %}
+  This is the complete, updated code for your section.
+  It includes the fix for clickable cards AND the correct schema to prevent the save error.
+{% endcomment %}
 
-{% enddoc %}
 {% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
 
 {% style %}
@@ -99,6 +73,8 @@
     position: relative;
     aspect-ratio: 4/5;
     overflow: hidden;
+    display: block; /* Ensures the <a> tag behaves like a container */
+    text-decoration: none; /* Prevents text underline */
     {% if block.settings.enable_card_styling %}
       border: {{ block.settings.card_border_width }}px solid {{ block.settings.card_border_color }};
       border-radius: {{ block.settings.card_border_radius }}px;
@@ -143,16 +119,6 @@
 
   .ai-collection-banner__column-{{ ai_gen_id }}:hover .ai-collection-banner__overlay-{{ ai_gen_id }} {
     transform: translateY(-8px);
-  }
-
-  .ai-collection-banner__link-{{ ai_gen_id }} {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 3;
-    text-decoration: none;
   }
 
   .ai-collection-banner__product-{{ ai_gen_id }} {
@@ -332,11 +298,12 @@
         {% break %}
       {% endif %}
 
-      <div class="ai-collection-banner__column-{{ ai_gen_id }}">
-        {% if collection %}
-          <a href="{{ collection.url }}" class="ai-collection-banner__link-{{ ai_gen_id }}" aria-label="View {{ collection.title }} collection"></a>
-        {% endif %}
-
+      {% if collection.url != blank %}
+        <a href="{{ collection.url }}" class="ai-collection-banner__column-{{ ai_gen_id }}" aria-label="View {{ collection.title }} collection">
+      {% else %}
+        <div class="ai-collection-banner__column-{{ ai_gen_id }}">
+      {% endif %}
+        
         {% if custom_video %}
           <video
             class="ai-collection-banner__media-{{ ai_gen_id }}"
@@ -401,7 +368,13 @@
             </div>
           {% endif %}
         </div>
-      </div>
+
+      {% if collection.url != blank %}
+        </a>
+      {% else %}
+        </div>
+      {% endif %}
+
     {% endfor %}
   </div>
 </collection-banner-{{ ai_gen_id }}>
