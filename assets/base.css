@@ -3738,3 +3738,36 @@ details-disclosure > details {
   padding-left: 4rem;  /* Adjusts the space on the left side of the grid */
   padding-right: 4rem; /* Adjusts the space on the right side of the grid */
 }
+
+/* --- Custom Add to Cart Button --- */
+
+.product-form__submit.add-to-cart-custom {
+  /* Basic Styling */
+  background-color: #000000 !important; /* Black background */
+  color: #FFFFFF !important; /* White text */
+  font-family: 'Poppins', sans-serif;
+  text-transform: uppercase;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  
+  /* Sizing and Border */
+  width: 100%;
+  border: 1px solid #000000;
+  border-radius: 0; /* Remove the theme's default rounding */
+  
+  /* Animation */
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Hover Effect */
+.product-form__submit.add-to-cart-custom:hover {
+  background-color: #FFFFFF !important; /* White background */
+  color: #000000 !important; /* Black text */
+  border-color: #000000;
+}
+
+/* Remove the theme's default overlays and shadows */
+.product-form__submit.add-to-cart-custom::before,
+.product-form__submit.add-to-cart-custom::after {
+  display: none;
+}
