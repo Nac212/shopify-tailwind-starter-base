@@ -2,6 +2,18 @@
 {{ 'component-collection-hero.css' | asset_url | stylesheet_tag }}
 
 {%- style -%}
+  .collection-hero__title {
+    font-family: {{ section.settings.title_font.family }}, {{ section.settings.title_font.fallback_families }};
+    font-weight: {{ section.settings.title_font.weight }};
+    font-style: {{ section.settings.title_font.style }};
+  }
+
+  .collection-hero__description {
+    font-family: {{ section.settings.description_font.family }}, {{ section.settings.description_font.fallback_families }};
+    font-weight: {{ section.settings.description_font.weight }};
+    font-style: {{ section.settings.description_font.style }};
+  }
+
   @media screen and (max-width: 749px) {
     .collection-hero--with-image .collection-hero__inner {
       padding-bottom: calc({{ settings.media_shadow_vertical_offset | at_least: 0 }}px + 2rem);
@@ -90,9 +102,15 @@
       "default": "center"
     },
     {
+      "type": "font_picker",
+      "id": "title_font",
+      "label": "Title font",
+      "default": "sans-serif"
+    },
+    {
       "type": "range",
       "id": "title_size",
-      "min": 30,
+      "min": 20,
       "max": 80,
       "step": 2,
       "unit": "px",
@@ -100,9 +118,15 @@
       "default": 50
     },
     {
+      "type": "font_picker",
+      "id": "description_font",
+      "label": "Description font",
+      "default": "sans-serif"
+    },
+    {
       "type": "range",
       "id": "description_size",
-      "min": 14,
+      "min": 12,
       "max": 24,
       "step": 1,
       "unit": "px",
