@@ -14,24 +14,24 @@
     "announcement-bar": {
       "type": "announcement-bar",
       "blocks": {
-        "announcement-bar-0": {
+        "announcement_hBeGyk": {
           "type": "announcement",
           "settings": {
-            "text": "Free Shipping On Orders £40+",
+            "text": "SUMMER SALE | SHOP NOW",
             "link": ""
           }
         },
-        "announcement_DY8Yp8": {
+        "announcement-bar-0": {
           "type": "announcement",
           "settings": {
-            "text": "Sign Up To Our Newsletter For 10% Off Your Order",
+            "text": "FREE DELIVERY | MINIMUM SPEND APPLIES",
             "link": ""
           }
         }
       },
       "block_order": [
-        "announcement-bar-0",
-        "announcement_DY8Yp8"
+        "announcement_hBeGyk",
+        "announcement-bar-0"
       ],
       "settings": {
         "color_scheme": "scheme-3",
