@@ -402,11 +402,26 @@
         this.arrowLeft.addEventListener('click', this.scrollLeftByOne.bind(this));
         this.arrowRight.addEventListener('click', this.scrollRightByOne.bind(this));
         
-        // Use both scroll and input events for better responsiveness
+        // Use multiple event types to catch all scroll scenarios
         this.track.addEventListener('scroll', this.onScroll.bind(this), { passive: true });
+        this.track.addEventListener('scrollend', this.updateScrollbar.bind(this), { passive: true });
         this.track.addEventListener('touchstart', this.onTouchStart.bind(this), { passive: true });
         this.track.addEventListener('touchmove', this.onTouchMove.bind(this), { passive: true });
         this.track.addEventListener('touchend', this.onTouchEnd.bind(this), { passive: true });
+        
+        // Add a manual scroll listener with polling as backup
+        this.startScrollPolling();
+        
+        console.log('Event listeners setup complete');
+      }
+
+      startScrollPolling() {
+        // Backup polling method to ensure scrollbar updates
+        setInterval(() => {
+          if (this.track && this.scrollbarThumb) {
+            this.updateScrollbar();
+          }
+        }, 100);
       }
 
       onTouchStart() {
@@ -437,7 +452,10 @@
       }
 
       updateScrollbar() {
-        if (!this.scrollbarThumb || !this.track) return;
+        if (!this.scrollbarThumb || !this.track) {
+          console.log('Missing elements:', { thumb: !!this.scrollbarThumb, track: !!this.track });
+          return;
+        }
 
         const track = this.track;
         const thumb = this.scrollbarThumb;
@@ -445,9 +463,17 @@
         const visibleWidth = track.clientWidth;
         const currentScrollLeft = track.scrollLeft;
         
+        console.log('Scroll data:', {
+          contentWidth,
+          visibleWidth,
+          currentScrollLeft,
+          canScroll: contentWidth > visibleWidth
+        });
+        
         // If content fits within visible area, no movement
         if (contentWidth <= visibleWidth) {
           thumb.style.marginLeft = '0%';
+          console.log('No scroll needed - setting margin to 0%');
           return;
         }
 
@@ -462,11 +488,10 @@
         // Apply margin-left positioning like ByCharlotte
         thumb.style.marginLeft = `${thumbPosition}%`;
         
-        console.log('Scrollbar Update:', {
-          scrollLeft: currentScrollLeft,
-          maxScroll: maxScrollLeft,
-          progress: scrollProgress,
-          marginLeft: `${thumbPosition}%`
+        console.log('Scrollbar positioned:', {
+          scrollProgress: (scrollProgress * 100).toFixed(1) + '%',
+          marginLeft: thumbPosition.toFixed(1) + '%',
+          actualStyle: thumb.style.marginLeft
         });
       }
 
