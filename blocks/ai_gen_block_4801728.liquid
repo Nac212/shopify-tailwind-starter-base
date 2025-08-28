@@ -1,6 +1,6 @@
 {% comment %}
   Shopify section code updated by Gemini.
-  - V9 FIX: Adjusted the minimum value for the mobile sale badge size slider to 1px for full customization.
+  - V10 FIX: Prevented the browser's default image drag behavior on desktop to ensure the custom drag-to-scroll works smoothly.
 {% endcomment %}
 
 {% style %}
@@ -319,12 +319,16 @@
         this.arrowLeft.addEventListener('click', this.scrollLeftByOne.bind(this));
         this.arrowRight.addEventListener('click', this.scrollRightByOne.bind(this));
         
-        // Prevent click on drag
+        // Prevent click and native browser drag on child elements
         this.querySelectorAll('a').forEach(a => {
             a.addEventListener('click', (e) => {
                 if(this.isDragging) {
                     e.preventDefault();
                 }
+            });
+            // This prevents the browser's default image drag behavior
+            a.addEventListener('dragstart', (e) => {
+                e.preventDefault();
             });
         });
       }
