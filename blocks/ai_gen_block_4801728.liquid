@@ -1,6 +1,6 @@
 {% comment %}
   Shopfolio section code updated by Gemini.
-  - V19 FIX: Added a mobile-only scrollbar pagination feature, controlled by a new theme setting, to replicate the user's design reference.
+  - V20 FIX: Re-styled the mobile scrollbar to feature a dashed track with a solid thumb, replicating the user's design reference for better visual feedback.
 {% endcomment %}
 
 {% style %}
@@ -219,7 +219,9 @@
     width: 80%;
     margin: 20px auto 0;
     height: 2px;
-    background-color: #e0e0e0;
+    background-image: linear-gradient(to right, #ccc 75%, transparent 25%);
+    background-size: 10px 2px;
+    background-repeat: repeat-x;
     position: relative;
   }
 
