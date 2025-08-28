@@ -224,7 +224,7 @@
     background-color: #e0e0e0;
     border-radius: 1px;
     position: relative;
-    overflow: hidden;
+    overflow: visible; /* Changed from hidden to visible */
   }
 
   .ai-product-carousel__scrollbar-thumb-{{ ai_gen_id }} {
@@ -233,9 +233,10 @@
     left: 0;
     height: 100%;
     width: 25%;
-    background-color: #333;
+    background-color: #333 !important; /* Added !important to override any conflicts */
     border-radius: 1px;
     transition: margin-left 0.3s ease-out;
+    z-index: 10; /* Ensure it's above other elements */
   }
 
   @media screen and (max-width: 768px) {
