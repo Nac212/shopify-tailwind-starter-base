@@ -451,7 +451,13 @@
         "feature_YJwhrr"
       ],
       "name": "Custom Features",
-      "settings": {}
+      "settings": {
+        "icon_size": 38,
+        "heading_font_size": 16,
+        "heading_color": "#333333",
+        "subheading_font_size": 14,
+        "subheading_color": "#777777"
+      }
     }
   },
   "order": [
