@@ -1,6 +1,6 @@
 {% comment %}
   Shopify section code updated by Gemini.
-  - V3 FIX: Implemented a highly defensive logic block for product selection to prevent errors. This version should reliably handle manual, collection, or empty states.
+  - V4 FIX: Corrected Liquid syntax to prevent "Unknown tag 'assign'" error and updated sale badge CSS.
 {% endcomment %}
 
 {% style %}
@@ -71,15 +71,17 @@
 
   .ai-product-carousel__sale-badge-{{ ai_gen_id }} {
     position: absolute;
-    top: 8px;
-    left: 8px;
-    background-color: {{ block.settings.sale_badge_color }};
-    color: white;
-    padding: 4px 8px;
+    top: 10px;
+    left: 10px;
+    background-color: #ffffff;
+    color: {{ block.settings.sale_badge_color }};
+    border: 1px solid {{ block.settings.sale_badge_color }};
+    padding: 5px 10px;
     font-size: {{ block.settings.sale_badge_size }}px;
-    font-weight: 600;
-    border-radius: 4px;
+    font-weight: 500;
+    border-radius: 0;
     z-index: 2;
+    letter-spacing: 1.5px;
   }
 
   .ai-product-carousel__title-{{ ai_gen_id }} {
@@ -178,16 +180,14 @@
     <h2 class="ai-product-carousel__heading-{{ ai_gen_id }}">{{ block.settings.heading | escape }}</h2>
   {% endif %}
 
-  {% comment %} --- FIXED LOGIC V3 --- {% endcomment %}
-  {% liquid
-    assign products_to_show = "" | split: "," 
+  {% comment %} --- Product Selection Logic --- {% endcomment %}
+  {%- assign products_to_show = "" | split: "," -%}
 
-    if block.settings.manual_products != blank and block.settings.manual_products.size > 0
-      assign products_to_show = block.settings.manual_products
-    elsif block.settings.collection != blank and block.settings.collection.products.size > 0
-      assign products_to_show = block.settings.collection.products
-    endif
-  %}
+  {%- if block.settings.manual_products != blank and block.settings.manual_products.size > 0 -%}
+    {%- assign products_to_show = block.settings.manual_products -%}
+  {%- elsif block.settings.collection != blank and block.settings.collection.products.size > 0 -%}
+    {%- assign products_to_show = block.settings.collection.products -%}
+  {%- endif -%}
 
   {% if products_to_show.size > 0 %}
     <product-carousel-{{ ai_gen_id }} class="ai-product-carousel__container-{{ ai_gen_id }}">
@@ -392,36 +392,36 @@
         "info": "Priority #1. Overrides the collection setting if products are selected here."
       },
       {
-          "type": "range",
-          "id": "max_products_to_show",
-          "min": 4,
-          "max": 50,
-          "step": 1,
-          "label": "Max products to show",
-          "default": 12
+        "type": "range",
+        "id": "max_products_to_show",
+        "min": 4,
+        "max": 50,
+        "step": 1,
+        "label": "Max products to show",
+        "default": 12
       },
       {
         "type": "header",
         "content": "Layout & Styling"
       },
       {
-          "type": "range",
-          "id": "desktop_columns",
-          "min": 2,
-          "max": 6,
-          "step": 1,
-          "label": "Columns on desktop",
-          "default": 4
+        "type": "range",
+        "id": "desktop_columns",
+        "min": 2,
+        "max": 6,
+        "step": 1,
+        "label": "Columns on desktop",
+        "default": 4
       },
       {
-          "type": "range",
-          "id": "mobile_columns",
-          "min": 1,
-          "max": 3,
-          "step": 1,
-          "label": "Columns on mobile",
-          "info": "A third/second column will be partially visible to encourage scrolling.",
-          "default": 2
+        "type": "range",
+        "id": "mobile_columns",
+        "min": 1,
+        "max": 3,
+        "step": 1,
+        "label": "Columns on mobile",
+        "info": "A third/second column will be partially visible to encourage scrolling.",
+        "default": 2
       },
       {
         "type": "range",
