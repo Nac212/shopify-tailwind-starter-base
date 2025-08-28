@@ -7,10 +7,21 @@
 {% endcomment %}
 
 <style>
+  {{ section.settings.heading_font | font_face }}
+  {{ section.settings.subheading_font | font_face }}
+
   .custom-features-section-{{ section.id }} {
     --icon-size: {{ section.settings.icon_size_desktop }}px;
+
+    --heading-font-family: {{ section.settings.heading_font.family }}, {{ section.settings.heading_font.fallback_families }};
+    --heading-font-style: {{ section.settings.heading_font.style }};
+    --heading-font-weight: {{ section.settings.heading_font.weight }};
     --heading-font-size: {{ section.settings.heading_font_size_desktop }}px;
     --heading-color: {{ section.settings.heading_color }};
+
+    --subheading-font-family: {{ section.settings.subheading_font.family }}, {{ section.settings.subheading_font.fallback_families }};
+    --subheading-font-style: {{ section.settings.subheading_font.style }};
+    --subheading-font-weight: {{ section.settings.subheading_font.weight }};
     --subheading-font-size: {{ section.settings.subheading_font_size_desktop }}px;
     --subheading-color: {{ section.settings.subheading_color }};
   }
@@ -50,13 +61,18 @@
   }
 
   .feature-heading {
+    font-family: var(--heading-font-family);
+    font-style: var(--heading-font-style);
+    font-weight: var(--heading-font-weight);
     font-size: var(--heading-font-size);
     color: var(--heading-color);
-    font-weight: 600;
     margin: 0 0 5px 0;
   }
 
   .feature-subheading {
+    font-family: var(--subheading-font-family);
+    font-style: var(--subheading-font-style);
+    font-weight: var(--subheading-font-weight);
     font-size: var(--subheading-font-size);
     color: var(--subheading-color);
     margin: 0;
@@ -132,6 +148,34 @@
   "settings": [
     {
       "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "font_picker",
+      "id": "heading_font",
+      "label": "Heading Font",
+      "default": "sans-serif"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading Color",
+      "default": "#333333"
+    },
+    {
+      "type": "font_picker",
+      "id": "subheading_font",
+      "label": "Subheading Font",
+      "default": "sans-serif"
+    },
+    {
+      "type": "color",
+      "id": "subheading_color",
+      "label": "Subheading Color",
+      "default": "#777777"
+    },
+    {
+      "type": "header",
       "content": "Desktop Settings"
     },
     {
@@ -197,22 +241,6 @@
       "unit": "px",
       "label": "Subheading Font Size (Mobile)",
       "default": 12
-    },
-    {
-      "type": "header",
-      "content": "Color Settings"
-    },
-    {
-      "type": "color",
-      "id": "heading_color",
-      "label": "Heading Color",
-      "default": "#333333"
-    },
-    {
-      "type": "color",
-      "id": "subheading_color",
-      "label": "Subheading Color",
-      "default": "#777777"
     }
   ],
   "blocks": [
