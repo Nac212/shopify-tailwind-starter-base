@@ -1,6 +1,6 @@
 {% comment %}
   Shopfolio section code updated by Gemini.
-  - V22 FIX: Corrected the JavaScript logic for the mobile scrollbar to ensure the thumb's position updates reliably and in perfect sync with the carousel's scroll.
+  - V23 FIX: Re-architected the mobile scrollbar script for a definitive fix. The new logic ensures the thumb's position is always perfectly in sync with the carousel's scroll on all devices.
 {% endcomment %}
 
 {% style %}
@@ -372,8 +372,6 @@
         
         if (this.cards.length === 0) return;
 
-        this.animationFrameId = null;
-        this.isObserving = false;
         this.debouncedOnResize = this.debounce(this.onResize.bind(this), 250);
         this.init();
       }
@@ -384,13 +382,37 @@
         this.setupPagination();
         this.updateArrowState();
         this.updatePaginationDots();
-        this.startScrollObserver();
+        this.handleScroll(); // Initial call to set thumb position
       }
 
       setupEventListeners() {
         this.arrowLeft.addEventListener('click', this.scrollLeftByOne.bind(this));
         this.arrowRight.addEventListener('click', this.scrollRightByOne.bind(this));
-        this.track.addEventListener('scroll', this.updateArrowState.bind(this));
+        this.track.addEventListener('scroll', this.handleScroll.bind(this));
+      }
+
+      handleScroll() {
+        this.updateArrowState();
+        if (this.scrollbarThumb) {
+          requestAnimationFrame(() => {
+            const track = this.track;
+            const thumb = this.scrollbarThumb;
+            const contentWidth = track.scrollWidth;
+            const visibleWidth = track.clientWidth;
+            
+            if (contentWidth <= visibleWidth) {
+              thumb.style.width = '0px';
+              return;
+            }
+
+            const thumbWidth = (visibleWidth / contentWidth) * 100;
+            const scrollPercentage = track.scrollLeft / (contentWidth - visibleWidth);
+            const thumbPosition = scrollPercentage * (100 - thumbWidth);
+
+            thumb.style.width = `${thumbWidth}%`;
+            thumb.style.left = `${thumbPosition}%`;
+          });
+        }
       }
 
       scrollLeftByOne() {
@@ -404,64 +426,28 @@
       }
 
       updateArrowState() {
-        if (!this.track) return;
-        const scrollLeft = this.track.scrollLeft;
-        const maxScroll = this.track.scrollWidth - this.track.clientWidth;
+        requestAnimationFrame(() => {
+          if (!this.track) return;
+          const scrollLeft = this.track.scrollLeft;
+          const maxScroll = this.track.scrollWidth - this.track.clientWidth;
 
-        this.arrowLeft.classList.toggle('disabled', scrollLeft <= 0);
-        this.arrowRight.classList.toggle('disabled', scrollLeft >= maxScroll - 5); // 5px buffer
-        
-        this.updatePaginationOnScroll();
-      }
-      
-      startScrollObserver() {
-        if (this.isObserving) return;
-        this.isObserving = true;
-        this.observeScroll();
-      }
-
-      stopScrollObserver() {
-        if (this.animationFrameId) {
-            cancelAnimationFrame(this.animationFrameId);
-        }
-        this.isObserving = false;
-      }
-
-      observeScroll() {
-        if (!this.isObserving) return;
-        
-        if (this.scrollbarThumb) {
-            const track = this.track;
-            const thumb = this.scrollbarThumb;
-            const contentWidth = track.scrollWidth;
-            const visibleWidth = track.clientWidth;
-            
-            if (contentWidth <= visibleWidth) {
-              thumb.style.width = '0px';
-            } else {
-              const thumbWidth = (visibleWidth / contentWidth) * 100;
-              const scrollPercentage = track.scrollLeft / (contentWidth - visibleWidth);
-              const thumbPosition = scrollPercentage * (100 - thumbWidth);
-              thumb.style.width = `${thumbWidth}%`;
-              thumb.style.left = `${thumbPosition}%`;
-            }
-        }
-        
-        this.animationFrameId = requestAnimationFrame(this.observeScroll.bind(this));
+          this.arrowLeft.classList.toggle('disabled', scrollLeft <= 0);
+          this.arrowRight.classList.toggle('disabled', scrollLeft >= maxScroll - 5); // 5px buffer
+          
+          this.updatePaginationOnScroll();
+        });
       }
 
       connectedCallback() {
         if (this.cards.length > 0) {
             window.addEventListener('resize', this.debouncedOnResize);
-            this.updateArrowState(); // Initial check
-            this.startScrollObserver();
+            this.handleScroll(); // Initial check
         }
       }
 
       disconnectedCallback() {
          if (this.cards.length > 0) {
             window.removeEventListener('resize', this.debouncedOnResize);
-            this.stopScrollObserver();
          }
       }
 
@@ -478,7 +464,7 @@
       onResize() {
         this.updateProperties();
         this.setupPagination();
-        this.updateArrowState();
+        this.handleScroll();
         this.updatePaginationDots();
       }
 
