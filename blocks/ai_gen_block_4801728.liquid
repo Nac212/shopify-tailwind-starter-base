@@ -1,6 +1,7 @@
 {% comment %}
-  Shopfolio section code updated by Gemini.
-  - V25 FIX: Implemented a segmented pagination bar for mobile, replacing the dots, to provide a clearer visual indication of the scroll position, as per the user's provided fix plan.
+  Shopfolio section code updated with proper pagination scroll indicator.
+  - Fixed pagination bar to properly highlight active section based on scroll position
+  - Synchronized scroll position with visual progress bar
 {% endcomment %}
 
 {% style %}
@@ -39,7 +40,7 @@
   }
 
   .ai-product-carousel__side-arrow-{{ ai_gen_id }} {
-    display: none; /* Hidden by default, shown on desktop */
+    display: none;
   }
 
   @media screen and (min-width: 769px) {
@@ -58,7 +59,7 @@
       cursor: pointer;
       z-index: 10;
       transition: opacity 0.3s ease, box-shadow 0.3s ease;
-      opacity: 0; /* Hidden until hover on the container */
+      opacity: 0;
     }
 
     .ai-product-carousel__container-{{ ai_gen_id }}:hover .ai-product-carousel__side-arrow-{{ ai_gen_id }} {
@@ -129,7 +130,7 @@
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
-    pointer-events: none; /* Prevent image drag interference */
+    pointer-events: none;
   }
 
   .ai-product-carousel__card-{{ ai_gen_id }}:hover .ai-product-carousel__image-{{ ai_gen_id }} {
@@ -196,36 +197,34 @@
   }
 
   .ai-product-carousel__pagination-{{ ai_gen_id }} {
-    display: flex;
     justify-content: center;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
     margin-top: 20px;
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
   }
 
-  .ai-product-carousel__segment-{{ ai_gen_id }} {
-    flex: 1;
-    height: 2px;
+  .ai-product-carousel__dot-{{ ai_gen_id }} {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
     background-color: #ccc;
-    transition: background-color 0.3s ease;
     cursor: pointer;
+    transition: background-color 0.3s ease;
   }
 
-  .ai-product-carousel__segment-{{ ai_gen_id }}.active {
+  .ai-product-carousel__dot-{{ ai_gen_id }}.active {
     background-color: #333;
   }
   
+  /* Updated scrollbar styling for better visual feedback */
   .ai-product-carousel__scrollbar-container-{{ ai_gen_id }} {
     width: 80%;
     margin: 20px auto 0;
-    height: 2px;
-    background-image: linear-gradient(to right, #ccc 75%, transparent 25%);
-    background-size: 10px 2px;
-    background-repeat: repeat-x;
+    height: 3px;
+    background-color: #e5e5e5;
+    border-radius: 2px;
     position: relative;
+    overflow: hidden;
   }
 
   .ai-product-carousel__scrollbar-thumb-{{ ai_gen_id }} {
@@ -235,6 +234,8 @@
     height: 100%;
     background-color: #333;
     border-radius: 2px;
+    transition: all 0.1s ease-out;
+    min-width: 20px; /* Minimum thumb width for better visibility */
   }
 
   @media screen and (max-width: 768px) {
@@ -370,6 +371,7 @@
         this.pagination = this.querySelector('[data-pagination]');
         this.arrowLeft = this.querySelector('[data-side-arrow-left]');
         this.arrowRight = this.querySelector('[data-side-arrow-right]');
+        this.scrollbarContainer = this.querySelector('[data-scrollbar-container]');
         this.scrollbarThumb = this.querySelector('[data-scrollbar-thumb]');
         this.cards = this.track ? Array.from(this.track.children) : [];
         
@@ -377,7 +379,10 @@
 
         this.animationFrameId = null;
         this.observer = null;
+        this.isScrolling = false;
+        this.scrollTimeout = null;
         this.debouncedOnResize = this.debounce(this.onResize.bind(this), 250);
+        
         this.init();
       }
 
@@ -386,34 +391,72 @@
         this.setupEventListeners();
         this.setupPagination();
         this.updateArrowState();
-        this.updatePaginationSegments();
+        this.updatePaginationDots();
         this.setupIntersectionObserver();
+        
+        // Initial scrollbar update
+        this.updateScrollbar();
       }
 
       setupEventListeners() {
         this.arrowLeft.addEventListener('click', this.scrollLeftByOne.bind(this));
         this.arrowRight.addEventListener('click', this.scrollRightByOne.bind(this));
-        this.track.addEventListener('scroll', this.updateArrowState.bind(this));
+        
+        // Use both scroll and input events for better responsiveness
+        this.track.addEventListener('scroll', this.onScroll.bind(this), { passive: true });
+        this.track.addEventListener('touchstart', this.onTouchStart.bind(this), { passive: true });
+        this.track.addEventListener('touchmove', this.onTouchMove.bind(this), { passive: true });
+        this.track.addEventListener('touchend', this.onTouchEnd.bind(this), { passive: true });
       }
 
-      runScrollObserver() {
-        if (this.scrollbarThumb) {
-            const track = this.track;
-            const thumb = this.scrollbarThumb;
-            const contentWidth = track.scrollWidth;
-            const visibleWidth = track.clientWidth;
-            
-            if (contentWidth <= visibleWidth) {
-              thumb.style.width = '0px';
-            } else {
-              const thumbWidth = (visibleWidth / contentWidth) * 100;
-              const scrollPercentage = track.scrollLeft / (contentWidth - visibleWidth);
-              const thumbPosition = scrollPercentage * (100 - thumbWidth);
-              thumb.style.width = `${thumbWidth}%`;
-              thumb.style.left = `${thumbPosition}%`;
-            }
+      onTouchStart() {
+        this.isScrolling = true;
+      }
+
+      onTouchMove() {
+        if (this.isScrolling) {
+          this.updateScrollbar();
         }
-        this.animationFrameId = requestAnimationFrame(this.runScrollObserver.bind(this));
+      }
+
+      onTouchEnd() {
+        this.isScrolling = false;
+        this.updatePaginationOnScroll();
+      }
+
+      onScroll() {
+        this.updateArrowState();
+        this.updateScrollbar();
+        this.updatePaginationOnScroll();
+      }
+
+      updateScrollbar() {
+        if (!this.scrollbarThumb || !this.track) return;
+
+        const track = this.track;
+        const thumb = this.scrollbarThumb;
+        const contentWidth = track.scrollWidth;
+        const visibleWidth = track.clientWidth;
+        
+        if (contentWidth <= visibleWidth) {
+          thumb.style.width = '100%';
+          thumb.style.left = '0%';
+          return;
+        }
+
+        // Calculate thumb width as percentage of visible area
+        const thumbWidthPercentage = Math.max((visibleWidth / contentWidth) * 100, 10);
+        
+        // Calculate scroll progress (0 to 1)
+        const maxScrollLeft = contentWidth - visibleWidth;
+        const scrollProgress = Math.min(track.scrollLeft / maxScrollLeft, 1);
+        
+        // Calculate thumb position
+        const maxThumbPosition = 100 - thumbWidthPercentage;
+        const thumbPosition = scrollProgress * maxThumbPosition;
+        
+        thumb.style.width = `${thumbWidthPercentage}%`;
+        thumb.style.left = `${thumbPosition}%`;
       }
 
       setupIntersectionObserver() {
@@ -426,11 +469,8 @@
         this.observer = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
-              this.animationFrameId = requestAnimationFrame(this.runScrollObserver.bind(this));
-            } else {
-              if (this.animationFrameId) {
-                cancelAnimationFrame(this.animationFrameId);
-              }
+              // Update scrollbar when visible
+              this.updateScrollbar();
             }
           });
         }, options);
@@ -449,35 +489,39 @@
       }
 
       updateArrowState() {
-        requestAnimationFrame(() => {
-          if (!this.track) return;
-          const scrollLeft = this.track.scrollLeft;
-          const maxScroll = this.track.scrollWidth - this.track.clientWidth;
+        if (!this.track) return;
+        
+        const scrollLeft = this.track.scrollLeft;
+        const maxScroll = this.track.scrollWidth - this.track.clientWidth;
 
-          this.arrowLeft.classList.toggle('disabled', scrollLeft <= 0);
-          this.arrowRight.classList.toggle('disabled', scrollLeft >= maxScroll - 5);
-          
-          this.updatePaginationOnScroll();
-        });
+        this.arrowLeft.classList.toggle('disabled', scrollLeft <= 1);
+        this.arrowRight.classList.toggle('disabled', scrollLeft >= maxScroll - 1);
       }
 
       connectedCallback() {
         if (this.cards.length > 0) {
-            window.addEventListener('resize', this.debouncedOnResize);
+          window.addEventListener('resize', this.debouncedOnResize);
+          // Initial update after a short delay to ensure proper rendering
+          setTimeout(() => {
             this.updateArrowState();
+            this.updateScrollbar();
+          }, 100);
         }
       }
 
       disconnectedCallback() {
-         if (this.cards.length > 0) {
-            window.removeEventListener('resize', this.debouncedOnResize);
-         }
-         if (this.observer) {
-            this.observer.disconnect();
-         }
-         if (this.animationFrameId) {
-            cancelAnimationFrame(this.animationFrameId);
-         }
+        if (this.cards.length > 0) {
+          window.removeEventListener('resize', this.debouncedOnResize);
+        }
+        if (this.observer) {
+          this.observer.disconnect();
+        }
+        if (this.animationFrameId) {
+          cancelAnimationFrame(this.animationFrameId);
+        }
+        if (this.scrollTimeout) {
+          clearTimeout(this.scrollTimeout);
+        }
       }
 
       updateProperties() {
@@ -494,7 +538,8 @@
         this.updateProperties();
         this.setupPagination();
         this.updateArrowState();
-        this.updatePaginationSegments();
+        this.updatePaginationDots();
+        this.updateScrollbar();
       }
 
       setupPagination() {
@@ -502,52 +547,61 @@
         this.pagination.innerHTML = '';
 
         if (this.totalPages <= 1) {
-            this.pagination.style.display = 'none';
-            return;
+          this.pagination.style.display = 'none';
+          return;
         }
         
         this.pagination.style.display = 'flex';
         for (let i = 0; i < this.totalPages; i++) {
-          const segment = document.createElement('div');
-          segment.className = 'ai-product-carousel__segment-{{ ai_gen_id }}';
-          segment.addEventListener('click', () => this.goToPage(i));
-          this.pagination.appendChild(segment);
+          const dot = document.createElement('div');
+          dot.className = 'ai-product-carousel__dot-{{ ai_gen_id }}';
+          dot.addEventListener('click', () => this.goToPage(i));
+          this.pagination.appendChild(dot);
         }
       }
 
       updatePaginationOnScroll() {
-        let scrollTimeout;
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => {
-            this.currentPage = this.calculateCurrentPage();
-            this.updatePaginationSegments();
-        }, 150);
+        // Clear existing timeout
+        if (this.scrollTimeout) {
+          clearTimeout(this.scrollTimeout);
+        }
+        
+        // Debounce the pagination update
+        this.scrollTimeout = setTimeout(() => {
+          this.currentPage = this.calculateCurrentPage();
+          this.updatePaginationDots();
+        }, 100);
       }
       
       calculateCurrentPage() {
         if (!this.track || !this.cards[0]) return 0;
+        
         const scrollLeft = this.track.scrollLeft;
         const itemWidth = this.cards[0].offsetWidth + {{ block.settings.card_spacing }};
-        const page = Math.round(scrollLeft / (itemWidth * this.cardsPerPage));
+        const itemsPerPage = this.cardsPerPage;
+        
+        // Calculate which page we're on based on scroll position
+        const page = Math.round(scrollLeft / (itemWidth * itemsPerPage));
         return Math.max(0, Math.min(page, this.totalPages - 1));
       }
 
-      updatePaginationSegments() {
+      updatePaginationDots() {
         if (!this.pagination) return;
-        const segments = this.pagination.children;
-        for (let i = 0; i < segments.length; i++) {
-          segments[i].classList.toggle('active', i === this.currentPage);
+        const dots = this.pagination.children;
+        for (let i = 0; i < dots.length; i++) {
+          dots[i].classList.toggle('active', i === this.currentPage);
         }
       }
 
       goToPage(pageIndex) {
         if (!this.track || !this.cards[0]) return;
+        
         const itemWidth = this.cards[0].offsetWidth + {{ block.settings.card_spacing }};
         const scrollLeft = pageIndex * itemWidth * this.cardsPerPage;
         
         this.track.scrollTo({ left: scrollLeft, behavior: 'smooth' });
         this.currentPage = pageIndex;
-        this.updatePaginationSegments();
+        this.updatePaginationDots();
       }
 
       debounce(func, wait) {
@@ -560,7 +614,7 @@
           clearTimeout(timeout);
           timeout = setTimeout(later, wait);
         };
-      };
+      }
     }
 
     customElements.define('product-carousel-{{ ai_gen_id }}', ProductCarousel{{ ai_gen_id }});
