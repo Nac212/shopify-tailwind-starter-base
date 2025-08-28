@@ -1,6 +1,6 @@
 {% comment %}
   Shopfolio section code updated by Gemini.
-  - V17 FIX: Removed the drag-to-scroll functionality entirely. Implemented a new, robust arrow navigation system on the sides of the carousel for desktop only, with conditional visibility based on the scroll position.
+  - V18 FIX: Added a separate aspect ratio setting for mobile devices, allowing for independent control over image shapes on desktop and mobile.
 {% endcomment %}
 
 {% style %}
@@ -214,6 +214,10 @@
     .ai-product-carousel__card-{{ ai_gen_id }} {
       width: calc((100% - {{ block.settings.card_spacing }}px) / {{ block.settings.mobile_columns }});
       min-width: 140px;
+    }
+
+    .ai-product-carousel__image-container-{{ ai_gen_id }} {
+      aspect-ratio: {% if block.settings.mobile_aspect_ratio == 'portrait' %} 3 / 4 {% elsif block.settings.mobile_aspect_ratio == 'original' %} auto {% else %} 1 / 1 {% endif %};
     }
 
     .ai-product-carousel__heading-{{ ai_gen_id }} {
@@ -504,7 +508,18 @@
       {
         "type": "select",
         "id": "aspect_ratio",
-        "label": "Image aspect ratio",
+        "label": "Image aspect ratio (Desktop)",
+        "options": [
+          { "value": "original", "label": "Original" },
+          { "value": "square", "label": "Square (1:1)" },
+          { "value": "portrait", "label": "Portrait (3:4)" }
+        ],
+        "default": "square"
+      },
+       {
+        "type": "select",
+        "id": "mobile_aspect_ratio",
+        "label": "Image aspect ratio (Mobile)",
         "options": [
           { "value": "original", "label": "Original" },
           { "value": "square", "label": "Square (1:1)" },
