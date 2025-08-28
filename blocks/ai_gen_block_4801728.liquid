@@ -415,7 +415,10 @@
 
       onTouchMove() {
         if (this.isScrolling) {
-          this.updateScrollbar();
+          // Force immediate update during touch scrolling
+          requestAnimationFrame(() => {
+            this.updateScrollbar();
+          });
         }
       }
 
@@ -425,8 +428,11 @@
       }
 
       onScroll() {
-        this.updateArrowState();
+        // Immediate update for better responsiveness
         this.updateScrollbar();
+        this.updateArrowState();
+        
+        // Debounced pagination update
         this.updatePaginationOnScroll();
       }
 
@@ -437,26 +443,40 @@
         const thumb = this.scrollbarThumb;
         const contentWidth = track.scrollWidth;
         const visibleWidth = track.clientWidth;
+        const currentScrollLeft = track.scrollLeft;
         
+        // If content fits within visible area, show full bar
         if (contentWidth <= visibleWidth) {
           thumb.style.width = '100%';
           thumb.style.left = '0%';
           return;
         }
 
-        // Calculate thumb width as percentage of visible area
-        const thumbWidthPercentage = Math.max((visibleWidth / contentWidth) * 100, 10);
-        
-        // Calculate scroll progress (0 to 1)
+        // Calculate how much content is scrollable
         const maxScrollLeft = contentWidth - visibleWidth;
-        const scrollProgress = Math.min(track.scrollLeft / maxScrollLeft, 1);
         
-        // Calculate thumb position
-        const maxThumbPosition = 100 - thumbWidthPercentage;
-        const thumbPosition = scrollProgress * maxThumbPosition;
+        // Calculate thumb width as percentage of container (minimum 15% for visibility)
+        const thumbWidthPercentage = Math.max((visibleWidth / contentWidth) * 100, 15);
         
+        // Calculate current scroll progress (0 to 1)
+        const scrollProgress = Math.max(0, Math.min(currentScrollLeft / maxScrollLeft, 1));
+        
+        // Calculate thumb position within the remaining space
+        const availableSpace = 100 - thumbWidthPercentage;
+        const thumbPosition = scrollProgress * availableSpace;
+        
+        // Apply the calculated values
         thumb.style.width = `${thumbWidthPercentage}%`;
         thumb.style.left = `${thumbPosition}%`;
+        
+        // Debug logging (remove after testing)
+        console.log('Scrollbar Debug:', {
+          scrollLeft: currentScrollLeft,
+          maxScroll: maxScrollLeft,
+          progress: scrollProgress,
+          thumbWidth: thumbWidthPercentage,
+          thumbPos: thumbPosition
+        });
       }
 
       setupIntersectionObserver() {
@@ -501,11 +521,30 @@
       connectedCallback() {
         if (this.cards.length > 0) {
           window.addEventListener('resize', this.debouncedOnResize);
-          // Initial update after a short delay to ensure proper rendering
-          setTimeout(() => {
+          
+          // Multiple initialization attempts to ensure proper setup
+          const initializeScrollbar = () => {
             this.updateArrowState();
             this.updateScrollbar();
-          }, 100);
+          };
+          
+          // Immediate init
+          initializeScrollbar();
+          
+          // Delayed init for DOM rendering
+          setTimeout(initializeScrollbar, 50);
+          setTimeout(initializeScrollbar, 200);
+          
+          // Init after images load
+          const images = this.querySelectorAll('img');
+          if (images.length > 0) {
+            Promise.all(Array.from(images).map(img => {
+              if (img.complete) return Promise.resolve();
+              return new Promise(resolve => {
+                img.onload = img.onerror = resolve;
+              });
+            })).then(initializeScrollbar);
+          }
         }
       }
 
