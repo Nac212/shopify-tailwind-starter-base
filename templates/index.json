@@ -211,7 +211,7 @@
             "sale_price_color": "#ff0000",
             "sale_badge_text": "ON SALE",
             "sale_badge_color": "#ff0000",
-            "sale_badge_size": 12
+            "sale_badge_size": 8
           },
           "blocks": {}
         }

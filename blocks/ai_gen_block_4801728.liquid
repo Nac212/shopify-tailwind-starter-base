@@ -1,6 +1,6 @@
 {% comment %}
   Shopify section code updated by Gemini.
-  - V5 FIX: Updated sale badge style, adjusted desktop carousel to show 4.3 columns, and added an image aspect ratio setting.
+  - V6 FIX: Added full sale badge customization (background, border, text color), implemented drag-to-scroll functionality, and added header navigation arrows.
 {% endcomment %}
 
 {% style %}
@@ -10,18 +10,35 @@
     box-sizing: border-box;
   }
 
+  .ai-product-carousel__header-{{ ai_gen_id }} {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    margin: 0 0 30px 0;
+  }
+
   .ai-product-carousel__heading-{{ ai_gen_id }} {
     font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
     font-weight: {{ block.settings.heading_font.weight }};
     font-style: {{ block.settings.heading_font.style }};
     font-size: {{ block.settings.heading_size }}px;
     color: {{ block.settings.heading_color }};
-    margin: 0 0 30px 0;
-    {% if block.settings.heading_center %}
-      text-align: center;
-    {% else %}
-      text-align: left;
-    {% endif %}
+    margin: 0;
+    flex-grow: 0;
+    white-space: nowrap;
+  }
+
+  .ai-product-carousel__arrow-{{ ai_gen_id }} {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 5px;
+  }
+
+  .ai-product-carousel__arrow-{{ ai_gen_id }} svg {
+    width: 12px;
+    height: 12px;
   }
 
   .ai-product-carousel__container-{{ ai_gen_id }} {
@@ -37,6 +54,12 @@
     scrollbar-width: none;
     -ms-overflow-style: none;
     padding-bottom: 20px;
+    cursor: grab;
+    user-select: none;
+  }
+
+  .ai-product-carousel__track-{{ ai_gen_id }}.active {
+      cursor: grabbing;
   }
 
   .ai-product-carousel__track-{{ ai_gen_id }}::-webkit-scrollbar {
@@ -63,6 +86,7 @@
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
+    pointer-events: none; /* Prevent image drag interference */
   }
 
   .ai-product-carousel__card-{{ ai_gen_id }}:hover .ai-product-carousel__image-{{ ai_gen_id }} {
@@ -73,8 +97,9 @@
     position: absolute;
     top: 10px;
     left: 10px;
-    background-color: #ffffff;
-    color: #ff0000;
+    background-color: {{ block.settings.sale_badge_background_color }};
+    color: {{ block.settings.sale_badge_color }};
+    border: 1px solid {{ block.settings.sale_badge_border_color }};
     font-family: "Poppins", sans-serif;
     padding: 5px 10px;
     font-size: {{ block.settings.sale_badge_size }}px;
@@ -176,9 +201,17 @@
 {% endstyle %}
 
 <div class="ai-product-carousel-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
-  {% if block.settings.heading != blank %}
-    <h2 class="ai-product-carousel__heading-{{ ai_gen_id }}">{{ block.settings.heading | escape }}</h2>
-  {% endif %}
+  <div class="ai-product-carousel__header-{{ ai_gen_id }}">
+    <button class="ai-product-carousel__arrow-{{ ai_gen_id }}" data-arrow-left>
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+    {% if block.settings.heading != blank %}
+      <h2 class="ai-product-carousel__heading-{{ ai_gen_id }}">{{ block.settings.heading | escape }}</h2>
+    {% endif %}
+    <button class="ai-product-carousel__arrow-{{ ai_gen_id }}" data-arrow-right>
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </button>
+  </div>
 
   {% comment %} --- Product Selection Logic --- {% endcomment %}
   {%- assign products_to_show = "" | split: "," -%}
@@ -244,16 +277,22 @@
 </div>
 
 <script>
-  // This Javascript is unchanged from the previous version and is correct.
   (function() {
     class ProductCarousel{{ ai_gen_id }} extends HTMLElement {
       constructor() {
         super();
         this.track = this.querySelector('[data-track]');
         this.pagination = this.querySelector('[data-pagination]');
+        this.arrowLeft = document.querySelector('[data-arrow-left]');
+        this.arrowRight = document.querySelector('[data-arrow-right]');
         this.cards = this.track ? Array.from(this.track.children) : [];
         
         if (this.cards.length === 0) return;
+
+        this.isDown = false;
+        this.startX;
+        this.scrollLeft;
+        this.isDragging = false;
 
         this.debouncedOnResize = this.debounce(this.onResize.bind(this), 250);
         this.init();
@@ -261,9 +300,70 @@
 
       init() {
         this.updateProperties();
+        this.setupEventListeners();
         this.setupPagination();
-        this.setupScrollListener();
         this.updatePaginationDots();
+      }
+
+      setupEventListeners() {
+        this.track.addEventListener('mousedown', this.handleMouseDown.bind(this));
+        this.track.addEventListener('mouseleave', this.handleMouseLeave.bind(this));
+        this.track.addEventListener('mouseup', this.handleMouseUp.bind(this));
+        this.track.addEventListener('mousemove', this.handleMouseMove.bind(this));
+        
+        this.arrowLeft.addEventListener('click', this.scrollLeftByOne.bind(this));
+        this.arrowRight.addEventListener('click', this.scrollRightByOne.bind(this));
+        
+        // Prevent click on drag
+        this.querySelectorAll('a').forEach(a => {
+            a.addEventListener('click', (e) => {
+                if(this.isDragging) {
+                    e.preventDefault();
+                }
+            });
+        });
+      }
+
+      handleMouseDown(e) {
+        this.isDown = true;
+        this.isDragging = false;
+        this.track.classList.add('active');
+        this.startX = e.pageX - this.track.offsetLeft;
+        this.scrollLeft = this.track.scrollLeft;
+      }
+
+      handleMouseLeave() {
+        this.isDown = false;
+        this.track.classList.remove('active');
+      }
+
+      handleMouseUp() {
+        this.isDown = false;
+        this.track.classList.remove('active');
+        // Reset dragging flag after a short delay to ensure click event is processed
+        setTimeout(() => this.isDragging = false, 50);
+      }
+
+      handleMouseMove(e) {
+        if (!this.isDown) return;
+        e.preventDefault();
+        this.isDragging = true;
+        const x = e.pageX - this.track.offsetLeft;
+        const walk = (x - this.startX) * 2; // the *2 makes the scroll faster
+        this.track.scrollLeft = this.scrollLeft - walk;
+        this.updatePaginationOnScroll();
+      }
+
+      scrollLeftByOne() {
+        const itemWidth = this.cards[0].offsetWidth + {{ block.settings.card_spacing }};
+        this.track.scrollBy({ left: -itemWidth, behavior: 'smooth' });
+        this.updatePaginationOnScroll();
+      }
+
+      scrollRightByOne() {
+        const itemWidth = this.cards[0].offsetWidth + {{ block.settings.card_spacing }};
+        this.track.scrollBy({ left: itemWidth, behavior: 'smooth' });
+        this.updatePaginationOnScroll();
       }
 
       connectedCallback() {
@@ -312,15 +412,13 @@
         }
       }
 
-      setupScrollListener() {
+      updatePaginationOnScroll() {
         let scrollTimeout;
-        this.track.addEventListener('scroll', () => {
-          clearTimeout(scrollTimeout);
-          scrollTimeout = setTimeout(() => {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
             this.currentPage = this.calculateCurrentPage();
             this.updatePaginationDots();
-          }, 150);
-        });
+        }, 150);
       }
       
       calculateCurrentPage() {
@@ -560,7 +658,19 @@
       {
         "type": "color",
         "id": "sale_badge_color",
-        "label": "Sale badge color",
+        "label": "Sale badge text color",
+        "default": "#ff0000"
+      },
+      {
+        "type": "color",
+        "id": "sale_badge_background_color",
+        "label": "Sale badge background color",
+        "default": "#ffffff"
+      },
+      {
+        "type": "color",
+        "id": "sale_badge_border_color",
+        "label": "Sale badge border color",
         "default": "#ff0000"
       },
       {
