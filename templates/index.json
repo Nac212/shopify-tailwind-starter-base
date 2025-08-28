@@ -406,7 +406,7 @@
         "feature_xkfFEx": {
           "type": "feature",
           "settings": {
-            "icon_select": "gift",
+            "icon_select": "returns",
             "icon_svg": "",
             "heading": "Easy Returns",
             "subheading": "30 day return policy.",
@@ -426,7 +426,7 @@
         "feature_cDqDMn": {
           "type": "feature",
           "settings": {
-            "icon_select": "gift",
+            "icon_select": "shipping",
             "icon_svg": "",
             "heading": "Free Shipping",
             "subheading": "On orders over £60.",
