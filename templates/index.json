@@ -217,10 +217,10 @@
             "sale_badge_background_color": "#ffffff",
             "sale_badge_border_color": "#000000",
             "sale_badge_size": 8,
-            "mobile_sale_badge_size": 5,
+            "mobile_sale_badge_size": 6,
             "sale_badge_position_top_desktop": 3,
             "sale_badge_position_left_desktop": 4,
-            "sale_badge_position_top_mobile": 3,
+            "sale_badge_position_top_mobile": 2,
             "sale_badge_position_left_mobile": 2
           },
           "blocks": {}
