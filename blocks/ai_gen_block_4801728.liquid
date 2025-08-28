@@ -1,6 +1,6 @@
 {% comment %}
   Shopfolio section code updated by Gemini.
-  - V16 FIX: Re-architected the event handling to definitively solve the "snap back" issue. Removed the <a> tag wrapper and now handle navigation via JavaScript to reliably distinguish between a click and a drag.
+  - V17 FIX: Removed the drag-to-scroll functionality entirely. Implemented a new, robust arrow navigation system on the sides of the carousel for desktop only, with conditional visibility based on the scroll position.
 {% endcomment %}
 
 {% style %}
@@ -29,37 +29,74 @@
     white-space: nowrap;
   }
 
-  .ai-product-carousel__arrow-{{ ai_gen_id }} {
-    border: none;
-    background: none;
-    cursor: pointer;
-    padding: 5px;
-  }
-
-  .ai-product-carousel__arrow-{{ ai_gen_id }} svg {
-    width: 12px;
-    height: 12px;
-  }
-
   .ai-product-carousel__container-{{ ai_gen_id }} {
     position: relative;
     width: 100%;
+  }
+
+  .ai-product-carousel__track-wrapper-{{ ai_gen_id }} {
+    position: relative;
+  }
+
+  .ai-product-carousel__side-arrow-{{ ai_gen_id }} {
+    display: none; /* Hidden by default, shown on desktop */
+  }
+
+  @media screen and (min-width: 769px) {
+    .ai-product-carousel__side-arrow-{{ ai_gen_id }} {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: opacity 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0; /* Hidden until hover on the container */
+    }
+
+    .ai-product-carousel__container-{{ ai_gen_id }}:hover .ai-product-carousel__side-arrow-{{ ai_gen_id }} {
+        opacity: 1;
+    }
+
+    .ai-product-carousel__side-arrow-{{ ai_gen_id }}.left {
+      left: -20px;
+    }
+
+    .ai-product-carousel__side-arrow-{{ ai_gen_id }}.right {
+      right: -20px;
+    }
+
+    .ai-product-carousel__side-arrow-{{ ai_gen_id }}:not(.disabled):hover {
+      box-shadow: 0 0 8px rgba(0,0,0,0.15);
+    }
+
+    .ai-product-carousel__side-arrow-{{ ai_gen_id }}.disabled {
+      opacity: 0 !important;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .ai-product-carousel__side-arrow-{{ ai_gen_id }} svg {
+      width: 16px;
+      height: 16px;
+    }
   }
 
   .ai-product-carousel__track-{{ ai_gen_id }} {
     display: flex;
     gap: {{ block.settings.card_spacing }}px;
     overflow-x: auto;
-    /* The `scroll-behavior: smooth` property is removed here to allow the JavaScript drag-and-scroll to work correctly without interference. */
     scrollbar-width: none;
     -ms-overflow-style: none;
     padding-bottom: 20px;
-    cursor: grab;
-    user-select: none;
-  }
-
-  .ai-product-carousel__track-{{ ai_gen_id }}.active {
-      cursor: grabbing;
+    scroll-behavior: smooth;
   }
 
   .ai-product-carousel__track-{{ ai_gen_id }}::-webkit-scrollbar {
@@ -70,7 +107,6 @@
     flex: 0 0 auto;
     width: calc((100% - ({{ block.settings.card_spacing }}px * 4)) / 4.3);
     min-width: 200px;
-    cursor: pointer;
   }
 
   .ai-product-carousel__image-container-{{ ai_gen_id }} {
@@ -202,15 +238,9 @@
 
 <div class="ai-product-carousel-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
   <div class="ai-product-carousel__header-{{ ai_gen_id }}">
-    <button class="ai-product-carousel__arrow-{{ ai_gen_id }}" data-arrow-left>
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
     {% if block.settings.heading != blank %}
       <h2 class="ai-product-carousel__heading-{{ ai_gen_id }}">{{ block.settings.heading | escape }}</h2>
     {% endif %}
-    <button class="ai-product-carousel__arrow-{{ ai_gen_id }}" data-arrow-right>
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </button>
   </div>
 
   {% comment %} --- Product Selection Logic --- {% endcomment %}
@@ -224,46 +254,53 @@
 
   {% if products_to_show.size > 0 %}
     <product-carousel-{{ ai_gen_id }} class="ai-product-carousel__container-{{ ai_gen_id }}">
-      <div class="ai-product-carousel__track-{{ ai_gen_id }}" data-track>
-        {% for product in products_to_show limit: block.settings.max_products_to_show %}
-          <div class="ai-product-carousel__card-{{ ai_gen_id }}" data-href="{{ product.url }}">
-            <div class="ai-product-carousel__image-container-{{ ai_gen_id }}">
-              {% if product.featured_image %}
-                <img
-                  src="{{ product.featured_image | image_url: width: 400 }}"
-                  alt="{{ product.featured_image.alt | escape }}"
-                  class="ai-product-carousel__image-{{ ai_gen_id }}"
-                  loading="lazy"
-                  width="400"
-                  height="400"
-                >
-              {% else %}
-                <div class="ai-product-carousel__image-placeholder-{{ ai_gen_id }}">
-                  {{ 'product-1' | placeholder_svg_tag }}
-                </div>
-              {% endif %}
+      <div class="ai-product-carousel__track-wrapper-{{ ai_gen_id }}">
+        <button class="ai-product-carousel__side-arrow-{{ ai_gen_id }} left" data-side-arrow-left>
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="ai-product-carousel__track-{{ ai_gen_id }}" data-track>
+          {% for product in products_to_show limit: block.settings.max_products_to_show %}
+            <a href="{{ product.url }}" class="ai-product-carousel__card-{{ ai_gen_id }}">
+              <div class="ai-product-carousel__image-container-{{ ai_gen_id }}">
+                {% if product.featured_image %}
+                  <img
+                    src="{{ product.featured_image | image_url: width: 400 }}"
+                    alt="{{ product.featured_image.alt | escape }}"
+                    class="ai-product-carousel__image-{{ ai_gen_id }}"
+                    loading="lazy"
+                    width="400"
+                    height="400"
+                  >
+                {% else %}
+                  <div class="ai-product-carousel__image-placeholder-{{ ai_gen_id }}">
+                    {{ 'product-1' | placeholder_svg_tag }}
+                  </div>
+                {% endif %}
 
-              {% if product.compare_at_price > product.price %}
-                <div class="ai-product-carousel__sale-badge-{{ ai_gen_id }}">
-                  {{ block.settings.sale_badge_text | escape }}
-                </div>
-              {% endif %}
-            </div>
+                {% if product.compare_at_price > product.price %}
+                  <div class="ai-product-carousel__sale-badge-{{ ai_gen_id }}">
+                    {{ block.settings.sale_badge_text | escape }}
+                  </div>
+                {% endif %}
+              </div>
 
-            <h3 class="ai-product-carousel__title-{{ ai_gen_id }}">{{ product.title | escape }}</h3>
+              <h3 class="ai-product-carousel__title-{{ ai_gen_id }}">{{ product.title | escape }}</h3>
 
-            <div class="ai-product-carousel__price-{{ ai_gen_id }}">
-              {% if product.compare_at_price > product.price %}
-                <span class="ai-product-carousel__price-compare-{{ ai_gen_id }}">{{ product.compare_at_price | money }}</span>
-                <span class="ai-product-carousel__price-sale-{{ ai_gen_id }}">{{ product.price | money }}</span>
-              {% else %}
-                <span class="ai-product-carousel__price-regular-{{ ai_gen_id }}">{{ product.price | money }}</span>
-              {% endif %}
-            </div>
-          </div>
-        {% endfor %}
+              <div class="ai-product-carousel__price-{{ ai_gen_id }}">
+                {% if product.compare_at_price > product.price %}
+                  <span class="ai-product-carousel__price-compare-{{ ai_gen_id }}">{{ product.compare_at_price | money }}</span>
+                  <span class="ai-product-carousel__price-sale-{{ ai_gen_id }}">{{ product.price | money }}</span>
+                {% else %}
+                  <span class="ai-product-carousel__price-regular-{{ ai_gen_id }}">{{ product.price | money }}</span>
+                {% endif %}
+              </div>
+            </a>
+          {% endfor %}
+        </div>
+        <button class="ai-product-carousel__side-arrow-{{ ai_gen_id }} right" data-side-arrow-right>
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
       </div>
-
       <div class="ai-product-carousel__pagination-{{ ai_gen_id }}" data-pagination></div>
     </product-carousel-{{ ai_gen_id }}>
   {% else %}
@@ -281,16 +318,11 @@
         super();
         this.track = this.querySelector('[data-track]');
         this.pagination = this.querySelector('[data-pagination]');
-        this.arrowLeft = document.querySelector('[data-arrow-left]');
-        this.arrowRight = document.querySelector('[data-arrow-right]');
+        this.arrowLeft = this.querySelector('[data-side-arrow-left]');
+        this.arrowRight = this.querySelector('[data-side-arrow-right]');
         this.cards = this.track ? Array.from(this.track.children) : [];
         
         if (this.cards.length === 0) return;
-
-        this.isDown = false;
-        this.startX;
-        this.scrollLeft;
-        this.isDragging = false;
 
         this.debouncedOnResize = this.debounce(this.onResize.bind(this), 250);
         this.init();
@@ -300,86 +332,41 @@
         this.updateProperties();
         this.setupEventListeners();
         this.setupPagination();
+        this.updateArrowState();
         this.updatePaginationDots();
       }
 
       setupEventListeners() {
-        this.track.addEventListener('mousedown', this.handleMouseDown.bind(this));
-        this.track.addEventListener('mouseleave', this.handleMouseLeave.bind(this));
-        this.track.addEventListener('mouseup', this.handleMouseUp.bind(this));
-        this.track.addEventListener('mousemove', this.handleMouseMove.bind(this));
-        
         this.arrowLeft.addEventListener('click', this.scrollLeftByOne.bind(this));
         this.arrowRight.addEventListener('click', this.scrollRightByOne.bind(this));
-        
-        // Handle clicks on the cards themselves, only navigating if not dragging.
-        this.cards.forEach(card => {
-            card.addEventListener('click', (e) => {
-                if (!this.isDragging) {
-                    window.location.href = card.dataset.href;
-                }
-            });
-            // Prevent the browser's default image drag behavior
-            card.addEventListener('dragstart', (e) => e.preventDefault());
-        });
-      }
-
-      handleMouseDown(e) {
-        this.isDown = true;
-        this.isDragging = false; // Reset dragging state on each new click
-        this.track.classList.add('active');
-        this.startX = e.pageX - this.track.offsetLeft;
-        this.scrollLeft = this.track.scrollLeft;
-      }
-
-      handleMouseLeave() {
-        this.isDown = false;
-        this.track.classList.remove('active');
-      }
-
-      handleMouseUp() {
-        this.isDown = false;
-        this.track.classList.remove('active');
-        // We need a timeout to reset the dragging flag, so the click event can check it first.
-        setTimeout(() => {
-          this.isDragging = false;
-        }, 50);
-      }
-
-      handleMouseMove(e) {
-        if (!this.isDown) return;
-        
-        const x = e.pageX - this.track.offsetLeft;
-        const walk = x - this.startX;
-
-        // If the mouse has moved more than a small threshold (e.g., 5px), we consider it a drag.
-        if (Math.abs(walk) > 5) {
-            this.isDragging = true;
-        }
-
-        // Only scroll the track if a drag has been initiated.
-        if (this.isDragging) {
-            e.preventDefault(); // Prevent text selection, etc.
-            this.track.scrollLeft = this.scrollLeft - walk;
-            this.updatePaginationOnScroll();
-        }
+        this.track.addEventListener('scroll', this.updateArrowState.bind(this));
       }
 
       scrollLeftByOne() {
         const itemWidth = this.cards[0].offsetWidth + {{ block.settings.card_spacing }};
         this.track.scrollBy({ left: -itemWidth, behavior: 'smooth' });
-        this.updatePaginationOnScroll();
       }
 
       scrollRightByOne() {
         const itemWidth = this.cards[0].offsetWidth + {{ block.settings.card_spacing }};
         this.track.scrollBy({ left: itemWidth, behavior: 'smooth' });
+      }
+
+      updateArrowState() {
+        if (!this.track) return;
+        const scrollLeft = this.track.scrollLeft;
+        const maxScroll = this.track.scrollWidth - this.track.clientWidth;
+
+        this.arrowLeft.classList.toggle('disabled', scrollLeft <= 0);
+        this.arrowRight.classList.toggle('disabled', scrollLeft >= maxScroll - 5); // 5px buffer
+        
         this.updatePaginationOnScroll();
       }
 
       connectedCallback() {
         if (this.cards.length > 0) {
             window.addEventListener('resize', this.debouncedOnResize);
+            this.updateArrowState(); // Initial check
         }
       }
 
@@ -402,6 +389,7 @@
       onResize() {
         this.updateProperties();
         this.setupPagination();
+        this.updateArrowState();
         this.updatePaginationDots();
       }
 
