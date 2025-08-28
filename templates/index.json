@@ -211,7 +211,10 @@
             "sale_price_color": "#ff0000",
             "sale_badge_text": "ON SALE",
             "sale_badge_color": "#ff0000",
-            "sale_badge_size": 8
+            "sale_badge_background_color": "#ffffff",
+            "sale_badge_border_color": "#ff0000",
+            "sale_badge_size": 8,
+            "mobile_sale_badge_size": 8
           },
           "blocks": {}
         }
