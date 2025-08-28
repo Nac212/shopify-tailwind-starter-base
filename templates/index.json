@@ -452,6 +452,10 @@
       ],
       "name": "Custom Features",
       "settings": {
+        "show_divider": true,
+        "logo": "shopify://shop_images/Falienne_Logo_-_Single_Falienne_-_1000x_30b8a000-8eb8-4e77-b01a-2332de12d542.png",
+        "logo_width": 150,
+        "logo_position": 50,
         "heading_font": "poppins_n4",
         "heading_color": "#333333",
         "subheading_font": "poppins_n4",
