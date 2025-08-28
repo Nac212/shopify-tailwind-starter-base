@@ -1,6 +1,6 @@
 {% comment %}
   Shopfolio section code updated by Gemini.
-  - V23 FIX: Re-architected the mobile scrollbar script for a definitive fix. The new logic ensures the thumb's position is always perfectly in sync with the carousel's scroll on all devices.
+  - V24 FINAL FIX: Re-architected the mobile scrollbar script using an Intersection Observer and a persistent requestAnimationFrame loop. This definitive solution bypasses browser scroll event throttling, ensuring the thumb's position is always perfectly in sync with the carousel's scroll.
 {% endcomment %}
 
 {% style %}
@@ -372,6 +372,8 @@
         
         if (this.cards.length === 0) return;
 
+        this.animationFrameId = null;
+        this.observer = null;
         this.debouncedOnResize = this.debounce(this.onResize.bind(this), 250);
         this.init();
       }
@@ -382,19 +384,19 @@
         this.setupPagination();
         this.updateArrowState();
         this.updatePaginationDots();
-        this.handleScroll(); // Initial call to set thumb position
+        this.setupIntersectionObserver();
       }
 
       setupEventListeners() {
         this.arrowLeft.addEventListener('click', this.scrollLeftByOne.bind(this));
         this.arrowRight.addEventListener('click', this.scrollRightByOne.bind(this));
-        this.track.addEventListener('scroll', this.handleScroll.bind(this));
+        // The scroll event is still useful for updating arrows and dots.
+        this.track.addEventListener('scroll', this.updateArrowState.bind(this));
       }
 
-      handleScroll() {
-        this.updateArrowState();
+      // This function runs on every frame while the element is visible.
+      runScrollObserver() {
         if (this.scrollbarThumb) {
-          requestAnimationFrame(() => {
             const track = this.track;
             const thumb = this.scrollbarThumb;
             const contentWidth = track.scrollWidth;
@@ -402,17 +404,39 @@
             
             if (contentWidth <= visibleWidth) {
               thumb.style.width = '0px';
-              return;
+            } else {
+              const thumbWidth = (visibleWidth / contentWidth) * 100;
+              const scrollPercentage = track.scrollLeft / (contentWidth - visibleWidth);
+              const thumbPosition = scrollPercentage * (100 - thumbWidth);
+              thumb.style.width = `${thumbWidth}%`;
+              thumb.style.left = `${thumbPosition}%`;
             }
-
-            const thumbWidth = (visibleWidth / contentWidth) * 100;
-            const scrollPercentage = track.scrollLeft / (contentWidth - visibleWidth);
-            const thumbPosition = scrollPercentage * (100 - thumbWidth);
-
-            thumb.style.width = `${thumbWidth}%`;
-            thumb.style.left = `${thumbPosition}%`;
-          });
         }
+        this.animationFrameId = requestAnimationFrame(this.runScrollObserver.bind(this));
+      }
+
+      setupIntersectionObserver() {
+        const options = {
+          root: null,
+          rootMargin: '0px',
+          threshold: 0.1
+        };
+
+        this.observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              // Start the animation loop when the element is visible
+              this.animationFrameId = requestAnimationFrame(this.runScrollObserver.bind(this));
+            } else {
+              // Stop the animation loop when the element is not visible
+              if (this.animationFrameId) {
+                cancelAnimationFrame(this.animationFrameId);
+              }
+            }
+          });
+        }, options);
+
+        this.observer.observe(this);
       }
 
       scrollLeftByOne() {
@@ -441,13 +465,19 @@
       connectedCallback() {
         if (this.cards.length > 0) {
             window.addEventListener('resize', this.debouncedOnResize);
-            this.handleScroll(); // Initial check
+            this.updateArrowState(); // Initial check
         }
       }
 
       disconnectedCallback() {
          if (this.cards.length > 0) {
             window.removeEventListener('resize', this.debouncedOnResize);
+         }
+         if (this.observer) {
+            this.observer.disconnect();
+         }
+         if (this.animationFrameId) {
+            cancelAnimationFrame(this.animationFrameId);
          }
       }
 
@@ -464,7 +494,7 @@
       onResize() {
         this.updateProperties();
         this.setupPagination();
-        this.handleScroll();
+        this.updateArrowState();
         this.updatePaginationDots();
       }
 
