@@ -1,6 +1,6 @@
 {% comment %}
   Shopfolio section code updated by Gemini.
-  - V18 FIX: Added a separate aspect ratio setting for mobile devices, allowing for independent control over image shapes on desktop and mobile.
+  - V19 FIX: Added a mobile-only scrollbar pagination feature, controlled by a new theme setting, to replicate the user's design reference.
 {% endcomment %}
 
 {% style %}
@@ -86,6 +86,12 @@
     .ai-product-carousel__side-arrow-{{ ai_gen_id }} svg {
       width: 16px;
       height: 16px;
+    }
+    .ai-product-carousel__pagination-{{ ai_gen_id }} {
+        display: flex;
+    }
+    .ai-product-carousel__scrollbar-container-{{ ai_gen_id }} {
+        display: none;
     }
   }
 
@@ -190,7 +196,6 @@
   }
 
   .ai-product-carousel__pagination-{{ ai_gen_id }} {
-    display: flex;
     justify-content: center;
     align-items: center;
     gap: 8px;
@@ -208,6 +213,23 @@
 
   .ai-product-carousel__dot-{{ ai_gen_id }}.active {
     background-color: #333;
+  }
+  
+  .ai-product-carousel__scrollbar-container-{{ ai_gen_id }} {
+    width: 80%;
+    margin: 20px auto 0;
+    height: 2px;
+    background-color: #e0e0e0;
+    position: relative;
+  }
+
+  .ai-product-carousel__scrollbar-thumb-{{ ai_gen_id }} {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #333;
+    border-radius: 2px;
   }
 
   @media screen and (max-width: 768px) {
@@ -237,6 +259,22 @@
         top: {{ block.settings.sale_badge_position_top_mobile }}px;
         left: {{ block.settings.sale_badge_position_left_mobile }}px;
     }
+    
+    {% if block.settings.enable_mobile_scrollbar %}
+      .ai-product-carousel__pagination-{{ ai_gen_id }} {
+          display: none;
+      }
+      .ai-product-carousel__scrollbar-container-{{ ai_gen_id }} {
+          display: block;
+      }
+    {% else %}
+      .ai-product-carousel__pagination-{{ ai_gen_id }} {
+          display: flex;
+      }
+      .ai-product-carousel__scrollbar-container-{{ ai_gen_id }} {
+          display: none;
+      }
+    {% endif %}
   }
 {% endstyle %}
 
@@ -306,6 +344,9 @@
         </button>
       </div>
       <div class="ai-product-carousel__pagination-{{ ai_gen_id }}" data-pagination></div>
+      <div class="ai-product-carousel__scrollbar-container-{{ ai_gen_id }}" data-scrollbar-container>
+        <div class="ai-product-carousel__scrollbar-thumb-{{ ai_gen_id }}" data-scrollbar-thumb></div>
+      </div>
     </product-carousel-{{ ai_gen_id }}>
   {% else %}
     <div class="ai-product-carousel__empty-state-{{ ai_gen_id }}">
@@ -324,6 +365,7 @@
         this.pagination = this.querySelector('[data-pagination]');
         this.arrowLeft = this.querySelector('[data-side-arrow-left]');
         this.arrowRight = this.querySelector('[data-side-arrow-right]');
+        this.scrollbarThumb = this.querySelector('[data-scrollbar-thumb]');
         this.cards = this.track ? Array.from(this.track.children) : [];
         
         if (this.cards.length === 0) return;
@@ -338,12 +380,16 @@
         this.setupPagination();
         this.updateArrowState();
         this.updatePaginationDots();
+        this.updateScrollbarThumb();
       }
 
       setupEventListeners() {
         this.arrowLeft.addEventListener('click', this.scrollLeftByOne.bind(this));
         this.arrowRight.addEventListener('click', this.scrollRightByOne.bind(this));
-        this.track.addEventListener('scroll', this.updateArrowState.bind(this));
+        this.track.addEventListener('scroll', () => {
+          this.updateArrowState();
+          this.updateScrollbarThumb();
+        });
       }
 
       scrollLeftByOne() {
@@ -366,11 +412,34 @@
         
         this.updatePaginationOnScroll();
       }
+      
+      updateScrollbarThumb() {
+        if (!this.scrollbarThumb) return;
+        requestAnimationFrame(() => {
+          const track = this.track;
+          const thumb = this.scrollbarThumb;
+          const contentWidth = track.scrollWidth;
+          const visibleWidth = track.clientWidth;
+          
+          if (contentWidth <= visibleWidth) {
+            thumb.style.width = '0px';
+            return;
+          }
+
+          const thumbWidth = (visibleWidth / contentWidth) * 100;
+          const scrollPercentage = track.scrollLeft / (contentWidth - visibleWidth);
+          const thumbPosition = scrollPercentage * (100 - thumbWidth);
+
+          thumb.style.width = `${thumbWidth}%`;
+          thumb.style.left = `${thumbPosition}%`;
+        });
+      }
 
       connectedCallback() {
         if (this.cards.length > 0) {
             window.addEventListener('resize', this.debouncedOnResize);
             this.updateArrowState(); // Initial check
+            this.updateScrollbarThumb();
         }
       }
 
@@ -395,6 +464,7 @@
         this.setupPagination();
         this.updateArrowState();
         this.updatePaginationDots();
+        this.updateScrollbarThumb();
       }
 
       setupPagination() {
@@ -536,6 +606,12 @@
         "label": "Columns on mobile",
         "info": "Adjust the number of columns visible. Use decimals (e.g., 1.7) to show a part of the next item and encourage scrolling.",
         "default": 2
+      },
+      {
+        "type": "checkbox",
+        "id": "enable_mobile_scrollbar",
+        "label": "Enable scrollbar on mobile",
+        "default": true
       },
       {
         "type": "range",
