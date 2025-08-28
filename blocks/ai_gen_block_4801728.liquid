@@ -1,6 +1,6 @@
 {% comment %}
   Shopfolio section code updated by Gemini.
-  - V15 FIX: Implemented a definitive fix for the "snap back" issue by using event capturing to reliably distinguish between a drag and a click, ensuring the scroll position is maintained.
+  - V16 FIX: Re-architected the event handling to definitively solve the "snap back" issue. Removed the <a> tag wrapper and now handle navigation via JavaScript to reliably distinguish between a click and a drag.
 {% endcomment %}
 
 {% style %}
@@ -70,6 +70,7 @@
     flex: 0 0 auto;
     width: calc((100% - ({{ block.settings.card_spacing }}px * 4)) / 4.3);
     min-width: 200px;
+    cursor: pointer;
   }
 
   .ai-product-carousel__image-container-{{ ai_gen_id }} {
@@ -173,12 +174,6 @@
     background-color: #333;
   }
 
-  .ai-product-carousel__link-{{ ai_gen_id }} {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-  }
-
   @media screen and (max-width: 768px) {
     .ai-product-carousel__card-{{ ai_gen_id }} {
       width: calc((100% - {{ block.settings.card_spacing }}px) / {{ block.settings.mobile_columns }});
@@ -231,42 +226,40 @@
     <product-carousel-{{ ai_gen_id }} class="ai-product-carousel__container-{{ ai_gen_id }}">
       <div class="ai-product-carousel__track-{{ ai_gen_id }}" data-track>
         {% for product in products_to_show limit: block.settings.max_products_to_show %}
-          <div class="ai-product-carousel__card-{{ ai_gen_id }}">
-            <a href="{{ product.url }}" class="ai-product-carousel__link-{{ ai_gen_id }}">
-              <div class="ai-product-carousel__image-container-{{ ai_gen_id }}">
-                {% if product.featured_image %}
-                  <img
-                    src="{{ product.featured_image | image_url: width: 400 }}"
-                    alt="{{ product.featured_image.alt | escape }}"
-                    class="ai-product-carousel__image-{{ ai_gen_id }}"
-                    loading="lazy"
-                    width="400"
-                    height="400"
-                  >
-                {% else %}
-                  <div class="ai-product-carousel__image-placeholder-{{ ai_gen_id }}">
-                    {{ 'product-1' | placeholder_svg_tag }}
-                  </div>
-                {% endif %}
+          <div class="ai-product-carousel__card-{{ ai_gen_id }}" data-href="{{ product.url }}">
+            <div class="ai-product-carousel__image-container-{{ ai_gen_id }}">
+              {% if product.featured_image %}
+                <img
+                  src="{{ product.featured_image | image_url: width: 400 }}"
+                  alt="{{ product.featured_image.alt | escape }}"
+                  class="ai-product-carousel__image-{{ ai_gen_id }}"
+                  loading="lazy"
+                  width="400"
+                  height="400"
+                >
+              {% else %}
+                <div class="ai-product-carousel__image-placeholder-{{ ai_gen_id }}">
+                  {{ 'product-1' | placeholder_svg_tag }}
+                </div>
+              {% endif %}
 
-                {% if product.compare_at_price > product.price %}
-                  <div class="ai-product-carousel__sale-badge-{{ ai_gen_id }}">
-                    {{ block.settings.sale_badge_text | escape }}
-                  </div>
-                {% endif %}
-              </div>
+              {% if product.compare_at_price > product.price %}
+                <div class="ai-product-carousel__sale-badge-{{ ai_gen_id }}">
+                  {{ block.settings.sale_badge_text | escape }}
+                </div>
+              {% endif %}
+            </div>
 
-              <h3 class="ai-product-carousel__title-{{ ai_gen_id }}">{{ product.title | escape }}</h3>
+            <h3 class="ai-product-carousel__title-{{ ai_gen_id }}">{{ product.title | escape }}</h3>
 
-              <div class="ai-product-carousel__price-{{ ai_gen_id }}">
-                {% if product.compare_at_price > product.price %}
-                  <span class="ai-product-carousel__price-compare-{{ ai_gen_id }}">{{ product.compare_at_price | money }}</span>
-                  <span class="ai-product-carousel__price-sale-{{ ai_gen_id }}">{{ product.price | money }}</span>
-                {% else %}
-                  <span class="ai-product-carousel__price-regular-{{ ai_gen_id }}">{{ product.price | money }}</span>
-                {% endif %}
-              </div>
-            </a>
+            <div class="ai-product-carousel__price-{{ ai_gen_id }}">
+              {% if product.compare_at_price > product.price %}
+                <span class="ai-product-carousel__price-compare-{{ ai_gen_id }}">{{ product.compare_at_price | money }}</span>
+                <span class="ai-product-carousel__price-sale-{{ ai_gen_id }}">{{ product.price | money }}</span>
+              {% else %}
+                <span class="ai-product-carousel__price-regular-{{ ai_gen_id }}">{{ product.price | money }}</span>
+              {% endif %}
+            </div>
           </div>
         {% endfor %}
       </div>
@@ -319,20 +312,16 @@
         this.arrowLeft.addEventListener('click', this.scrollLeftByOne.bind(this));
         this.arrowRight.addEventListener('click', this.scrollRightByOne.bind(this));
         
-        // Use event capturing on the track to reliably prevent clicks after a drag.
-        this.track.addEventListener('click', this.preventClickAfterDrag.bind(this), true);
-
-        // Prevent the browser's default image drag behavior on all links within the carousel.
-        this.querySelectorAll('a').forEach(a => {
-            a.addEventListener('dragstart', (e) => e.preventDefault());
+        // Handle clicks on the cards themselves, only navigating if not dragging.
+        this.cards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                if (!this.isDragging) {
+                    window.location.href = card.dataset.href;
+                }
+            });
+            // Prevent the browser's default image drag behavior
+            card.addEventListener('dragstart', (e) => e.preventDefault());
         });
-      }
-
-      preventClickAfterDrag(e) {
-        if (this.isDragging) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
       }
 
       handleMouseDown(e) {
@@ -351,11 +340,10 @@
       handleMouseUp() {
         this.isDown = false;
         this.track.classList.remove('active');
-        // It's important to reset the isDragging flag slightly after mouseup
-        // to ensure the click event has time to be captured.
+        // We need a timeout to reset the dragging flag, so the click event can check it first.
         setTimeout(() => {
           this.isDragging = false;
-        }, 0);
+        }, 50);
       }
 
       handleMouseMove(e) {
