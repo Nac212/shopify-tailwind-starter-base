@@ -1,29 +1,9 @@
-{% doc %}
-  @prompt
-    Create a scrollable product carousel section for a Shopify page.
-    
-    The section should have a customizable heading (e.g., "TRENDING PIECES") with a customizable font and color. The heading font must default to 'Bebas Neue'.
-    
-    The carousel should display a maximum of four product cards at a time on desktop and be fully scrollable on all devices. Include a dot or line-based pagination system below the product cards to indicate progress through the carousel. This scrolling widget visual must be present on both desktop and mobile views.
-    
-    The product cards should have a customizable amount of white space between them. Each card should display the product image, title, and price. The product title and price fonts must default to 'Poppins'. The regular price should default to black. If there is a sale price, the regular price must be crossed out and displayed on the left side, with the sale price on the right side in red. A small, customizable "ON SALE" badge should be displayed on the product image.
-    
-    The section should include settings for a store owner to:
-    
-    Choose a specific collection to pull products from.
-    
-    Alternatively, manually select individual products to display. Ensure this functionality is fully working and reliable.
-    
-    Customize the font, size, and centering of the section heading.
-    
-    Customize the font, size, and centering of the product titles and prices.
-    
-    Customize the amount of white space between the product cards.
-    
-    Ensure the section is fully responsive. On mobile, the layout must display two full columns with a third column partially visible on the right, indicating to the user that they can scroll to see more products. The functionality and visual appearance must be consistent across all devices., the manual product selection doesnt work, and the collection page doesn't work when you choose one - no products are being showcased
-
-{% enddoc %}
-{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+{% comment %}
+  Shopify section code updated by Gemini.
+  - Fixed collection and manual product selection logic.
+  - Added "Card Border Radius" setting.
+  - Added separate font size controls for desktop and mobile (title & price).
+{% endcomment %}
 
 {% style %}
   .ai-product-carousel-{{ ai_gen_id }} {
@@ -76,7 +56,7 @@
     aspect-ratio: 1;
     margin-bottom: 12px;
     overflow: hidden;
-    border-radius: 8px;
+    border-radius: {{ block.settings.card_border_radius }}px; /* <-- New Setting Applied */
   }
 
   .ai-product-carousel__image-{{ ai_gen_id }} {
@@ -122,7 +102,7 @@
     font-family: {{ block.settings.product_font.family }}, {{ block.settings.product_font.fallback_families }};
     font-weight: {{ block.settings.product_font.weight }};
     font-style: {{ block.settings.product_font.style }};
-    font-size: {{ block.settings.product_title_size }}px;
+    font-size: {{ block.settings.desktop_product_title_size }}px; /* <-- New Desktop Setting */
     color: {{ block.settings.product_title_color }};
     margin: 0 0 8px 0;
     line-height: 1.3;
@@ -137,7 +117,7 @@
     font-family: {{ block.settings.product_font.family }}, {{ block.settings.product_font.fallback_families }};
     font-weight: {{ block.settings.product_font.weight }};
     font-style: {{ block.settings.product_font.style }};
-    font-size: {{ block.settings.product_price_size }}px;
+    font-size: {{ block.settings.desktop_product_price_size }}px; /* <-- New Desktop Setting */
     margin: 0;
     {% if block.settings.product_text_center %}
       text-align: center;
@@ -210,11 +190,11 @@
     }
 
     .ai-product-carousel__title-{{ ai_gen_id }} {
-      font-size: {{ block.settings.product_title_size | times: 0.9 }}px;
+      font-size: {{ block.settings.mobile_product_title_size }}px; /* <-- New Mobile Setting */
     }
 
     .ai-product-carousel__price-{{ ai_gen_id }} {
-      font-size: {{ block.settings.product_price_size | times: 0.9 }}px;
+      font-size: {{ block.settings.mobile_product_price_size }}px; /* <-- New Mobile Setting */
     }
   }
 
@@ -237,7 +217,7 @@
     if block.settings.manual_products.size > 0
       assign products_to_show = block.settings.manual_products
     elsif block.settings.collection != blank
-      assign products_to_show = collections[block.settings.collection].products
+      assign products_to_show = block.settings.collection.products
     endif
   %}
 
@@ -245,7 +225,8 @@
     <div class="ai-product-carousel__container-{{ ai_gen_id }}">
       <div class="ai-product-carousel__track-{{ ai_gen_id }}" data-track>
         {% for product in products_to_show limit: 20 %}
-          <div class="ai-product-carousel__card-{{ ai_gen_id }}"><a href="{{ product.url }}" class="ai-product-carousel__link-{{ ai_gen_id }}">
+          <div class="ai-product-carousel__card-{{ ai_gen_id }}">
+            <a href="{{ product.url }}" class="ai-product-carousel__link-{{ ai_gen_id }}">
               <div class="ai-product-carousel__image-container-{{ ai_gen_id }}">
                 {% if product.featured_image %}
                   <img
@@ -314,25 +295,40 @@
         if (!this.track) return;
 
         this.cards = Array.from(this.track.children);
+        if (this.cards.length === 0) return; // Prevent errors if no products
+        
         this.calculatePages();
         this.setupPagination();
         this.setupScrollListener();
         this.updatePagination();
+        
+        // Recalculate on resize
+        window.addEventListener('resize', this.debounce(() => {
+          this.calculatePages();
+          this.setupPagination();
+          this.updateCurrentPage();
+          this.updatePagination();
+        }, 250));
       }
 
       calculatePages() {
         const containerWidth = this.track.offsetWidth;
-        const cardWidth = this.cards[0]?.offsetWidth || 200;
+        const cardWidth = this.cards[0]?.offsetWidth;
+        if (!cardWidth) return;
+
         const gap = {{ block.settings.card_spacing }};
         
         if (window.innerWidth <= 768) {
-          this.cardsPerPage = 2.3;
+          this.cardsPerPage = (containerWidth + gap) / (cardWidth + gap);
         } else {
           this.cardsPerPage = Math.floor((containerWidth + gap) / (cardWidth + gap));
           this.cardsPerPage = Math.min(this.cardsPerPage, 4);
         }
         
-        this.totalPages = Math.ceil(this.cards.length / this.cardsPerPage);
+        this.totalPages = this.cards.length > this.cardsPerPage ? Math.ceil(this.cards.length / this.cardsPerPage) : 1;
+        if(window.innerWidth <= 768) {
+           this.totalPages = Math.ceil(this.cards.length / Math.floor(this.cardsPerPage));
+        }
       }
 
       setupPagination() {
@@ -341,6 +337,7 @@
           return;
         }
 
+        this.pagination.style.display = 'flex';
         this.pagination.innerHTML = '';
         
         for (let i = 0; i < this.totalPages; i++) {
@@ -365,11 +362,13 @@
 
       updateCurrentPage() {
         const scrollLeft = this.track.scrollLeft;
-        const cardWidth = this.cards[0]?.offsetWidth || 200;
-        const gap = {{ block.settings.card_spacing }};
-        const pageWidth = (cardWidth + gap) * this.cardsPerPage;
+        const cardWidth = this.cards[0]?.offsetWidth;
+        if (!cardWidth) return;
         
-        this.currentPage = Math.round(scrollLeft / pageWidth);
+        const gap = {{ block.settings.card_spacing }};
+        
+        // This logic determines the current "page" based on which card is nearest to the left edge
+        this.currentPage = Math.round(scrollLeft / (cardWidth + gap) / Math.floor(this.cardsPerPage));
         this.currentPage = Math.max(0, Math.min(this.currentPage, this.totalPages - 1));
       }
 
@@ -385,10 +384,12 @@
       goToPage(pageIndex) {
         if (pageIndex < 0 || pageIndex >= this.totalPages) return;
         
-        const cardWidth = this.cards[0]?.offsetWidth || 200;
+        const cardWidth = this.cards[0]?.offsetWidth;
+        if (!cardWidth) return;
+        
         const gap = {{ block.settings.card_spacing }};
-        const pageWidth = (cardWidth + gap) * this.cardsPerPage;
-        const scrollLeft = pageIndex * pageWidth;
+        
+        const scrollLeft = pageIndex * Math.floor(this.cardsPerPage) * (cardWidth + gap);
         
         this.track.scrollTo({
           left: scrollLeft,
@@ -398,6 +399,21 @@
         this.currentPage = pageIndex;
         this.updatePagination();
       }
+
+      debounce(func, wait, immediate) {
+        var timeout;
+        return function() {
+          var context = this, args = arguments;
+          var later = function() {
+            timeout = null;
+            if (!immediate) func.apply(context, args);
+          };
+          var callNow = immediate && !timeout;
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+          if (callNow) func.apply(context, args);
+        };
+      };
     }
 
     customElements.define('product-carousel-{{ ai_gen_id }}', ProductCarousel{{ ai_gen_id }});
@@ -459,6 +475,7 @@
       "type": "product_list",
       "id": "manual_products",
       "label": "Manual product selection",
+      "info": "Overrides the collection setting if products are selected here.",
       "limit": 20
     },
     {
@@ -473,23 +490,43 @@
     },
     {
       "type": "range",
-      "id": "product_title_size",
+      "id": "desktop_product_title_size",
       "min": 12,
-      "max": 24,
+      "max": 30,
       "step": 1,
       "unit": "px",
-      "label": "Product title size",
+      "label": "Desktop - Title size",
       "default": 16
     },
     {
       "type": "range",
-      "id": "product_price_size",
-      "min": 12,
+      "id": "mobile_product_title_size",
+      "min": 10,
       "max": 24,
       "step": 1,
       "unit": "px",
-      "label": "Product price size",
+      "label": "Mobile - Title size",
       "default": 14
+    },
+    {
+      "type": "range",
+      "id": "desktop_product_price_size",
+      "min": 12,
+      "max": 30,
+      "step": 1,
+      "unit": "px",
+      "label": "Desktop - Price size",
+      "default": 14
+    },
+    {
+      "type": "range",
+      "id": "mobile_product_price_size",
+      "min": 10,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "label": "Mobile - Price size",
+      "default": 13
     },
     {
       "type": "color",
@@ -544,6 +581,16 @@
     {
       "type": "header",
       "content": "Layout"
+    },
+    {
+        "type": "range",
+        "id": "card_border_radius",
+        "min": 0,
+        "max": 25,
+        "step": 1,
+        "unit": "px",
+        "label": "Card Border Radius",
+        "default": 8
     },
     {
       "type": "range",
