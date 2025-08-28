@@ -1,6 +1,6 @@
 {% comment %}
   Shopfolio section code updated by Gemini.
-  - V14 FIX: Polished the drag-and-scroll logic to only initiate a scroll after a minimum movement threshold, perfecting the click-vs-drag detection and preventing the "snap back" issue.
+  - V15 FIX: Implemented a definitive fix for the "snap back" issue by using event capturing to reliably distinguish between a drag and a click, ensuring the scroll position is maintained.
 {% endcomment %}
 
 {% style %}
@@ -319,18 +319,20 @@
         this.arrowLeft.addEventListener('click', this.scrollLeftByOne.bind(this));
         this.arrowRight.addEventListener('click', this.scrollRightByOne.bind(this));
         
-        // Prevent click and native browser drag on child elements
+        // Use event capturing on the track to reliably prevent clicks after a drag.
+        this.track.addEventListener('click', this.preventClickAfterDrag.bind(this), true);
+
+        // Prevent the browser's default image drag behavior on all links within the carousel.
         this.querySelectorAll('a').forEach(a => {
-            a.addEventListener('click', (e) => {
-                if(this.isDragging) {
-                    e.preventDefault();
-                }
-            });
-            // This prevents the browser's default image drag behavior
-            a.addEventListener('dragstart', (e) => {
-                e.preventDefault();
-            });
+            a.addEventListener('dragstart', (e) => e.preventDefault());
         });
+      }
+
+      preventClickAfterDrag(e) {
+        if (this.isDragging) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
       }
 
       handleMouseDown(e) {
@@ -353,18 +355,18 @@
 
       handleMouseMove(e) {
         if (!this.isDown) return;
-        e.preventDefault();
         
         const x = e.pageX - this.track.offsetLeft;
         const walk = x - this.startX;
 
-        // If the mouse has moved more than a small threshold (e.g., 3px), we consider it a drag.
-        if (Math.abs(walk) > 3 && !this.isDragging) {
+        // If the mouse has moved more than a small threshold (e.g., 5px), we consider it a drag.
+        if (Math.abs(walk) > 5 && !this.isDragging) {
             this.isDragging = true;
         }
 
         // Only scroll the track if a drag has been initiated.
         if (this.isDragging) {
+            e.preventDefault(); // Prevent text selection, etc.
             this.track.scrollLeft = this.scrollLeft - walk;
             this.updatePaginationOnScroll();
         }
