@@ -24,11 +24,27 @@
     --subheading-font-weight: {{ section.settings.subheading_font.weight }};
     --subheading-font-size: {{ section.settings.subheading_font_size_desktop }}px;
     --subheading-color: {{ section.settings.subheading_color }};
+    
+    --logo-max-width: {{ section.settings.logo_width }}px;
+    --logo-position: {{ section.settings.logo_position }}%;
   }
 
   .custom-features-section {
     padding: 40px 0;
     text-align: center;
+    {% if section.settings.show_divider %}
+      border-top: 1px solid #e5e5e5;
+    {% endif %}
+  }
+  
+  .section-header-{{ section.id }} {
+    margin-bottom: 30px;
+  }
+
+  .section-header-{{ section.id }} .logo-image {
+    max-width: var(--logo-max-width);
+    margin-left: var(--logo-position);
+    transform: translateX(-50%);
   }
 
   .custom-features-grid {
@@ -99,6 +115,12 @@
 </style>
 
 <div class="custom-features-section page-width custom-features-section-{{ section.id }}">
+  {%- if section.settings.logo != blank -%}
+    <div class="section-header-{{ section.id }}">
+      <img src="{{ section.settings.logo | image_url: width: 400 }}" class="logo-image" alt="{{ section.settings.logo.alt | default: 'Logo' }}">
+    </div>
+  {%- endif -%}
+
   <div class="custom-features-grid">
     {%- for block in section.blocks -%}
       <a href="{{ block.settings.link_url }}" class="custom-feature-block" {{ block.shopify_attributes }}>
@@ -149,6 +171,41 @@
   "class": "custom-features-wrapper",
   "max_blocks": 4,
   "settings": [
+    {
+      "type": "header",
+      "content": "Section Header"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_divider",
+      "label": "Show top divider",
+      "default": true
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "min": 50,
+      "max": 400,
+      "step": 10,
+      "unit": "px",
+      "label": "Logo Width",
+      "default": 150
+    },
+    {
+      "type": "range",
+      "id": "logo_position",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Logo Horizontal Position",
+      "default": 50
+    },
     {
       "type": "header",
       "content": "Typography"
