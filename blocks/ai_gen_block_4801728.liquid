@@ -1,14 +1,16 @@
 {% comment %}
   Shopify section code updated by Gemini.
-  - Fixed collection and manual product selection logic.
-  - Added "Card Border Radius" setting.
-  - Added separate font size controls for desktop and mobile (title & price).
+  - V2 FIX: Implemented a more robust fix for manual product selection.
+  - ADDED: Setting for the maximum number of products to show.
+  - ADDED: Settings for number of columns on desktop and mobile.
+  - UPDATED: CSS and JS to support dynamic columns.
 {% endcomment %}
 
 {% style %}
   .ai-product-carousel-{{ ai_gen_id }} {
     width: 100%;
     padding: 40px 20px;
+    box-sizing: border-box;
   }
 
   .ai-product-carousel__heading-{{ ai_gen_id }} {
@@ -37,7 +39,7 @@
     scroll-behavior: smooth;
     scrollbar-width: none;
     -ms-overflow-style: none;
-    padding-bottom: 10px;
+    padding-bottom: 20px; /* Increased padding for pagination */
   }
 
   .ai-product-carousel__track-{{ ai_gen_id }}::-webkit-scrollbar {
@@ -46,7 +48,8 @@
 
   .ai-product-carousel__card-{{ ai_gen_id }} {
     flex: 0 0 auto;
-    width: calc((100% - ({{ block.settings.card_spacing }}px * 3)) / 4);
+    /* <-- New Desktop Column Setting Applied --> */
+    width: calc((100% - ({{ block.settings.card_spacing }}px * ({{ block.settings.desktop_columns | minus: 1 }}))) / {{ block.settings.desktop_columns }});
     min-width: 200px;
   }
 
@@ -56,7 +59,7 @@
     aspect-ratio: 1;
     margin-bottom: 12px;
     overflow: hidden;
-    border-radius: {{ block.settings.card_border_radius }}px; /* <-- New Setting Applied */
+    border-radius: {{ block.settings.card_border_radius }}px;
   }
 
   .ai-product-carousel__image-{{ ai_gen_id }} {
@@ -68,21 +71,6 @@
 
   .ai-product-carousel__card-{{ ai_gen_id }}:hover .ai-product-carousel__image-{{ ai_gen_id }} {
     transform: scale(1.05);
-  }
-
-  .ai-product-carousel__image-placeholder-{{ ai_gen_id }} {
-    width: 100%;
-    height: 100%;
-    background-color: #f4f4f4;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .ai-product-carousel__image-placeholder-{{ ai_gen_id }} svg {
-    width: 60%;
-    height: 60%;
-    opacity: 0.3;
   }
 
   .ai-product-carousel__sale-badge-{{ ai_gen_id }} {
@@ -102,7 +90,7 @@
     font-family: {{ block.settings.product_font.family }}, {{ block.settings.product_font.fallback_families }};
     font-weight: {{ block.settings.product_font.weight }};
     font-style: {{ block.settings.product_font.style }};
-    font-size: {{ block.settings.desktop_product_title_size }}px; /* <-- New Desktop Setting */
+    font-size: {{ block.settings.desktop_product_title_size }}px;
     color: {{ block.settings.product_title_color }};
     margin: 0 0 8px 0;
     line-height: 1.3;
@@ -117,7 +105,7 @@
     font-family: {{ block.settings.product_font.family }}, {{ block.settings.product_font.fallback_families }};
     font-weight: {{ block.settings.product_font.weight }};
     font-style: {{ block.settings.product_font.style }};
-    font-size: {{ block.settings.desktop_product_price_size }}px; /* <-- New Desktop Setting */
+    font-size: {{ block.settings.desktop_product_price_size }}px;
     margin: 0;
     {% if block.settings.product_text_center %}
       text-align: center;
@@ -154,6 +142,7 @@
     height: 8px;
     border-radius: 50%;
     background-color: #ccc;
+    cursor: pointer;
     transition: background-color 0.3s ease;
   }
 
@@ -167,21 +156,11 @@
     display: block;
   }
 
-  .ai-product-carousel__empty-state-{{ ai_gen_id }} {
-    text-align: center;
-    padding: 60px 20px;
-    color: #666;
-  }
-
-  .ai-product-carousel__empty-title-{{ ai_gen_id }} {
-    font-size: 18px;
-    margin-bottom: 8px;
-    color: #333;
-  }
-
   @media screen and (max-width: 768px) {
     .ai-product-carousel__card-{{ ai_gen_id }} {
-      width: calc((100% - {{ block.settings.card_spacing }}px) / 2.3);
+      /* <-- New Mobile Column Setting Applied (with peek effect) --> */
+      {% assign mobile_divisor = block.settings.mobile_columns | plus: 0.3 %}
+      width: calc((100% - {{ block.settings.card_spacing }}px) / {{ mobile_divisor }});
       min-width: 140px;
     }
 
@@ -190,41 +169,31 @@
     }
 
     .ai-product-carousel__title-{{ ai_gen_id }} {
-      font-size: {{ block.settings.mobile_product_title_size }}px; /* <-- New Mobile Setting */
+      font-size: {{ block.settings.mobile_product_title_size }}px;
     }
 
     .ai-product-carousel__price-{{ ai_gen_id }} {
-      font-size: {{ block.settings.mobile_product_price_size }}px; /* <-- New Mobile Setting */
-    }
-  }
-
-  @media screen and (max-width: 480px) {
-    .ai-product-carousel__card-{{ ai_gen_id }} {
-      width: calc((100% - {{ block.settings.card_spacing }}px) / 2.2);
-      min-width: 120px;
+      font-size: {{ block.settings.mobile_product_price_size }}px;
     }
   }
 {% endstyle %}
 
-<product-carousel-{{ ai_gen_id }} class="ai-product-carousel-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+<div class="ai-product-carousel-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
   {% if block.settings.heading != blank %}
-    <h2 class="ai-product-carousel__heading-{{ ai_gen_id }}">{{ block.settings.heading }}</h2>
+    <h2 class="ai-product-carousel__heading-{{ ai_gen_id }}">{{ block.settings.heading | escape }}</h2>
   {% endif %}
 
   {% liquid
-    assign products_to_show = blank
-    
-    if block.settings.manual_products.size > 0
-      assign products_to_show = block.settings.manual_products
-    elsif block.settings.collection != blank
+    assign products_to_show = block.settings.manual_products
+    if products_to_show.size == 0 and block.settings.collection != blank
       assign products_to_show = block.settings.collection.products
     endif
   %}
 
   {% if products_to_show.size > 0 %}
-    <div class="ai-product-carousel__container-{{ ai_gen_id }}">
+    <product-carousel-{{ ai_gen_id }} class="ai-product-carousel__container-{{ ai_gen_id }}">
       <div class="ai-product-carousel__track-{{ ai_gen_id }}" data-track>
-        {% for product in products_to_show limit: 20 %}
+        {% for product in products_to_show limit: block.settings.max_products_to_show %}
           <div class="ai-product-carousel__card-{{ ai_gen_id }}">
             <a href="{{ product.url }}" class="ai-product-carousel__link-{{ ai_gen_id }}">
               <div class="ai-product-carousel__image-container-{{ ai_gen_id }}">
@@ -245,12 +214,12 @@
 
                 {% if product.compare_at_price > product.price %}
                   <div class="ai-product-carousel__sale-badge-{{ ai_gen_id }}">
-                    {{ block.settings.sale_badge_text }}
+                    {{ block.settings.sale_badge_text | escape }}
                   </div>
                 {% endif %}
               </div>
 
-              <h3 class="ai-product-carousel__title-{{ ai_gen_id }}">{{ product.title }}</h3>
+              <h3 class="ai-product-carousel__title-{{ ai_gen_id }}">{{ product.title | escape }}</h3>
 
               <div class="ai-product-carousel__price-{{ ai_gen_id }}">
                 {% if product.compare_at_price > product.price %}
@@ -266,80 +235,75 @@
       </div>
 
       <div class="ai-product-carousel__pagination-{{ ai_gen_id }}" data-pagination></div>
-    </div>
+    </product-carousel-{{ ai_gen_id }}>
   {% else %}
     <div class="ai-product-carousel__empty-state-{{ ai_gen_id }}">
-      <div class="ai-product-carousel__empty-title-{{ ai_gen_id }}">No products to display</div>
-      <p>Select a collection or add products manually to display them in this carousel.</p>
+      <h3>No products to display</h3>
+      <p>Select a collection or add products manually in the theme editor.</p>
     </div>
   {% endif %}
-</product-carousel-{{ ai_gen_id }}>
+</div>
 
 <script>
   (function() {
     class ProductCarousel{{ ai_gen_id }} extends HTMLElement {
       constructor() {
         super();
-        this.track = null;
-        this.pagination = null;
-        this.cards = [];
-        this.currentPage = 0;
-        this.cardsPerPage = 4;
-        this.totalPages = 0;
+        this.track = this.querySelector('[data-track]');
+        this.pagination = this.querySelector('[data-pagination]');
+        this.cards = this.track ? Array.from(this.track.children) : [];
+        
+        if (this.cards.length === 0) return;
+
+        this.debouncedOnResize = this.debounce(this.onResize.bind(this), 250);
+        this.init();
+      }
+
+      init() {
+        this.updateProperties();
+        this.setupPagination();
+        this.setupScrollListener();
+        this.updatePaginationDots();
       }
 
       connectedCallback() {
-        this.track = this.querySelector('[data-track]');
-        this.pagination = this.querySelector('[data-pagination]');
-        
-        if (!this.track) return;
-
-        this.cards = Array.from(this.track.children);
-        if (this.cards.length === 0) return; // Prevent errors if no products
-        
-        this.calculatePages();
-        this.setupPagination();
-        this.setupScrollListener();
-        this.updatePagination();
-        
-        // Recalculate on resize
-        window.addEventListener('resize', this.debounce(() => {
-          this.calculatePages();
-          this.setupPagination();
-          this.updateCurrentPage();
-          this.updatePagination();
-        }, 250));
+        if (this.cards.length > 0) {
+            window.addEventListener('resize', this.debouncedOnResize);
+        }
       }
 
-      calculatePages() {
-        const containerWidth = this.track.offsetWidth;
-        const cardWidth = this.cards[0]?.offsetWidth;
-        if (!cardWidth) return;
+      disconnectedCallback() {
+         if (this.cards.length > 0) {
+            window.removeEventListener('resize', this.debouncedOnResize);
+         }
+      }
 
-        const gap = {{ block.settings.card_spacing }};
-        
+      updateProperties() {
         if (window.innerWidth <= 768) {
-          this.cardsPerPage = (containerWidth + gap) / (cardWidth + gap);
+          this.cardsPerPage = {{ block.settings.mobile_columns }};
         } else {
-          this.cardsPerPage = Math.floor((containerWidth + gap) / (cardWidth + gap));
-          this.cardsPerPage = Math.min(this.cardsPerPage, 4);
+          this.cardsPerPage = {{ block.settings.desktop_columns }};
         }
-        
-        this.totalPages = this.cards.length > this.cardsPerPage ? Math.ceil(this.cards.length / this.cardsPerPage) : 1;
-        if(window.innerWidth <= 768) {
-           this.totalPages = Math.ceil(this.cards.length / Math.floor(this.cardsPerPage));
-        }
+        this.totalPages = this.cards.length > 0 ? Math.ceil(this.cards.length / this.cardsPerPage) : 0;
+        this.currentPage = this.calculateCurrentPage();
+      }
+      
+      onResize() {
+        this.updateProperties();
+        this.setupPagination();
+        this.updatePaginationDots();
       }
 
       setupPagination() {
-        if (!this.pagination || this.totalPages <= 1) {
-          if (this.pagination) this.pagination.style.display = 'none';
-          return;
-        }
-
-        this.pagination.style.display = 'flex';
+        if (!this.pagination) return;
         this.pagination.innerHTML = '';
+
+        if (this.totalPages <= 1) {
+            this.pagination.style.display = 'none';
+            return;
+        }
         
+        this.pagination.style.display = 'flex';
         for (let i = 0; i < this.totalPages; i++) {
           const dot = document.createElement('div');
           dot.className = 'ai-product-carousel__dot-{{ ai_gen_id }}';
@@ -350,31 +314,25 @@
 
       setupScrollListener() {
         let scrollTimeout;
-        
         this.track.addEventListener('scroll', () => {
           clearTimeout(scrollTimeout);
           scrollTimeout = setTimeout(() => {
-            this.updateCurrentPage();
-            this.updatePagination();
-          }, 100);
+            this.currentPage = this.calculateCurrentPage();
+            this.updatePaginationDots();
+          }, 150);
         });
       }
-
-      updateCurrentPage() {
+      
+      calculateCurrentPage() {
+        if (!this.track || !this.cards[0]) return 0;
         const scrollLeft = this.track.scrollLeft;
-        const cardWidth = this.cards[0]?.offsetWidth;
-        if (!cardWidth) return;
-        
-        const gap = {{ block.settings.card_spacing }};
-        
-        // This logic determines the current "page" based on which card is nearest to the left edge
-        this.currentPage = Math.round(scrollLeft / (cardWidth + gap) / Math.floor(this.cardsPerPage));
-        this.currentPage = Math.max(0, Math.min(this.currentPage, this.totalPages - 1));
+        const itemWidth = this.cards[0].offsetWidth + {{ block.settings.card_spacing }};
+        const page = Math.round(scrollLeft / (itemWidth * this.cardsPerPage));
+        return Math.max(0, Math.min(page, this.totalPages - 1));
       }
 
-      updatePagination() {
+      updatePaginationDots() {
         if (!this.pagination) return;
-        
         const dots = this.pagination.children;
         for (let i = 0; i < dots.length; i++) {
           dots[i].classList.toggle('active', i === this.currentPage);
@@ -382,36 +340,24 @@
       }
 
       goToPage(pageIndex) {
-        if (pageIndex < 0 || pageIndex >= this.totalPages) return;
+        if (!this.track || !this.cards[0]) return;
+        const itemWidth = this.cards[0].offsetWidth + {{ block.settings.card_spacing }};
+        const scrollLeft = pageIndex * itemWidth * this.cardsPerPage;
         
-        const cardWidth = this.cards[0]?.offsetWidth;
-        if (!cardWidth) return;
-        
-        const gap = {{ block.settings.card_spacing }};
-        
-        const scrollLeft = pageIndex * Math.floor(this.cardsPerPage) * (cardWidth + gap);
-        
-        this.track.scrollTo({
-          left: scrollLeft,
-          behavior: 'smooth'
-        });
-        
+        this.track.scrollTo({ left: scrollLeft, behavior: 'smooth' });
         this.currentPage = pageIndex;
-        this.updatePagination();
+        this.updatePaginationDots();
       }
 
-      debounce(func, wait, immediate) {
-        var timeout;
-        return function() {
-          var context = this, args = arguments;
-          var later = function() {
-            timeout = null;
-            if (!immediate) func.apply(context, args);
+      debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+          const later = () => {
+            clearTimeout(timeout);
+            func(...args);
           };
-          var callNow = immediate && !timeout;
           clearTimeout(timeout);
           timeout = setTimeout(later, wait);
-          if (callNow) func.apply(context, args);
         };
       };
     }
@@ -422,17 +368,84 @@
 
 {% schema %}
 {
-  "name": "Product carousel",
+  "name": "Product Carousel",
   "settings": [
     {
       "type": "header",
-      "content": "Heading"
+      "content": "Content"
     },
     {
       "type": "text",
       "id": "heading",
       "label": "Heading",
       "default": "TRENDING PIECES"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Fallback Collection"
+    },
+    {
+      "type": "product_list",
+      "id": "manual_products",
+      "label": "Manual Product Selection",
+      "info": "Priority #1. Overrides the collection setting if products are selected here."
+    },
+    {
+        "type": "range",
+        "id": "max_products_to_show",
+        "min": 4,
+        "max": 50,
+        "step": 1,
+        "label": "Max products to show",
+        "default": 12
+    },
+    {
+      "type": "header",
+      "content": "Layout & Styling"
+    },
+    {
+        "type": "range",
+        "id": "desktop_columns",
+        "min": 2,
+        "max": 6,
+        "step": 1,
+        "label": "Columns on desktop",
+        "default": 4
+    },
+    {
+        "type": "range",
+        "id": "mobile_columns",
+        "min": 1,
+        "max": 3,
+        "step": 1,
+        "label": "Columns on mobile",
+        "info": "A third/second column will be partially visible to encourage scrolling.",
+        "default": 2
+    },
+    {
+      "type": "range",
+      "id": "card_spacing",
+      "min": 8,
+      "max": 40,
+      "step": 4,
+      "unit": "px",
+      "label": "Card spacing",
+      "default": 16
+    },
+    {
+      "type": "range",
+      "id": "card_border_radius",
+      "min": 0,
+      "max": 25,
+      "step": 1,
+      "unit": "px",
+      "label": "Card border radius",
+      "default": 8
+    },
+    {
+      "type": "header",
+      "content": "Typography"
     },
     {
       "type": "font_picker",
@@ -445,42 +458,10 @@
       "id": "heading_size",
       "min": 16,
       "max": 60,
-      "step": 2,
+      "step": 1,
       "unit": "px",
       "label": "Heading size",
       "default": 32
-    },
-    {
-      "type": "color",
-      "id": "heading_color",
-      "label": "Heading color",
-      "default": "#000000"
-    },
-    {
-      "type": "checkbox",
-      "id": "heading_center",
-      "label": "Center heading",
-      "default": true
-    },
-    {
-      "type": "header",
-      "content": "Products"
-    },
-    {
-      "type": "collection",
-      "id": "collection",
-      "label": "Collection"
-    },
-    {
-      "type": "product_list",
-      "id": "manual_products",
-      "label": "Manual product selection",
-      "info": "Overrides the collection setting if products are selected here.",
-      "limit": 20
-    },
-    {
-      "type": "header",
-      "content": "Product styling"
     },
     {
       "type": "font_picker",
@@ -529,6 +510,28 @@
       "default": 13
     },
     {
+      "type": "checkbox",
+      "id": "heading_center",
+      "label": "Center heading",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "product_text_center",
+      "label": "Center product text",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Colors & Badges"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#000000"
+    },
+    {
       "type": "color",
       "id": "product_title_color",
       "label": "Product title color",
@@ -545,16 +548,6 @@
       "id": "sale_price_color",
       "label": "Sale price color",
       "default": "#ff0000"
-    },
-    {
-      "type": "checkbox",
-      "id": "product_text_center",
-      "label": "Center product text",
-      "default": false
-    },
-    {
-      "type": "header",
-      "content": "Sale badge"
     },
     {
       "type": "text",
@@ -577,35 +570,11 @@
       "unit": "px",
       "label": "Sale badge size",
       "default": 12
-    },
-    {
-      "type": "header",
-      "content": "Layout"
-    },
-    {
-        "type": "range",
-        "id": "card_border_radius",
-        "min": 0,
-        "max": 25,
-        "step": 1,
-        "unit": "px",
-        "label": "Card Border Radius",
-        "default": 8
-    },
-    {
-      "type": "range",
-      "id": "card_spacing",
-      "min": 8,
-      "max": 40,
-      "step": 4,
-      "unit": "px",
-      "label": "Card spacing",
-      "default": 16
     }
   ],
   "presets": [
     {
-      "name": "Product carousel"
+      "name": "Product Carousel"
     }
   ]
 }
