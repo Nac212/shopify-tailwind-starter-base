@@ -1,6 +1,6 @@
 {% comment %}
   Shopfolio section code updated by Gemini.
-  - V13 FIX: Implemented a more robust drag-detection logic to prevent the carousel from snapping back to the start after a drag-and-click action.
+  - V14 FIX: Polished the drag-and-scroll logic to only initiate a scroll after a minimum movement threshold, perfecting the click-vs-drag detection and preventing the "snap back" issue.
 {% endcomment %}
 
 {% style %}
@@ -358,13 +358,16 @@
         const x = e.pageX - this.track.offsetLeft;
         const walk = x - this.startX;
 
-        // If the mouse has moved more than a small threshold (e.g., 5px), we consider it a drag.
-        if (Math.abs(walk) > 5) {
+        // If the mouse has moved more than a small threshold (e.g., 3px), we consider it a drag.
+        if (Math.abs(walk) > 3 && !this.isDragging) {
             this.isDragging = true;
         }
 
-        this.track.scrollLeft = this.scrollLeft - walk;
-        this.updatePaginationOnScroll();
+        // Only scroll the track if a drag has been initiated.
+        if (this.isDragging) {
+            this.track.scrollLeft = this.scrollLeft - walk;
+            this.updatePaginationOnScroll();
+        }
       }
 
       scrollLeftByOne() {
