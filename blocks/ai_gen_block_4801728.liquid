@@ -1,6 +1,6 @@
 {% comment %}
   Shopify section code updated by Gemini.
-  - V6 FIX: Added full sale badge customization (background, border, text color), implemented drag-to-scroll functionality, and added header navigation arrows.
+  - V7 FIX: Added mobile-specific sale badge size setting and refined the drag-to-scroll functionality for a smoother, more controlled user experience.
 {% endcomment %}
 
 {% style %}
@@ -197,6 +197,10 @@
     .ai-product-carousel__price-{{ ai_gen_id }} {
       font-size: {{ block.settings.mobile_product_price_size }}px;
     }
+
+    .ai-product-carousel__sale-badge-{{ ai_gen_id }} {
+        font-size: {{ block.settings.mobile_sale_badge_size }}px;
+    }
   }
 {% endstyle %}
 
@@ -349,7 +353,7 @@
         e.preventDefault();
         this.isDragging = true;
         const x = e.pageX - this.track.offsetLeft;
-        const walk = (x - this.startX) * 2; // the *2 makes the scroll faster
+        const walk = x - this.startX;
         this.track.scrollLeft = this.scrollLeft - walk;
         this.updatePaginationOnScroll();
       }
@@ -682,6 +686,16 @@
         "unit": "px",
         "label": "Sale badge size",
         "default": 12
+      },
+      {
+        "type": "range",
+        "id": "mobile_sale_badge_size",
+        "min": 8,
+        "max": 16,
+        "step": 1,
+        "unit": "px",
+        "label": "Sale badge size on mobile",
+        "default": 10
       }
     ],
     "presets": [
