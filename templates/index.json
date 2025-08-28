@@ -224,11 +224,52 @@
             "sale_badge_position_left_mobile": 2
           },
           "blocks": {}
+        },
+        "ai_gen_block_4801728_PXzMGn": {
+          "type": "ai_gen_block_4801728",
+          "settings": {
+            "heading": "FALIENNE PICKS",
+            "collection": "full-collection",
+            "manual_products": [],
+            "max_products_to_show": 9,
+            "section_padding_top": 44,
+            "section_padding_bottom": 0,
+            "aspect_ratio": "portrait",
+            "mobile_aspect_ratio": "portrait",
+            "mobile_columns": 2.3,
+            "card_spacing": 8,
+            "card_border_radius": 3,
+            "heading_font": "bebas_neue_n4",
+            "heading_size": 38,
+            "product_font": "poppins_n4",
+            "desktop_product_title_size": 12,
+            "mobile_product_title_size": 11,
+            "desktop_product_price_size": 12,
+            "mobile_product_price_size": 11,
+            "heading_center": true,
+            "product_text_center": true,
+            "heading_color": "#000000",
+            "product_title_color": "#000000",
+            "regular_price_color": "#000000",
+            "sale_price_color": "#ff0000",
+            "sale_badge_text": "ON SALE",
+            "sale_badge_color": "#ff4949",
+            "sale_badge_background_color": "#ffffff",
+            "sale_badge_border_color": "#000000",
+            "sale_badge_size": 8,
+            "mobile_sale_badge_size": 6,
+            "sale_badge_position_top_desktop": 3,
+            "sale_badge_position_left_desktop": 4,
+            "sale_badge_position_top_mobile": 2,
+            "sale_badge_position_left_mobile": 2
+          },
+          "blocks": {}
         }
       },
       "block_order": [
         "ai_gen_block_5820fa6_Bgh9yX",
-        "ai_gen_block_4801728_97aLkP"
+        "ai_gen_block_4801728_97aLkP",
+        "ai_gen_block_4801728_PXzMGn"
       ],
       "settings": {}
     },
