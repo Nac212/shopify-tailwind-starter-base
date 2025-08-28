@@ -351,6 +351,11 @@
       handleMouseUp() {
         this.isDown = false;
         this.track.classList.remove('active');
+        // It's important to reset the isDragging flag slightly after mouseup
+        // to ensure the click event has time to be captured.
+        setTimeout(() => {
+          this.isDragging = false;
+        }, 0);
       }
 
       handleMouseMove(e) {
@@ -360,7 +365,7 @@
         const walk = x - this.startX;
 
         // If the mouse has moved more than a small threshold (e.g., 5px), we consider it a drag.
-        if (Math.abs(walk) > 5 && !this.isDragging) {
+        if (Math.abs(walk) > 5) {
             this.isDragging = true;
         }
 
