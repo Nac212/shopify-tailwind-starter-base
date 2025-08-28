@@ -189,10 +189,10 @@
           "type": "ai_gen_block_4801728",
           "settings": {
             "heading": "TRENDING PIECES",
-            "collection": "earrings",
+            "collection": "full-collection",
             "manual_products": [],
-            "max_products_to_show": 4,
-            "desktop_columns": 4,
+            "max_products_to_show": 9,
+            "aspect_ratio": "square",
             "mobile_columns": 2,
             "card_spacing": 8,
             "card_border_radius": 3,
