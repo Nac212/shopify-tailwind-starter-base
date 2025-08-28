@@ -452,14 +452,16 @@
       ],
       "name": "Custom Features",
       "settings": {
-        "icon_size_desktop": 48,
+        "heading_font": "poppins_n4",
+        "heading_color": "#333333",
+        "subheading_font": "sans-serif",
+        "subheading_color": "#777777",
+        "icon_size_desktop": 40,
         "heading_font_size_desktop": 16,
         "subheading_font_size_desktop": 14,
         "icon_size_mobile": 38,
         "heading_font_size_mobile": 12,
-        "subheading_font_size_mobile": 12,
-        "heading_color": "#333333",
-        "subheading_color": "#777777"
+        "subheading_font_size_mobile": 12
       }
     }
   },
