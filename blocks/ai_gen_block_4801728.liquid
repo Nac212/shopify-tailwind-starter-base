@@ -1,6 +1,6 @@
 {% comment %}
-  Shopify section code updated by Gemini.
-  - V11 FIX: Refined the drag-to-scroll logic for a smoother, 1-to-1 movement on desktop, matching the behavior of the reference site.
+  Shopfolio section code updated by Gemini.
+  - V12 FIX: Removed `scroll-behavior: smooth` from the track's CSS to fix the jerky/unresponsive drag-and-scroll behavior on desktop.
 {% endcomment %}
 
 {% style %}
@@ -50,7 +50,7 @@
     display: flex;
     gap: {{ block.settings.card_spacing }}px;
     overflow-x: auto;
-    scroll-behavior: smooth;
+    /* The `scroll-behavior: smooth` property is removed here to allow the JavaScript drag-and-scroll to work correctly without interference. */
     scrollbar-width: none;
     -ms-overflow-style: none;
     padding-bottom: 20px;
