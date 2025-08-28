@@ -216,13 +216,13 @@
     background-color: #333;
   }
   
-  /* Updated scrollbar styling for better visual feedback */
+  /* ByCharlotte-style pagination indicator */
   .ai-product-carousel__scrollbar-container-{{ ai_gen_id }} {
-    width: 80%;
+    width: 8rem;
     margin: 20px auto 0;
-    height: 3px;
-    background-color: #e5e5e5;
-    border-radius: 2px;
+    height: 2px;
+    background-color: #e0e0e0;
+    border-radius: 1px;
     position: relative;
     overflow: hidden;
   }
@@ -232,10 +232,10 @@
     top: 0;
     left: 0;
     height: 100%;
+    width: 25%;
     background-color: #333;
-    border-radius: 2px;
-    transition: all 0.1s ease-out;
-    min-width: 20px; /* Minimum thumb width for better visibility */
+    border-radius: 1px;
+    transition: margin-left 0.3s ease-out;
   }
 
   @media screen and (max-width: 768px) {
@@ -445,37 +445,28 @@
         const visibleWidth = track.clientWidth;
         const currentScrollLeft = track.scrollLeft;
         
-        // If content fits within visible area, show full bar
+        // If content fits within visible area, no movement
         if (contentWidth <= visibleWidth) {
-          thumb.style.width = '100%';
-          thumb.style.left = '0%';
+          thumb.style.marginLeft = '0%';
           return;
         }
 
-        // Calculate how much content is scrollable
+        // Calculate scroll progress (0 to 1)
         const maxScrollLeft = contentWidth - visibleWidth;
-        
-        // Calculate thumb width as percentage of container (minimum 15% for visibility)
-        const thumbWidthPercentage = Math.max((visibleWidth / contentWidth) * 100, 15);
-        
-        // Calculate current scroll progress (0 to 1)
         const scrollProgress = Math.max(0, Math.min(currentScrollLeft / maxScrollLeft, 1));
         
-        // Calculate thumb position within the remaining space
-        const availableSpace = 100 - thumbWidthPercentage;
-        const thumbPosition = scrollProgress * availableSpace;
+        // Calculate position within the available 75% space (100% - 25% thumb width)
+        const maxPosition = 75; // 100% - 25% (thumb width)
+        const thumbPosition = scrollProgress * maxPosition;
         
-        // Apply the calculated values
-        thumb.style.width = `${thumbWidthPercentage}%`;
-        thumb.style.left = `${thumbPosition}%`;
+        // Apply margin-left positioning like ByCharlotte
+        thumb.style.marginLeft = `${thumbPosition}%`;
         
-        // Debug logging (remove after testing)
-        console.log('Scrollbar Debug:', {
+        console.log('Scrollbar Update:', {
           scrollLeft: currentScrollLeft,
           maxScroll: maxScrollLeft,
           progress: scrollProgress,
-          thumbWidth: thumbWidthPercentage,
-          thumbPos: thumbPosition
+          marginLeft: `${thumbPosition}%`
         });
       }
 
