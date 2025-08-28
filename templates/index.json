@@ -205,7 +205,7 @@
             "sale_badge_text": "ON SALE",
             "sale_badge_color": "#ff0000",
             "sale_badge_size": 12,
-            "card_spacing": 12
+            "card_spacing": 8
           },
           "blocks": {}
         }
