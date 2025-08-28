@@ -1,7 +1,6 @@
 {% comment %}
-  Shopfolio section code updated with proper pagination scroll indicator.
-  - Fixed pagination bar to properly highlight active section based on scroll position
-  - Synchronized scroll position with visual progress bar
+  Shopfolio section code updated by Gemini.
+  - V26 FINAL FIX: Re-implemented the pagination from the ground up based on the user-provided fix plan. This version uses a clean, simple, and robust segmented bar for mobile that correctly syncs with the scroll position. All conflicting scrollbar code has been removed.
 {% endcomment %}
 
 {% style %}
@@ -40,60 +39,7 @@
   }
 
   .ai-product-carousel__side-arrow-{{ ai_gen_id }} {
-    display: none;
-  }
-
-  @media screen and (min-width: 769px) {
-    .ai-product-carousel__side-arrow-{{ ai_gen_id }} {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      background-color: white;
-      border: 1px solid #e0e0e0;
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      z-index: 10;
-      transition: opacity 0.3s ease, box-shadow 0.3s ease;
-      opacity: 0;
-    }
-
-    .ai-product-carousel__container-{{ ai_gen_id }}:hover .ai-product-carousel__side-arrow-{{ ai_gen_id }} {
-        opacity: 1;
-    }
-
-    .ai-product-carousel__side-arrow-{{ ai_gen_id }}.left {
-      left: -20px;
-    }
-
-    .ai-product-carousel__side-arrow-{{ ai_gen_id }}.right {
-      right: -20px;
-    }
-
-    .ai-product-carousel__side-arrow-{{ ai_gen_id }}:not(.disabled):hover {
-      box-shadow: 0 0 8px rgba(0,0,0,0.15);
-    }
-
-    .ai-product-carousel__side-arrow-{{ ai_gen_id }}.disabled {
-      opacity: 0 !important;
-      cursor: default;
-      pointer-events: none;
-    }
-
-    .ai-product-carousel__side-arrow-{{ ai_gen_id }} svg {
-      width: 16px;
-      height: 16px;
-    }
-    .ai-product-carousel__pagination-{{ ai_gen_id }} {
-        display: flex;
-    }
-    .ai-product-carousel__scrollbar-container-{{ ai_gen_id }} {
-        display: none;
-    }
+    display: none; /* Hidden by default, shown on desktop */
   }
 
   .ai-product-carousel__track-{{ ai_gen_id }} {
@@ -130,7 +76,7 @@
     height: 100%;
     object-fit: cover;
     transition: transform 0.3s ease;
-    pointer-events: none;
+    pointer-events: none; /* Prevent image drag interference */
   }
 
   .ai-product-carousel__card-{{ ai_gen_id }}:hover .ai-product-carousel__image-{{ ai_gen_id }} {
@@ -197,44 +143,73 @@
   }
 
   .ai-product-carousel__pagination-{{ ai_gen_id }} {
+    display: flex;
     justify-content: center;
     align-items: center;
     gap: 8px;
     margin-top: 20px;
   }
 
-  .ai-product-carousel__dot-{{ ai_gen_id }} {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
+  .ai-product-carousel__pagination-item-{{ ai_gen_id }} {
     background-color: #ccc;
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
 
-  .ai-product-carousel__dot-{{ ai_gen_id }}.active {
+  .ai-product-carousel__pagination-item-{{ ai_gen_id }}.active {
     background-color: #333;
   }
-  
-  /* Simple, direct pagination indicator */
-  .ai-product-carousel__scrollbar-container-{{ ai_gen_id }} {
-    width: 128px; /* 8rem = 128px */
-    height: 2px;
-    margin: 20px auto 0;
-    background-color: #e0e0e0;
-    position: relative;
+
+  /* Desktop: Dots */
+  @media screen and (min-width: 769px) {
+    .ai-product-carousel__side-arrow-{{ ai_gen_id }} {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background-color: white;
+      border: 1px solid #e0e0e0;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: opacity 0.3s ease, box-shadow 0.3s ease;
+      opacity: 0;
+    }
+
+    .ai-product-carousel__container-{{ ai_gen_id }}:hover .ai-product-carousel__side-arrow-{{ ai_gen_id }} {
+        opacity: 1;
+    }
+
+    .ai-product-carousel__side-arrow-{{ ai_gen_id }}.left { left: -20px; }
+    .ai-product-carousel__side-arrow-{{ ai_gen_id }}.right { right: -20px; }
+
+    .ai-product-carousel__side-arrow-{{ ai_gen_id }}:not(.disabled):hover {
+      box-shadow: 0 0 8px rgba(0,0,0,0.15);
+    }
+
+    .ai-product-carousel__side-arrow-{{ ai_gen_id }}.disabled {
+      opacity: 0 !important;
+      cursor: default;
+      pointer-events: none;
+    }
+
+    .ai-product-carousel__side-arrow-{{ ai_gen_id }} svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .ai-product-carousel__pagination-item-{{ ai_gen_id }} {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
   }
 
-  .ai-product-carousel__scrollbar-thumb-{{ ai_gen_id }} {
-    width: 32px; /* 25% of 128px */
-    height: 2px;
-    background-color: #000000;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transition: transform 0.3s ease-out;
-  }
-
+  /* Mobile: Segments */
   @media screen and (max-width: 768px) {
     .ai-product-carousel__card-{{ ai_gen_id }} {
       width: calc((100% - {{ block.settings.card_spacing }}px) / {{ block.settings.mobile_columns }});
@@ -262,22 +237,18 @@
         top: {{ block.settings.sale_badge_position_top_mobile }}px;
         left: {{ block.settings.sale_badge_position_left_mobile }}px;
     }
-    
-    {% if block.settings.enable_mobile_scrollbar %}
-      .ai-product-carousel__pagination-{{ ai_gen_id }} {
-          display: none;
-      }
-      .ai-product-carousel__scrollbar-container-{{ ai_gen_id }} {
-          display: block;
-      }
-    {% else %}
-      .ai-product-carousel__pagination-{{ ai_gen_id }} {
-          display: flex;
-      }
-      .ai-product-carousel__scrollbar-container-{{ ai_gen_id }} {
-          display: none;
-      }
-    {% endif %}
+
+    .ai-product-carousel__pagination-{{ ai_gen_id }} {
+      width: 80%;
+      margin-left: auto;
+      margin-right: auto;
+      gap: 4px;
+    }
+
+    .ai-product-carousel__pagination-item-{{ ai_gen_id }} {
+      flex: 1;
+      height: 2px;
+    }
   }
 {% endstyle %}
 
@@ -347,9 +318,6 @@
         </button>
       </div>
       <div class="ai-product-carousel__pagination-{{ ai_gen_id }}" data-pagination></div>
-      <div class="ai-product-carousel__scrollbar-container-{{ ai_gen_id }}" data-scrollbar-container>
-        <div class="ai-product-carousel__scrollbar-thumb-{{ ai_gen_id }}" data-scrollbar-thumb></div>
-      </div>
     </product-carousel-{{ ai_gen_id }}>
   {% else %}
     <div class="ai-product-carousel__empty-state-{{ ai_gen_id }}">
@@ -368,18 +336,11 @@
         this.pagination = this.querySelector('[data-pagination]');
         this.arrowLeft = this.querySelector('[data-side-arrow-left]');
         this.arrowRight = this.querySelector('[data-side-arrow-right]');
-        this.scrollbarContainer = this.querySelector('[data-scrollbar-container]');
-        this.scrollbarThumb = this.querySelector('[data-scrollbar-thumb]');
         this.cards = this.track ? Array.from(this.track.children) : [];
         
         if (this.cards.length === 0) return;
 
-        this.animationFrameId = null;
-        this.observer = null;
-        this.isScrolling = false;
-        this.scrollTimeout = null;
         this.debouncedOnResize = this.debounce(this.onResize.bind(this), 250);
-        
         this.init();
       }
 
@@ -388,127 +349,13 @@
         this.setupEventListeners();
         this.setupPagination();
         this.updateArrowState();
-        this.updatePaginationDots();
-        this.setupIntersectionObserver();
-        
-        // Initial scrollbar update
-        this.updateScrollbar();
+        this.updatePaginationState();
       }
 
       setupEventListeners() {
         this.arrowLeft.addEventListener('click', this.scrollLeftByOne.bind(this));
         this.arrowRight.addEventListener('click', this.scrollRightByOne.bind(this));
-        
-        // Use multiple event types to catch all scroll scenarios
-        this.track.addEventListener('scroll', this.onScroll.bind(this), { passive: true });
-        this.track.addEventListener('scrollend', this.updateScrollbar.bind(this), { passive: true });
-        this.track.addEventListener('touchstart', this.onTouchStart.bind(this), { passive: true });
-        this.track.addEventListener('touchmove', this.onTouchMove.bind(this), { passive: true });
-        this.track.addEventListener('touchend', this.onTouchEnd.bind(this), { passive: true });
-        
-        // Add a manual scroll listener with polling as backup
-        this.startScrollPolling();
-        
-        console.log('Event listeners setup complete');
-      }
-
-      startScrollPolling() {
-        // Backup polling method to ensure scrollbar updates
-        setInterval(() => {
-          if (this.track && this.scrollbarThumb) {
-            this.updateScrollbar();
-          }
-        }, 100);
-      }
-
-      onTouchStart() {
-        this.isScrolling = true;
-      }
-
-      onTouchMove() {
-        if (this.isScrolling) {
-          // Force immediate update during touch scrolling
-          requestAnimationFrame(() => {
-            this.updateScrollbar();
-          });
-        }
-      }
-
-      onTouchEnd() {
-        this.isScrolling = false;
-        this.updatePaginationOnScroll();
-      }
-
-      onScroll() {
-        // Immediate update for better responsiveness
-        this.updateScrollbar();
-        this.updateArrowState();
-        
-        // Debounced pagination update
-        this.updatePaginationOnScroll();
-      }
-
-      updateScrollbar() {
-        if (!this.scrollbarThumb || !this.track) {
-          console.log('Missing elements:', { thumb: !!this.scrollbarThumb, track: !!this.track });
-          return;
-        }
-
-        const track = this.track;
-        const thumb = this.scrollbarThumb;
-        const contentWidth = track.scrollWidth;
-        const visibleWidth = track.clientWidth;
-        const currentScrollLeft = track.scrollLeft;
-        
-        console.log('Scroll data:', {
-          contentWidth,
-          visibleWidth,
-          currentScrollLeft,
-          canScroll: contentWidth > visibleWidth
-        });
-        
-        // If content fits within visible area, no movement
-        if (contentWidth <= visibleWidth) {
-          thumb.style.marginLeft = '0%';
-          console.log('No scroll needed - setting margin to 0%');
-          return;
-        }
-
-        // Calculate scroll progress (0 to 1)
-        const maxScrollLeft = contentWidth - visibleWidth;
-        const scrollProgress = Math.max(0, Math.min(currentScrollLeft / maxScrollLeft, 1));
-        
-        // Calculate position within the available 75% space (100% - 25% thumb width)
-        const maxPosition = 75; // 100% - 25% (thumb width)
-        const thumbPosition = scrollProgress * maxPosition;
-        
-        // Apply margin-left positioning like ByCharlotte
-        thumb.style.marginLeft = `${thumbPosition}%`;
-        
-        console.log('Scrollbar positioned:', {
-          scrollProgress: (scrollProgress * 100).toFixed(1) + '%',
-          marginLeft: thumbPosition.toFixed(1) + '%',
-          actualStyle: thumb.style.marginLeft
-        });
-      }
-
-      setupIntersectionObserver() {
-        const options = {
-          root: null,
-          rootMargin: '0px',
-          threshold: 0.1
-        };
-
-        this.observer = new IntersectionObserver((entries) => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) {
-              // Update scrollbar when visible
-              this.updateScrollbar();
-            }
-          });
-        }, options);
-
-        this.observer.observe(this);
+        this.track.addEventListener('scroll', this.updateArrowState.bind(this));
       }
 
       scrollLeftByOne() {
@@ -522,58 +369,29 @@
       }
 
       updateArrowState() {
-        if (!this.track) return;
-        
-        const scrollLeft = this.track.scrollLeft;
-        const maxScroll = this.track.scrollWidth - this.track.clientWidth;
+        requestAnimationFrame(() => {
+          if (!this.track) return;
+          const scrollLeft = this.track.scrollLeft;
+          const maxScroll = this.track.scrollWidth - this.track.clientWidth;
 
-        this.arrowLeft.classList.toggle('disabled', scrollLeft <= 1);
-        this.arrowRight.classList.toggle('disabled', scrollLeft >= maxScroll - 1);
+          this.arrowLeft.classList.toggle('disabled', scrollLeft <= 0);
+          this.arrowRight.classList.toggle('disabled', scrollLeft >= maxScroll - 5);
+          
+          this.updatePaginationOnScroll();
+        });
       }
 
       connectedCallback() {
         if (this.cards.length > 0) {
-          window.addEventListener('resize', this.debouncedOnResize);
-          
-          // Multiple initialization attempts to ensure proper setup
-          const initializeScrollbar = () => {
+            window.addEventListener('resize', this.debouncedOnResize);
             this.updateArrowState();
-            this.updateScrollbar();
-          };
-          
-          // Immediate init
-          initializeScrollbar();
-          
-          // Delayed init for DOM rendering
-          setTimeout(initializeScrollbar, 50);
-          setTimeout(initializeScrollbar, 200);
-          
-          // Init after images load
-          const images = this.querySelectorAll('img');
-          if (images.length > 0) {
-            Promise.all(Array.from(images).map(img => {
-              if (img.complete) return Promise.resolve();
-              return new Promise(resolve => {
-                img.onload = img.onerror = resolve;
-              });
-            })).then(initializeScrollbar);
-          }
         }
       }
 
       disconnectedCallback() {
-        if (this.cards.length > 0) {
-          window.removeEventListener('resize', this.debouncedOnResize);
-        }
-        if (this.observer) {
-          this.observer.disconnect();
-        }
-        if (this.animationFrameId) {
-          cancelAnimationFrame(this.animationFrameId);
-        }
-        if (this.scrollTimeout) {
-          clearTimeout(this.scrollTimeout);
-        }
+         if (this.cards.length > 0) {
+            window.removeEventListener('resize', this.debouncedOnResize);
+         }
       }
 
       updateProperties() {
@@ -590,8 +408,7 @@
         this.updateProperties();
         this.setupPagination();
         this.updateArrowState();
-        this.updatePaginationDots();
-        this.updateScrollbar();
+        this.updatePaginationState();
       }
 
       setupPagination() {
@@ -599,61 +416,52 @@
         this.pagination.innerHTML = '';
 
         if (this.totalPages <= 1) {
-          this.pagination.style.display = 'none';
-          return;
+            this.pagination.style.display = 'none';
+            return;
         }
         
         this.pagination.style.display = 'flex';
         for (let i = 0; i < this.totalPages; i++) {
-          const dot = document.createElement('div');
-          dot.className = 'ai-product-carousel__dot-{{ ai_gen_id }}';
-          dot.addEventListener('click', () => this.goToPage(i));
-          this.pagination.appendChild(dot);
+          const item = document.createElement('div');
+          item.className = 'ai-product-carousel__pagination-item-{{ ai_gen_id }}';
+          item.addEventListener('click', () => this.goToPage(i));
+          this.pagination.appendChild(item);
         }
       }
 
       updatePaginationOnScroll() {
-        // Clear existing timeout
-        if (this.scrollTimeout) {
-          clearTimeout(this.scrollTimeout);
-        }
-        
-        // Debounce the pagination update
-        this.scrollTimeout = setTimeout(() => {
-          this.currentPage = this.calculateCurrentPage();
-          this.updatePaginationDots();
-        }, 100);
+        let scrollTimeout;
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            this.currentPage = this.calculateCurrentPage();
+            this.updatePaginationState();
+        }, 150);
       }
       
       calculateCurrentPage() {
         if (!this.track || !this.cards[0]) return 0;
-        
         const scrollLeft = this.track.scrollLeft;
         const itemWidth = this.cards[0].offsetWidth + {{ block.settings.card_spacing }};
-        const itemsPerPage = this.cardsPerPage;
-        
-        // Calculate which page we're on based on scroll position
-        const page = Math.round(scrollLeft / (itemWidth * itemsPerPage));
+        const page = Math.round(scrollLeft / (itemWidth * this.cardsPerPage));
         return Math.max(0, Math.min(page, this.totalPages - 1));
       }
 
-      updatePaginationDots() {
+      updatePaginationState() {
         if (!this.pagination) return;
-        const dots = this.pagination.children;
-        for (let i = 0; i < dots.length; i++) {
-          dots[i].classList.toggle('active', i === this.currentPage);
+        const items = this.pagination.children;
+        for (let i = 0; i < items.length; i++) {
+          items[i].classList.toggle('active', i === this.currentPage);
         }
       }
 
       goToPage(pageIndex) {
         if (!this.track || !this.cards[0]) return;
-        
         const itemWidth = this.cards[0].offsetWidth + {{ block.settings.card_spacing }};
         const scrollLeft = pageIndex * itemWidth * this.cardsPerPage;
         
         this.track.scrollTo({ left: scrollLeft, behavior: 'smooth' });
         this.currentPage = pageIndex;
-        this.updatePaginationDots();
+        this.updatePaginationState();
       }
 
       debounce(func, wait) {
@@ -666,7 +474,7 @@
           clearTimeout(timeout);
           timeout = setTimeout(later, wait);
         };
-      }
+      };
     }
 
     customElements.define('product-carousel-{{ ai_gen_id }}', ProductCarousel{{ ai_gen_id }});
@@ -742,12 +550,6 @@
         "label": "Columns on mobile",
         "info": "Adjust the number of columns visible. Use decimals (e.g., 1.7) to show a part of the next item and encourage scrolling.",
         "default": 2
-      },
-      {
-        "type": "checkbox",
-        "id": "enable_mobile_scrollbar",
-        "label": "Enable scrollbar on mobile",
-        "default": true
       },
       {
         "type": "range",
