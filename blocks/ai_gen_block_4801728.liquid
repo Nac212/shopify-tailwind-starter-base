@@ -1,6 +1,6 @@
 {% comment %}
   Shopfolio section code updated by Gemini.
-  - V20 FIX: Re-styled the mobile scrollbar to feature a dashed track with a solid thumb, replicating the user's design reference for better visual feedback.
+  - V21 FIX: Re-engineered the mobile scrollbar logic to use a requestAnimationFrame loop, ensuring the thumb's position is always perfectly in sync with the scroll position for a smooth and reliable visual experience.
 {% endcomment %}
 
 {% style %}
@@ -372,6 +372,8 @@
         
         if (this.cards.length === 0) return;
 
+        this.animationFrameId = null;
+        this.isObserving = false;
         this.debouncedOnResize = this.debounce(this.onResize.bind(this), 250);
         this.init();
       }
@@ -382,16 +384,13 @@
         this.setupPagination();
         this.updateArrowState();
         this.updatePaginationDots();
-        this.updateScrollbarThumb();
+        this.startScrollObserver();
       }
 
       setupEventListeners() {
         this.arrowLeft.addEventListener('click', this.scrollLeftByOne.bind(this));
         this.arrowRight.addEventListener('click', this.scrollRightByOne.bind(this));
-        this.track.addEventListener('scroll', () => {
-          this.updateArrowState();
-          this.updateScrollbarThumb();
-        });
+        this.track.addEventListener('scroll', this.updateArrowState.bind(this));
       }
 
       scrollLeftByOne() {
@@ -415,39 +414,54 @@
         this.updatePaginationOnScroll();
       }
       
-      updateScrollbarThumb() {
-        if (!this.scrollbarThumb) return;
-        requestAnimationFrame(() => {
-          const track = this.track;
-          const thumb = this.scrollbarThumb;
-          const contentWidth = track.scrollWidth;
-          const visibleWidth = track.clientWidth;
-          
-          if (contentWidth <= visibleWidth) {
-            thumb.style.width = '0px';
-            return;
-          }
+      startScrollObserver() {
+        if (this.isObserving) return;
+        this.isObserving = true;
+        this.observeScroll();
+      }
 
-          const thumbWidth = (visibleWidth / contentWidth) * 100;
-          const scrollPercentage = track.scrollLeft / (contentWidth - visibleWidth);
-          const thumbPosition = scrollPercentage * (100 - thumbWidth);
+      stopScrollObserver() {
+        if (this.animationFrameId) {
+            cancelAnimationFrame(this.animationFrameId);
+        }
+        this.isObserving = false;
+      }
 
-          thumb.style.width = `${thumbWidth}%`;
-          thumb.style.left = `${thumbPosition}%`;
-        });
+      observeScroll() {
+        if (!this.isObserving) return;
+        
+        if (this.scrollbarThumb) {
+            const track = this.track;
+            const thumb = this.scrollbarThumb;
+            const contentWidth = track.scrollWidth;
+            const visibleWidth = track.clientWidth;
+            
+            if (contentWidth <= visibleWidth) {
+              thumb.style.width = '0px';
+            } else {
+              const thumbWidth = (visibleWidth / contentWidth) * 100;
+              const scrollPercentage = track.scrollLeft / (contentWidth - visibleWidth);
+              const thumbPosition = scrollPercentage * (100 - thumbWidth);
+              thumb.style.width = `${thumbWidth}%`;
+              thumb.style.left = `${thumbPosition}%`;
+            }
+        }
+        
+        this.animationFrameId = requestAnimationFrame(this.observeScroll.bind(this));
       }
 
       connectedCallback() {
         if (this.cards.length > 0) {
             window.addEventListener('resize', this.debouncedOnResize);
             this.updateArrowState(); // Initial check
-            this.updateScrollbarThumb();
+            this.startScrollObserver();
         }
       }
 
       disconnectedCallback() {
          if (this.cards.length > 0) {
             window.removeEventListener('resize', this.debouncedOnResize);
+            this.stopScrollObserver();
          }
       }
 
@@ -466,7 +480,6 @@
         this.setupPagination();
         this.updateArrowState();
         this.updatePaginationDots();
-        this.updateScrollbarThumb();
       }
 
       setupPagination() {
