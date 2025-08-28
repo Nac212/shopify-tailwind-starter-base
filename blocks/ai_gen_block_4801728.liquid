@@ -1,6 +1,6 @@
 {% comment %}
   Shopify section code updated by Gemini.
-  - V7 FIX: Added mobile-specific sale badge size setting and refined the drag-to-scroll functionality for a smoother, more controlled user experience.
+  - V9 FIX: Adjusted the minimum value for the mobile sale badge size slider to 1px for full customization.
 {% endcomment %}
 
 {% style %}
@@ -95,8 +95,8 @@
 
   .ai-product-carousel__sale-badge-{{ ai_gen_id }} {
     position: absolute;
-    top: 10px;
-    left: 10px;
+    top: {{ block.settings.sale_badge_position_top_desktop }}px;
+    left: {{ block.settings.sale_badge_position_left_desktop }}px;
     background-color: {{ block.settings.sale_badge_background_color }};
     color: {{ block.settings.sale_badge_color }};
     border: 1px solid {{ block.settings.sale_badge_border_color }};
@@ -181,8 +181,7 @@
 
   @media screen and (max-width: 768px) {
     .ai-product-carousel__card-{{ ai_gen_id }} {
-      {% assign mobile_divisor = block.settings.mobile_columns | plus: 0.3 %}
-      width: calc((100% - {{ block.settings.card_spacing }}px) / {{ mobile_divisor }});
+      width: calc((100% - {{ block.settings.card_spacing }}px) / {{ block.settings.mobile_columns }});
       min-width: 140px;
     }
 
@@ -200,6 +199,8 @@
 
     .ai-product-carousel__sale-badge-{{ ai_gen_id }} {
         font-size: {{ block.settings.mobile_sale_badge_size }}px;
+        top: {{ block.settings.sale_badge_position_top_mobile }}px;
+        left: {{ block.settings.sale_badge_position_left_mobile }}px;
     }
   }
 {% endstyle %}
@@ -522,9 +523,9 @@
         "id": "mobile_columns",
         "min": 1,
         "max": 3,
-        "step": 1,
+        "step": 0.1,
         "label": "Columns on mobile",
-        "info": "A third/second column will be partially visible to encourage scrolling.",
+        "info": "Adjust the number of columns visible. Use decimals (e.g., 1.7) to show a part of the next item and encourage scrolling.",
         "default": 2
       },
       {
@@ -690,11 +691,55 @@
       {
         "type": "range",
         "id": "mobile_sale_badge_size",
-        "min": 8,
+        "min": 1,
         "max": 16,
         "step": 1,
         "unit": "px",
         "label": "Sale badge size on mobile",
+        "default": 10
+      },
+      {
+        "type": "header",
+        "content": "Sale Badge Positioning"
+      },
+      {
+        "type": "range",
+        "id": "sale_badge_position_top_desktop",
+        "min": 0,
+        "max": 50,
+        "step": 1,
+        "unit": "px",
+        "label": "Desktop - Top position",
+        "default": 10
+      },
+      {
+        "type": "range",
+        "id": "sale_badge_position_left_desktop",
+        "min": 0,
+        "max": 50,
+        "step": 1,
+        "unit": "px",
+        "label": "Desktop - Left position",
+        "default": 10
+      },
+      {
+        "type": "range",
+        "id": "sale_badge_position_top_mobile",
+        "min": 0,
+        "max": 50,
+        "step": 1,
+        "unit": "px",
+        "label": "Mobile - Top position",
+        "default": 10
+      },
+      {
+        "type": "range",
+        "id": "sale_badge_position_left_mobile",
+        "min": 0,
+        "max": 50,
+        "step": 1,
+        "unit": "px",
+        "label": "Mobile - Left position",
         "default": 10
       }
     ],
