@@ -408,8 +408,8 @@
           "settings": {
             "icon_select": "gift",
             "icon_svg": "",
-            "heading": "Feature Heading",
-            "subheading": "Describe the feature here.",
+            "heading": "Easy Returns",
+            "subheading": "30 day return policy.",
             "link_url": ""
           }
         },
@@ -418,8 +418,8 @@
           "settings": {
             "icon_select": "payment",
             "icon_svg": "",
-            "heading": "Feature Heading",
-            "subheading": "Describe the feature here.",
+            "heading": "Handcrafted Quality",
+            "subheading": "Made to endure.",
             "link_url": ""
           }
         },
@@ -428,8 +428,8 @@
           "settings": {
             "icon_select": "gift",
             "icon_svg": "",
-            "heading": "Feature Heading",
-            "subheading": "Describe the feature here.",
+            "heading": "Free Shipping",
+            "subheading": "On orders over £60.",
             "link_url": ""
           }
         },
@@ -438,8 +438,8 @@
           "settings": {
             "icon_select": "gift",
             "icon_svg": "",
-            "heading": "Feature Heading",
-            "subheading": "Describe the feature here.",
+            "heading": "1 Year Guarantee",
+            "subheading": "Peace of mind with every purchase.",
             "link_url": ""
           }
         }
