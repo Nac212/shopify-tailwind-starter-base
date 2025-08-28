@@ -1,6 +1,6 @@
 {% comment %}
   Shopfolio section code updated by Gemini.
-  - V12 FIX: Removed `scroll-behavior: smooth` from the track's CSS to fix the jerky/unresponsive drag-and-scroll behavior on desktop.
+  - V13 FIX: Implemented a more robust drag-detection logic to prevent the carousel from snapping back to the start after a drag-and-click action.
 {% endcomment %}
 
 {% style %}
@@ -335,7 +335,7 @@
 
       handleMouseDown(e) {
         this.isDown = true;
-        this.isDragging = false;
+        this.isDragging = false; // Reset dragging state on each new click
         this.track.classList.add('active');
         this.startX = e.pageX - this.track.offsetLeft;
         this.scrollLeft = this.track.scrollLeft;
@@ -349,16 +349,20 @@
       handleMouseUp() {
         this.isDown = false;
         this.track.classList.remove('active');
-        // Reset dragging flag after a short delay to ensure click event is processed
-        setTimeout(() => this.isDragging = false, 50);
       }
 
       handleMouseMove(e) {
         if (!this.isDown) return;
         e.preventDefault();
-        this.isDragging = true;
+        
         const x = e.pageX - this.track.offsetLeft;
         const walk = x - this.startX;
+
+        // If the mouse has moved more than a small threshold (e.g., 5px), we consider it a drag.
+        if (Math.abs(walk) > 5) {
+            this.isDragging = true;
+        }
+
         this.track.scrollLeft = this.scrollLeft - walk;
         this.updatePaginationOnScroll();
       }
