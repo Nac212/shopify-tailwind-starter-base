@@ -1,6 +1,6 @@
 {% comment %}
   Shopify section code updated by Gemini.
-  - V4 FIX: Corrected Liquid syntax to prevent "Unknown tag 'assign'" error and updated sale badge CSS.
+  - V5 FIX: Updated sale badge style, adjusted desktop carousel to show 4.3 columns, and added an image aspect ratio setting.
 {% endcomment %}
 
 {% style %}
@@ -45,14 +45,14 @@
 
   .ai-product-carousel__card-{{ ai_gen_id }} {
     flex: 0 0 auto;
-    width: calc((100% - ({{ block.settings.card_spacing }}px * ({{ block.settings.desktop_columns | minus: 1 }}))) / {{ block.settings.desktop_columns }});
+    width: calc((100% - ({{ block.settings.card_spacing }}px * 4)) / 4.3);
     min-width: 200px;
   }
 
   .ai-product-carousel__image-container-{{ ai_gen_id }} {
     position: relative;
     width: 100%;
-    aspect-ratio: 1;
+    aspect-ratio: {% if block.settings.aspect_ratio == 'portrait' %} 3 / 4 {% elsif block.settings.aspect_ratio == 'original' %} auto {% else %} 1 / 1 {% endif %};
     margin-bottom: 12px;
     overflow: hidden;
     border-radius: {{ block.settings.card_border_radius }}px;
@@ -74,8 +74,8 @@
     top: 10px;
     left: 10px;
     background-color: #ffffff;
-    color: {{ block.settings.sale_badge_color }};
-    border: 1px solid {{ block.settings.sale_badge_color }};
+    color: #ff0000;
+    font-family: "Poppins", sans-serif;
     padding: 5px 10px;
     font-size: {{ block.settings.sale_badge_size }}px;
     font-weight: 500;
@@ -282,7 +282,7 @@
         if (window.innerWidth <= 768) {
           this.cardsPerPage = {{ block.settings.mobile_columns }};
         } else {
-          this.cardsPerPage = {{ block.settings.desktop_columns }};
+          this.cardsPerPage = 4.3;
         }
         this.totalPages = this.cards.length > 0 ? Math.ceil(this.cards.length / this.cardsPerPage) : 0;
         this.currentPage = this.calculateCurrentPage();
@@ -405,13 +405,15 @@
         "content": "Layout & Styling"
       },
       {
-        "type": "range",
-        "id": "desktop_columns",
-        "min": 2,
-        "max": 6,
-        "step": 1,
-        "label": "Columns on desktop",
-        "default": 4
+        "type": "select",
+        "id": "aspect_ratio",
+        "label": "Image aspect ratio",
+        "options": [
+          { "value": "original", "label": "Original" },
+          { "value": "square", "label": "Square (1:1)" },
+          { "value": "portrait", "label": "Portrait (3:4)" }
+        ],
+        "default": "square"
       },
       {
         "type": "range",
