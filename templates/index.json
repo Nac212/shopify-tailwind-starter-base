@@ -399,6 +399,59 @@
         "padding_top": 40,
         "padding_bottom": 52
       }
+    },
+    "custom_features_fLr3cR": {
+      "type": "custom-features",
+      "blocks": {
+        "feature_xkfFEx": {
+          "type": "feature",
+          "settings": {
+            "icon_select": "gift",
+            "icon_svg": "",
+            "heading": "Feature Heading",
+            "subheading": "Describe the feature here.",
+            "link_url": ""
+          }
+        },
+        "feature_Jp3EKn": {
+          "type": "feature",
+          "settings": {
+            "icon_select": "payment",
+            "icon_svg": "",
+            "heading": "Feature Heading",
+            "subheading": "Describe the feature here.",
+            "link_url": ""
+          }
+        },
+        "feature_cDqDMn": {
+          "type": "feature",
+          "settings": {
+            "icon_select": "gift",
+            "icon_svg": "",
+            "heading": "Feature Heading",
+            "subheading": "Describe the feature here.",
+            "link_url": ""
+          }
+        },
+        "feature_YJwhrr": {
+          "type": "feature",
+          "settings": {
+            "icon_select": "gift",
+            "icon_svg": "",
+            "heading": "Feature Heading",
+            "subheading": "Describe the feature here.",
+            "link_url": ""
+          }
+        }
+      },
+      "block_order": [
+        "feature_xkfFEx",
+        "feature_Jp3EKn",
+        "feature_cDqDMn",
+        "feature_YJwhrr"
+      ],
+      "name": "Custom Features",
+      "settings": {}
     }
   },
   "order": [
@@ -410,6 +463,7 @@
     "video",
     "multicolumn",
     "custom_liquid_fr4BWC",
-    "custom_liquid_Q3pEPN"
+    "custom_liquid_Q3pEPN",
+    "custom_features_fLr3cR"
   ]
 }
