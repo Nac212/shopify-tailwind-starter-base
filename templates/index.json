@@ -452,10 +452,13 @@
       ],
       "name": "Custom Features",
       "settings": {
-        "icon_size": 38,
-        "heading_font_size": 16,
+        "icon_size_desktop": 48,
+        "heading_font_size_desktop": 16,
+        "subheading_font_size_desktop": 14,
+        "icon_size_mobile": 38,
+        "heading_font_size_mobile": 12,
+        "subheading_font_size_mobile": 12,
         "heading_color": "#333333",
-        "subheading_font_size": 14,
         "subheading_color": "#777777"
       }
     }
