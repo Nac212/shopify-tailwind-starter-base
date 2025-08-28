@@ -1,0 +1,180 @@
+{% comment %}
+  Section: Custom Features
+
+  This section displays a row of feature blocks, each with an icon,
+  a heading, a subheading, and a link. The content for these
+  blocks can be managed through the Shopify Theme Editor.
+{% endcomment %}
+
+<div class="custom-features-section page-width">
+  <div class="custom-features-grid">
+    {%- for block in section.blocks -%}
+      <a href="{{ block.settings.link_url }}" class="custom-feature-block" {{ block.shopify_attributes }}>
+        <div class="feature-icon">
+          {%- if block.settings.icon_svg != blank -%}
+            {{ block.settings.icon_svg }}
+          {%- else -%}
+            {%- case block.settings.icon_select -%}
+              {%- when 'gift' -%}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7" />
+                </svg>
+              {%- when 'shipping' -%}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                  <path d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10l2.5-1.5L8 17l2.5-1.5L13 16z" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M17 16h2a2 2 0 002-2V6a2 2 0 00-2-2h-1" />
+                </svg>
+              {%- when 'returns' -%}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3" />
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                </svg>
+              {%- when 'payment' -%}
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                </svg>
+            {%- endcase -%}
+          {%- endif -%}
+        </div>
+        <div class="feature-text">
+          {%- if block.settings.heading != blank -%}
+            <h3 class="feature-heading">{{ block.settings.heading | escape }}</h3>
+          {%- endif -%}
+          {%- if block.settings.subheading != blank -%}
+            <p class="feature-subheading">{{ block.settings.subheading | escape }}</p>
+          {%- endif -%}
+        </div>
+      </a>
+    {%- endfor -%}
+  </div>
+</div>
+
+<style>
+  .custom-features-section {
+    padding: 40px 0;
+    text-align: center;
+  }
+
+  .custom-features-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  .custom-feature-block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Align items to the top */
+    padding: 20px;
+    text-decoration: none;
+    color: #333;
+    transition: background-color 0.3s ease;
+    border-radius: 8px;
+    min-height: 180px; /* Set a minimum height */
+  }
+
+  .custom-feature-block:hover {
+    background-color: #f5f5f5; /* Lighter grey on hover */
+  }
+
+  .feature-icon svg {
+    width: 48px;
+    height: 48px;
+    margin-bottom: 15px;
+    color: #555;
+  }
+
+  .feature-heading {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 5px 0;
+  }
+
+  .feature-subheading {
+    font-size: 14px;
+    color: #777;
+    margin: 0;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 990px) {
+    .custom-features-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 550px) {
+    .custom-features-grid {
+      grid-template-columns: 1fr;
+    }
+    .custom-feature-block {
+       min-height: auto; /* Reset min-height for single column */
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Custom Features",
+  "tag": "section",
+  "class": "custom-features-wrapper",
+  "max_blocks": 4,
+  "settings": [],
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature Block",
+      "settings": [
+        {
+          "type": "select",
+          "id": "icon_select",
+          "label": "Select Icon",
+          "options": [
+            { "value": "gift", "label": "Gift" },
+            { "value": "shipping", "label": "Shipping" },
+            { "value": "returns", "label": "Returns" },
+            { "value": "payment", "label": "Payment" }
+          ],
+          "default": "gift"
+        },
+        {
+          "type": "html",
+          "id": "icon_svg",
+          "label": "Or Paste Custom SVG Code",
+          "info": "If you add custom SVG code, it will override the selected icon above."
+        },
+        {
+          "type": "text",
+          "id": "heading",
+          "label": "Heading",
+          "default": "Feature Heading"
+        },
+        {
+          "type": "text",
+          "id": "subheading",
+          "label": "Subheading",
+          "default": "Describe the feature here."
+        },
+        {
+          "type": "url",
+          "id": "link_url",
+          "label": "Link URL"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Custom Features",
+      "blocks": [
+        { "type": "feature" },
+        { "type": "feature" },
+        { "type": "feature" },
+        { "type": "feature" }
+      ]
+    }
+  ]
+}
+{% endschema %}

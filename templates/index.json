@@ -390,50 +390,15 @@
         "padding_bottom": 52
       }
     },
-    "four_collection_banner_iUWMwV": {
-      "type": "four-collection-banner",
-      "blocks": {
-        "collection_item_FBUQnE": {
-          "type": "collection_item",
-          "settings": {
-            "collection": "",
-            "headline": "Headline",
-            "subline": "Subline"
-          }
-        },
-        "collection_item_PUghjY": {
-          "type": "collection_item",
-          "settings": {
-            "collection": "",
-            "headline": "Headline",
-            "subline": "Subline"
-          }
-        },
-        "collection_item_FMVPVD": {
-          "type": "collection_item",
-          "settings": {
-            "collection": "",
-            "headline": "Headline",
-            "subline": "Subline"
-          }
-        },
-        "collection_item_3wVgwe": {
-          "type": "collection_item",
-          "settings": {
-            "collection": "",
-            "headline": "Headline",
-            "subline": "Subline"
-          }
-        }
-      },
-      "block_order": [
-        "collection_item_FBUQnE",
-        "collection_item_PUghjY",
-        "collection_item_FMVPVD",
-        "collection_item_3wVgwe"
-      ],
-      "name": "Four Collection Banner",
-      "settings": {}
+    "custom_liquid_Q3pEPN": {
+      "type": "custom-liquid",
+      "name": "t:sections.custom-liquid.presets.name",
+      "settings": {
+        "custom_liquid": "",
+        "color_scheme": "",
+        "padding_top": 40,
+        "padding_bottom": 52
+      }
     }
   },
   "order": [
@@ -445,6 +410,6 @@
     "video",
     "multicolumn",
     "custom_liquid_fr4BWC",
-    "four_collection_banner_iUWMwV"
+    "custom_liquid_Q3pEPN"
   ]
 }
