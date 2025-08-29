@@ -63,6 +63,7 @@
         },
         "description": {
           "type": "description",
+          "disabled": true,
           "settings": {
             "description_font": "helvetica_n4",
             "description_font_size": 15,
@@ -72,14 +73,28 @@
         "tab_item_zMTLBY": {
           "type": "tab_item",
           "settings": {
-            "tab_header": "Delivery & RETURNS",
-            "tab_content": "<p>shipping</p>"
+            "tab_header": "Details",
+            "tab_content": ""
           }
         },
         "tab_item_YTUJqA": {
           "type": "tab_item",
           "settings": {
             "tab_header": "CARE",
+            "tab_content": "<p>Content for this tab.</p>"
+          }
+        },
+        "tab_item_x3pmDz": {
+          "type": "tab_item",
+          "settings": {
+            "tab_header": "Shipping",
+            "tab_content": "<p>Content for this tab.</p>"
+          }
+        },
+        "tab_item_yzAt8z": {
+          "type": "tab_item",
+          "settings": {
+            "tab_header": "Returns",
             "tab_content": "<p>Content for this tab.</p>"
           }
         },
@@ -117,6 +132,8 @@
         "description",
         "tab_item_zMTLBY",
         "tab_item_YTUJqA",
+        "tab_item_x3pmDz",
+        "tab_item_yzAt8z",
         "tab_item_Pnpi6M",
         "custom_liquid_gqRyCT",
         "share"
