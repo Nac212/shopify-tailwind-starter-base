@@ -140,8 +140,8 @@
       ],
       "settings": {
         "tab_font": "poppins_n4",
-        "tab_header_font_size": 10,
-        "tab_header_font_size_mobile": 10,
+        "tab_header_font_size": 6,
+        "tab_header_font_size_mobile": 8,
         "tab_content_font_size": 12,
         "tab_content_font_size_mobile": 12,
         "enable_sticky_info": true,
