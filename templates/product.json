@@ -22,11 +22,7 @@
         },
         "title": {
           "type": "title",
-          "settings": {
-            "title_font": "bebas_neue_n4",
-            "title_font_size": 35,
-            "title_font_size_mobile": 26
-          }
+          "settings": {}
         },
         "caption": {
           "type": "text",
@@ -42,8 +38,7 @@
         "variant_picker": {
           "type": "variant_picker",
           "settings": {
-            "picker_type": "dropdown",
-            "swatch_shape": "none"
+            "picker_type": "dropdown"
           }
         },
         "quantity_selector": {
@@ -53,8 +48,7 @@
         "buy_buttons": {
           "type": "buy_buttons",
           "settings": {
-            "show_dynamic_checkout": false,
-            "show_gift_card_recipient": true
+            "show_dynamic_checkout": false
           }
         },
         "essential_upsell_frequently_bought_together_app_block_Di6FYN": {
@@ -64,11 +58,7 @@
         "description": {
           "type": "description",
           "disabled": true,
-          "settings": {
-            "description_font": "helvetica_n4",
-            "description_font_size": 15,
-            "description_font_size_mobile": 13
-          }
+          "settings": {}
         },
         "tab_item_zMTLBY": {
           "type": "tab_item",
@@ -139,19 +129,9 @@
         "share"
       ],
       "settings": {
-        "enable_sticky_info": true,
-        "color_scheme": "",
         "media_size": "small",
-        "constrain_to_viewport": true,
-        "media_fit": "contain",
-        "gallery_layout": "thumbnail_slider",
         "media_position": "left",
-        "image_zoom": "none",
-        "mobile_thumbnails": "hide",
-        "hide_variants": true,
-        "enable_video_looping": false,
-        "padding_top": 24,
-        "padding_bottom": 0
+        "enable_sticky_info": true
       }
     },
     "image-with-text": {
