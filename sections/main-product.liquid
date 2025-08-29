@@ -254,7 +254,6 @@
         {{ section.settings.tab_font | font_face }}
         .product-tabs-container {
           width: 100%;
-          font-family: 'Poppins', sans-serif;
           color: #333;
           margin: 3rem 0; /* Increased margin for spacing */
         }
@@ -267,10 +266,13 @@
           white-space: nowrap;
         }
         .tab-header {
+          font-family: {{ section.settings.tab_font.family }}, {{ section.settings.tab_font.fallback_families }};
+          font-style: {{ section.settings.tab_font.style }};
+          font-weight: {{ section.settings.tab_font.weight }};
+          font-size: {{ section.settings.tab_header_font_size }}px;
           cursor: pointer;
           padding: 0.75rem 0; /* Padding top and bottom only */
           margin-right: 2rem; /* Space between tab headers */
-          font-size: 0.9rem;
           color: #888; /* Inactive tabs are grey */
           text-transform: uppercase;
           font-weight: 500;
@@ -288,11 +290,20 @@
         .tab-content {
           display: none;
           line-height: 1.6;
-          font-size: 1rem;
+          font-size: {{ section.settings.tab_content_font_size }}px;
         }
         .tab-content.active {
           display: block;
         }
+
+        @media screen and (max-width: 749px) {
+  .tab-header {
+    font-size: {{ section.settings.tab_header_font_size_mobile }}px;
+  }
+  .tab-content {
+    font-size: {{ section.settings.tab_content_font_size_mobile }}px;
+  }
+}
       </style>
 
       <div class="tab-headers">
