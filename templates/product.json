@@ -22,7 +22,11 @@
         },
         "title": {
           "type": "title",
-          "settings": {}
+          "settings": {
+            "title_font": "bebas_neue_n4",
+            "title_font_size": 32,
+            "title_font_size_mobile": 24
+          }
         },
         "caption": {
           "type": "text",
@@ -38,7 +42,8 @@
         "variant_picker": {
           "type": "variant_picker",
           "settings": {
-            "picker_type": "dropdown"
+            "picker_type": "dropdown",
+            "swatch_shape": "circle"
           }
         },
         "quantity_selector": {
@@ -48,7 +53,8 @@
         "buy_buttons": {
           "type": "buy_buttons",
           "settings": {
-            "show_dynamic_checkout": false
+            "show_dynamic_checkout": false,
+            "show_gift_card_recipient": true
           }
         },
         "essential_upsell_frequently_bought_together_app_block_Di6FYN": {
@@ -58,7 +64,11 @@
         "description": {
           "type": "description",
           "disabled": true,
-          "settings": {}
+          "settings": {
+            "description_font": "helvetica_n4",
+            "description_font_size": 16,
+            "description_font_size_mobile": 14
+          }
         },
         "tab_item_zMTLBY": {
           "type": "tab_item",
@@ -129,9 +139,24 @@
         "share"
       ],
       "settings": {
+        "tab_font": "bebas_neue_n4",
+        "tab_header_font_size": 10,
+        "tab_header_font_size_mobile": 14,
+        "tab_content_font_size": 12,
+        "tab_content_font_size_mobile": 16,
+        "enable_sticky_info": true,
+        "color_scheme": "",
         "media_size": "small",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "thumbnail",
         "media_position": "left",
-        "enable_sticky_info": true
+        "image_zoom": "none",
+        "mobile_thumbnails": "hide",
+        "hide_variants": false,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 36
       }
     },
     "image-with-text": {
