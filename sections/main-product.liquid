@@ -251,6 +251,7 @@
   {%- if tab_blocks.size > 0 and tabs_rendered == false -%}
     <div class="product-tabs-container" id="ProductTabs-{{ section.id }}" {{ block.shopify_attributes }}>
       <style>
+        {{ section.settings.tab_font | font_face }}
         .product-tabs-container {
           width: 100%;
           font-family: 'Poppins', sans-serif;
