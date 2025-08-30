@@ -94,12 +94,40 @@
   {%- case block.type -%}
     {%- when '@app' -%}
       {%- when 'promo_block' -%}
-  <div class="promo-block-wrapper" {{ block.shopify_attributes }}>
+  {%- style -%}
+    #PromoBlock--{{ block.id }} .promo-block-content {
+      background-color: {{ block.settings.promo_background }};
+      padding: {{ block.settings.padding_vertical }}px {{ block.settings.padding_horizontal }}px;
+    }
+    #PromoBlock--{{ block.id }} .promo-block-heading {
+      color: {{ block.settings.promo_heading_color }};
+      font-size: {{ block.settings.heading_font_size }}px;
+    }
+    #PromoBlock--{{ block.id }} .promo-block-subheading {
+      color: {{ block.settings.promo_subheading_color }};
+      font-size: {{ block.settings.subheading_font_size }}px;
+    }
+
+    @media screen and (max-width: 749px) {
+      #PromoBlock--{{ block.id }} .promo-block-heading {
+        font-size: {{ block.settings.heading_font_size_mobile }}px;
+      }
+      #PromoBlock--{{ block.id }} .promo-block-subheading {
+        font-size: {{ block.settings.subheading_font_size_mobile }}px;
+      }
+    }
+  {%- endstyle -%}
+
+  <div
+    id="PromoBlock--{{ block.id }}"
+    class="promo-block-wrapper {% if block.settings.match_button_width %}promo-block-wrapper--match-width{% endif %}"
+    {{ block.shopify_attributes }}
+  >
     {%- if block.settings.promo_link != blank -%}
       <a href="{{ block.settings.promo_link }}" class="promo-block-link">
     {%- endif -%}
 
-    <div class="promo-block-content" style="background-color: {{ block.settings.promo_background }}; color: {{ block.settings.promo_text_color }};">
+    <div class="promo-block-content">
       {%- if block.settings.promo_heading != blank -%}
         <div class="promo-block-heading">
           {{ block.settings.promo_heading }}
@@ -120,26 +148,28 @@
       .promo-block-wrapper {
         margin: 20px 0;
       }
+      .promo-block-wrapper--match-width {
+        max-width: 100%; /* Will match the container width */
+      }
       .promo-block-link {
         text-decoration: none;
         display: block;
       }
       .promo-block-content {
-        padding: 20px;
         text-align: center;
-        border-radius: 4px;
+        border-radius: var(--buttons-radius);
       }
       .promo-block-heading {
         font-weight: bold;
-        font-size: 1.1em;
         margin-bottom: 5px;
       }
-      .promo-block-heading p {
-        margin: 0;
+      .promo-block-heading > *:first-child,
+      .promo-block-subheading > *:first-child {
+        margin-top: 0;
       }
-      .promo-block-subheading p {
-        margin: 0;
-        font-size: 0.9em;
+       .promo-block-heading > *:last-child,
+      .promo-block-subheading > *:last-child {
+        margin-bottom: 0;
       }
     </style>
   </div>
