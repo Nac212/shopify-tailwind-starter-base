@@ -1,27 +1,25 @@
-/* --- Combined Quantity & ATC Button (Grid Layout) --- */
+/* --- Combined Quantity & ATC Button (Final Layout Fix) --- */
 .quantity-and-atc-wrapper{
-    display: grid !important; /* CHANGED from flex to grid */
-    grid-template-columns: 30% 70%; /* Set the 30/70 split here */
+    display: grid !important;
+    grid-template-columns: 30% 70%;
     border:1px solid #a9a9a9;
     border-radius:4px;
     overflow:hidden;
+    /* The WRAPPER now controls the background color and transition */
+    background-color: #000;
+    transition: background-color .2s ease;
 }
 .quantity-and-atc-wrapper:hover{
-    border-color:#a9a9a9;
+    background-color: #fff; /* On hover, the WRAPPER'S background becomes white */
 }
 
-/* Background and text color transitions for children */
-.quantity-and-atc-wrapper .quantity,
-.quantity-and-atc-wrapper .product-form__submit{
-    background-color:#000;
-    transition:background-color .2s ease;
+/* All text inside starts as white */
+.quantity-and-atc-wrapper * {
+    color: #fff;
 }
-.quantity-and-atc-wrapper:hover .quantity,
-.quantity-and-atc-wrapper:hover .product-form__submit{
-    background-color:#fff;
-}
+/* All text inside becomes black on hover */
 .quantity-and-atc-wrapper:hover *{
-    color:#000!important;
+    color: #000 !important;
 }
 
 /* --- Quantity Section --- */
@@ -29,14 +27,11 @@
     display:flex;
     align-items:center;
     border-right:1px solid #ddd;
-    /* REMOVED flex-basis, as grid handles width now */
-}
-.quantity-and-atc-wrapper:hover .quantity{
-    border-right-color:#ddd;
+    /* This section is now transparent, showing the wrapper's background */
+    background-color: transparent;
 }
 
 .quantity-and-atc-wrapper .quantity__input{
-    color:#fff;
     background:transparent;
     border:none;
     padding:10px 2px;
@@ -46,7 +41,6 @@
     -moz-appearance:textfield;
 }
 .quantity-and-atc-wrapper .quantity__button{
-    color:#fff;
     background:transparent;
     border:none;
     padding:10px 12px;
@@ -62,7 +56,10 @@
 
 /* --- Add to Cart Button Section --- */
 .quantity-and-atc-wrapper .product-form__submit{
-    color:#fff;
+    width:100%;
+    height:100%;
+    /* The button itself is now ALWAYS transparent */
+    background-color:transparent!important;
     border:none;
     font-family:'Poppins',sans-serif;
     text-transform:uppercase;
@@ -71,13 +68,12 @@
     display:flex;
     align-items:center;
     justify-content:center;
-    /* REMOVED flex-basis, as grid handles width now */
 }
 
 /* --- Mobile Styles (35/65 Split) --- */
 @media screen and (max-width:749px){
     .quantity-and-atc-wrapper {
-        grid-template-columns: 35% 65%; /* Adjust grid for mobile */
+        grid-template-columns: 35% 65%;
     }
     .quantity-and-atc-wrapper .product-form__submit{
         padding:0 15px;
