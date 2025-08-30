@@ -61,7 +61,7 @@
         "promo_block_Aiq6U4": {
           "type": "promo_block",
           "settings": {
-            "promo_heading": "<p>WANT A FREE GIFT?</p>",
+            "promo_heading": "<p><strong>WANT A FREE GIFT?</strong></p>",
             "promo_subheading": "<p>SPEND £100+ AND CHOOSE YOURS AT CHECKOUT.</p>",
             "promo_link": "",
             "heading_font": "poppins_n4",
@@ -70,12 +70,14 @@
             "promo_heading_color": "#333333",
             "promo_subheading_color": "#555555",
             "match_button_width": true,
-            "padding_vertical": 1,
-            "padding_horizontal": 1,
+            "padding_vertical_desktop": 11,
+            "padding_horizontal_desktop": 20,
+            "padding_vertical_mobile": 7,
+            "padding_horizontal_mobile": 15,
             "heading_font_size": 12,
-            "heading_font_size_mobile": 14,
+            "heading_font_size_mobile": 12,
             "subheading_font_size": 10,
-            "subheading_font_size_mobile": 12
+            "subheading_font_size_mobile": 9
           }
         },
         "essential_upsell_frequently_bought_together_app_block_Di6FYN": {
