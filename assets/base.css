@@ -3780,34 +3780,35 @@ details-disclosure > details {
   font-weight: 700; /* Makes the font bold */
   color: #000000;   /* Sets the text color to black */
 
-/* --- Combined Quantity and Add to Cart Button --- */
+/* --- Combined Quantity and Add to Cart Button (Corrected) --- */
 .quantity-and-atc-wrapper {
   display: flex;
   border: 1px solid #000;
-  border-radius: 4px; /* Adjust for more or less rounded corners */
-  overflow: hidden; /* This keeps the corners neat */
-  background-color: #000; /* Black background for the whole component */
-  color: #fff; /* White text for everything inside */
+  border-radius: 4px;
+  overflow: hidden;
+  background-color: #000;
+  color: #fff;
 }
 
-/* Style the quantity input section */
+/* Style the quantity input section (30% width) */
 .quantity-and-atc-wrapper .quantity {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  flex: 0 0 30%; /* Sets the width to 30% */
   border-right: 1px solid #444; /* Separator line */
 }
 
 .quantity-and-atc-wrapper .quantity__input {
-  width: 40px;
+  width: 33%;
   text-align: center;
   background-color: transparent;
   border: none;
   color: #fff;
   font-size: 16px;
-  -moz-appearance: textfield; /* Hides number input arrows on Firefox */
+  -moz-appearance: textfield;
 }
 
-/* Hides number input arrows on Chrome, Safari, etc. */
 .quantity-and-atc-wrapper .quantity__input::-webkit-outer-spin-button,
 .quantity-and-atc-wrapper .quantity__input::-webkit-inner-spin-button {
   -webkit-appearance: none;
@@ -3819,14 +3820,14 @@ details-disclosure > details {
   border: none;
   color: #fff;
   cursor: pointer;
-  padding: 10px 15px;
+  padding: 10px 12px;
   font-size: 18px;
   line-height: 1;
 }
 
-/* Style the Add to Cart button section */
+/* Style the Add to Cart button section (70% width) */
 .quantity-and-atc-wrapper .product-form__submit {
-  flex-grow: 1; /* Allows the button to fill the remaining space */
+  flex: 1 1 70%; /* Sets the width to 70% */
   border: none;
   padding: 12px 24px;
   background-color: #000;
@@ -3836,13 +3837,12 @@ details-disclosure > details {
   font-weight: 500;
   letter-spacing: 1px;
   cursor: pointer;
+  /* THIS LINE RESTORES THE SMOOTH HOVER EFFECT */
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* The hover effect we previously created */
+/* THE HOVER EFFECT */
 .quantity-and-atc-wrapper .product-form__submit:hover {
-  background-color: #fff;
-  color: #000;
-}
-
+  background-color: #fff; /* White background on hover */
+  color: #000; /* Black text on hover */
 }
