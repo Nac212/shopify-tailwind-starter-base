@@ -94,6 +94,11 @@
   {%- case block.type -%}
     {%- when '@app' -%}
       {%- when 'promo_block' -%}
+  {%- style -%}
+    {{ block.settings.heading_font | font_face }}
+    {{ block.settings.subheading_font | font_face }}
+  {%- endstyle -%}
+
   <div class="{% if block.settings.match_button_width %}product-form__input{% endif %}" {{ block.shopify_attributes }}>
     {%- style -%}
       #PromoBlock--{{ block.id }} .promo-block-content {
@@ -105,10 +110,16 @@
       }
       #PromoBlock--{{ block.id }} .promo-block-heading {
         color: {{ block.settings.promo_heading_color }};
+        font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+        font-style: {{ block.settings.heading_font.style }};
+        font-weight: {{ block.settings.heading_font.weight }};
         font-size: {{ block.settings.heading_font_size }}px;
       }
       #PromoBlock--{{ block.id }} .promo-block-subheading {
         color: {{ block.settings.promo_subheading_color }};
+        font-family: {{ block.settings.subheading_font.family }}, {{ block.settings.subheading_font.fallback_families }};
+        font-style: {{ block.settings.subheading_font.style }};
+        font-weight: {{ block.settings.subheading_font.weight }};
         font-size: {{ block.settings.subheading_font_size }}px;
       }
 
