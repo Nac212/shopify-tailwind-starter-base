@@ -65,7 +65,15 @@
             "promo_subheading": "<p>SPEND £100+ AND CHOOSE YOURS AT CHECKOUT.</p>",
             "promo_link": "",
             "promo_background": "#d1e8e8",
-            "promo_text_color": "#333333"
+            "promo_heading_color": "#333333",
+            "promo_subheading_color": "#555555",
+            "match_button_width": true,
+            "padding_vertical": 15,
+            "padding_horizontal": 10,
+            "heading_font_size": 12,
+            "heading_font_size_mobile": 14,
+            "subheading_font_size": 10,
+            "subheading_font_size_mobile": 12
           }
         },
         "essential_upsell_frequently_bought_together_app_block_Di6FYN": {
