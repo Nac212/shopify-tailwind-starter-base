@@ -103,7 +103,7 @@
     {%- style -%}
       #PromoBlock--{{ block.id }} .promo-block-content {
         background-color: {{ block.settings.promo_background }};
-        padding: {{ block.settings.padding_vertical }}px {{ block.settings.padding_horizontal }}px;
+        padding: {{ block.settings.padding_vertical_desktop }}px {{ block.settings.padding_horizontal_desktop }}px;
         box-sizing: border-box; /* Fixes the padding issue */
         width: 100%;
         display: block;
@@ -124,6 +124,9 @@
       }
 
       @media screen and (max-width: 749px) {
+        #PromoBlock--{{ block.id }} .promo-block-content {
+            padding: {{ block.settings.padding_vertical_mobile }}px {{ block.settings.padding_horizontal_mobile }}px;
+        }
         #PromoBlock--{{ block.id }} .promo-block-heading {
           font-size: {{ block.settings.heading_font_size_mobile }}px;
         }
