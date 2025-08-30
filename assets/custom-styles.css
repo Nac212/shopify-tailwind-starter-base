@@ -1,16 +1,15 @@
-/* --- Combined Quantity & ATC Button (Final Layout Fix) --- */
+/* --- Combined Quantity & ATC Button (Final Version) --- */
 .quantity-and-atc-wrapper{
     display: grid !important;
     grid-template-columns: 30% 70%;
     border:1px solid #a9a9a9;
     border-radius:4px;
     overflow:hidden;
-    /* The WRAPPER now controls the background color and transition */
     background-color: #000;
     transition: background-color .2s ease;
 }
 .quantity-and-atc-wrapper:hover{
-    background-color: #fff; /* On hover, the WRAPPER'S background becomes white */
+    background-color: #fff;
 }
 
 /* All text inside starts as white */
@@ -27,7 +26,6 @@
     display:flex;
     align-items:center;
     border-right:1px solid #ddd;
-    /* This section is now transparent, showing the wrapper's background */
     background-color: transparent;
 }
 
@@ -58,7 +56,6 @@
 .quantity-and-atc-wrapper .product-form__submit{
     width:100%;
     height:100%;
-    /* The button itself is now ALWAYS transparent */
     background-color:transparent!important;
     border:none;
     font-family:'Poppins',sans-serif;
@@ -67,7 +64,9 @@
     cursor:pointer;
     display:flex;
     align-items:center;
-    justify-content:center;
+    /* --- THIS IS THE FIX --- */
+    justify-content: flex-start; /* Changed from 'center' to 'flex-start' (left-align) */
+    padding-left: 24px; /* Added padding to create space from the divider */
 }
 
 /* --- Mobile Styles (35/65 Split) --- */
@@ -76,7 +75,7 @@
         grid-template-columns: 35% 65%;
     }
     .quantity-and-atc-wrapper .product-form__submit{
-        padding:0 15px;
+        padding:0 15px; /* Mobile padding overrides the desktop padding */
     }
 }
 
