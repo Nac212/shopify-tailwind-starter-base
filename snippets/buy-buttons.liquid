@@ -82,6 +82,7 @@
         type="submit"
         name="add"
         class="product-form__submit button add-to-cart-custom"
+        form="{{ product_form_id }}"
         {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}
       >
         <span>
