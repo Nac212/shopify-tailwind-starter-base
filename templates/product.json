@@ -39,6 +39,16 @@
           "type": "price",
           "settings": {}
         },
+        "promo_block_Aiq6U4": {
+          "type": "promo_block",
+          "settings": {
+            "promo_heading": "<p>WANT A FREE GIFT?</p>",
+            "promo_subheading": "<p>SPEND £100+ AND CHOOSE YOURS AT CHECKOUT.</p>",
+            "promo_link": "",
+            "promo_background": "#d1e8e8",
+            "promo_text_color": "#333333"
+          }
+        },
         "variant_picker": {
           "type": "variant_picker",
           "settings": {
@@ -126,6 +136,7 @@
         "title",
         "caption",
         "price",
+        "promo_block_Aiq6U4",
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
