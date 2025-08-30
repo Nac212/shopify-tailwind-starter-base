@@ -93,6 +93,57 @@
 {%- for block in section.blocks -%}
   {%- case block.type -%}
     {%- when '@app' -%}
+      {%- when 'promo_block' -%}
+  <div class="promo-block-wrapper" {{ block.shopify_attributes }}>
+    {%- if block.settings.promo_link != blank -%}
+      <a href="{{ block.settings.promo_link }}" class="promo-block-link">
+    {%- endif -%}
+
+    <div class="promo-block-content" style="background-color: {{ block.settings.promo_background }}; color: {{ block.settings.promo_text_color }};">
+      {%- if block.settings.promo_heading != blank -%}
+        <div class="promo-block-heading">
+          {{ block.settings.promo_heading }}
+        </div>
+      {%- endif -%}
+      {%- if block.settings.promo_subheading != blank -%}
+        <div class="promo-block-subheading">
+          {{ block.settings.promo_subheading }}
+        </div>
+      {%- endif -%}
+    </div>
+
+    {%- if block.settings.promo_link != blank -%}
+      </a>
+    {%- endif -%}
+
+    <style>
+      .promo-block-wrapper {
+        margin: 20px 0;
+      }
+      .promo-block-link {
+        text-decoration: none;
+        display: block;
+      }
+      .promo-block-content {
+        padding: 20px;
+        text-align: center;
+        border-radius: 4px;
+      }
+      .promo-block-heading {
+        font-weight: bold;
+        font-size: 1.1em;
+        margin-bottom: 5px;
+      }
+      .promo-block-heading p {
+        margin: 0;
+      }
+      .promo-block-subheading p {
+        margin: 0;
+        font-size: 0.9em;
+      }
+    </style>
+  </div>
+
       {% render block %}
 
     {%- when 'text' -%}
