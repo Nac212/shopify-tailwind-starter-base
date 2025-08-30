@@ -1,53 +1,79 @@
-/* --- Combined Quantity & ATC Button (Final Version) --- */
+/* --- Combined Quantity & ATC Button (v4 - Centering & Hover Fix) --- */
 .quantity-and-atc-wrapper {
-  position: relative; /* Enables positioning for the pseudo-element */
-  display: grid;
-  grid-template-columns: 30% 70%;
-  z-index: 0;
-}
-
-/* This is the new "background shape" that sits behind the content */
-.quantity-and-atc-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background-color: #000;
-  border: 1px solid #a9a9a9;
+  display: flex !important;
+  border: 1px solid #000;
   border-radius: 4px;
-  z-index: -1; /* Puts the shape behind the text and buttons */
-  transition: background-color 0.2s ease;
+  overflow: hidden;
+  /* Background and transition are now handled by the children below */
 }
 
-/* On hover, we change the background shape's color */
-.quantity-and-atc-wrapper:hover::before {
-  background-color: #fff;
+/* Give each child section its own background and transition for synchronized hover */
+.quantity-and-atc-wrapper .quantity,
+.quantity-and-atc-wrapper .product-form__submit-wrapper {
+    background-color: #000;
+    transition: background-color 0.2s ease;
 }
 
-/* Make the actual button and quantity section transparent */
-.quantity-and-atc-wrapper .product-form__submit,
-.quantity-and-atc-wrapper .quantity {
-  background-color: transparent !important;
+/* Hover effect for the entire block's background */
+.quantity-and-atc-wrapper:hover .quantity,
+.quantity-and-atc-wrapper:hover .product-form__submit-wrapper {
+    background-color: #fff;
 }
 
-/* All text inside starts as white */
-.quantity-and-atc-wrapper * {
-  color: #fff;
-}
-/* All text inside becomes black on hover */
+/* Hover effect for ALL text inside the block */
 .quantity-and-atc-wrapper:hover * {
   color: #000 !important;
 }
 
-/* --- Layout & Styling for the visible elements --- */
+/* --- Quantity Section --- */
 .quantity-and-atc-wrapper .quantity {
   display: flex;
   align-items: center;
-  border-right: 1px solid #ddd;
+  flex: 0 0 30%;
+  border-right: 1px solid #444; /* Separator line */
+  transition: border-color .2s ease,background-color .2s ease;
 }
 
+.quantity-and-atc-wrapper:hover .quantity {
+  border-right-color: #eee;
+}
+
+.quantity-and-atc-wrapper .quantity__input {
+    color: #fff;
+    background: transparent;
+    border: none;
+    padding: 10px 2px;
+    font-size: 16px;
+    width: 33%;
+    text-align: center;
+    -moz-appearance: textfield;
+}
+
+.quantity-and-atc-wrapper .quantity__button {
+    color: #fff;
+    background: transparent;
+    border: none;
+    padding: 10px 12px;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.quantity-and-atc-wrapper .quantity__input::-webkit-outer-spin-button,
+.quantity-and-atc-wrapper .quantity__input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* --- Add to Cart Button Section (Centering Fix) --- */
+.product-form__submit-wrapper {
+  flex: 1 1 70%;
+}
 .quantity-and-atc-wrapper .product-form__submit {
-  width: 100%; height: 100%;
+  width: 100%;
+  height: 100%;
+  background-color: transparent !important; /* Force transparent to see wrapper bg */
+  color: #fff;
   border: none;
   font-family: 'Poppins', sans-serif;
   text-transform: uppercase;
@@ -58,25 +84,17 @@
   justify-content: center;
 }
 
-.quantity-and-atc-wrapper .quantity__input {
-  border:none; padding:10px 2px; font-size:16px; width:33%; text-align:center; -moz-appearance:textfield;
-}
-.quantity-and-atc-wrapper .quantity__button {
-  border:none; padding:10px 12px; font-size:18px; line-height:1; cursor:pointer;
-}
-.quantity-and-atc-wrapper .quantity__input::-webkit-outer-spin-button,
-.quantity-and-atc-wrapper .quantity__input::-webkit-inner-spin-button { -webkit-appearance:none; margin:0; }
+/* --- Mobile Styles for Quantity Button (35/65 Split) --- */
+@media screen and (max-width: 749px) {
+  .quantity-and-atc-wrapper .quantity {
+    flex-basis: 35%;
+  }
 
-/* --- Mobile Styles --- */
-@media screen and (max-width:749px){
-  .quantity-and-atc-wrapper { grid-template-columns: 35% 65%; }
-  .quantity-and-atc-wrapper .product-form__submit { padding:0 15px; }
-}
+  .product-form__submit-wrapper {
+    flex-basis: 65%;
+  }
 
-/* --- Focus Styles --- */
-.quantity-and-atc-wrapper .product-form__submit:focus-visible,
-.quantity-and-atc-wrapper .quantity__button:focus-visible,
-.quantity-and-atc-wrapper .product-form__submit:focus,
-.quantity-and-atc-wrapper .quantity__button:focus {
-  outline: none; box-shadow: none;
+  .quantity-and-atc-wrapper .product-form__submit {
+    padding: 0 15px;
+  }
 }
