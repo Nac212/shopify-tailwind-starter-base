@@ -406,7 +406,7 @@
       ".quantity-and-atc-wrapper .quantity__button{color:#fff;background:0 0;border:none;padding:10px 12px;font-size:18px;line-height:1;cursor:pointer}",
       ".quantity-and-atc-wrapper .quantity__input::-webkit-outer-spin-button,.quantity-and-atc-wrapper .quantity__input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}",
       ".product-form__submit-wrapper{flex:1 1 70%}",
-      ".quantity-and-atc-wrapper .product-form__submit{width:100%;height:100%;background-color:transparent;color:#fff;border:none;font-family:'Poppins',sans-serif;text-transform:uppercase;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center}",
+      ".quantity-and-atc-wrapper .product-form__submit{width:100%;height:100%;background-color:transparent!important;color:#fff;border:none;font-family:'Poppins',sans-serif;text-transform:uppercase;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center}",
       ".quantity-and-atc-wrapper:hover *{color:#000!important}",
       "@media screen and (max-width:749px){.quantity-and-atc-wrapper .quantity{flex-basis:35%}.product-form__submit-wrapper{flex-basis:65%}.quantity-and-atc-wrapper .product-form__submit{padding-left:15px;padding-right:15px}}"
     ]
