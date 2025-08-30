@@ -398,14 +398,15 @@
   },
   "platform_customizations": {
     "custom_css": [
-      "/* --- Combined Quantity and Add to Cart Button --- */.quantity-and-atc-wrapper {display: flex !important; border: 1px solid #000; border-radius: 4px; overflow: hidden; background-color: #000; color: #fff;}",
-      ".quantity-and-atc-wrapper .quantity {display: flex; align-items: center; justify-content: space-between; flex: 0 0 30%; border-right: 1px solid #444;}",
-      ".quantity-and-atc-wrapper .quantity__input {width: 33%; text-align: center; background-color: transparent; border: none; color: #fff; font-size: 16px; -moz-appearance: textfield;}",
-      ".quantity-and-atc-wrapper .quantity__input::-webkit-outer-spin-button,.quantity-and-atc-wrapper .quantity__input::-webkit-inner-spin-button {-webkit-appearance: none; margin: 0;}",
-      ".quantity-and-atc-wrapper .quantity__button {background-color: transparent; border: none; color: #fff; cursor: pointer; padding: 10px 12px; font-size: 18px; line-height: 1;}",
-      ".quantity-and-atc-wrapper .product-form__submit {flex: 1 1 70%; border: none; padding: 12px 24px; background-color: #000; color: #fff; font-family: \"Poppins\", sans-serif; text-transform: uppercase; font-weight: 500; letter-spacing: 1px; cursor: pointer; transition: background-color 0.3s ease, color 0.3s ease;}",
-      ".quantity-and-atc-wrapper .product-form__submit:hover {background-color: #fff; color: #000;}",
-      "/* --- Mobile Styles for Quantity Button (35/65 Split) --- */@media screen and (max-width: 749px) {.quantity-and-atc-wrapper .quantity {flex-basis: 35%; /* Changed to 35% */ } .quantity-and-atc-wrapper .product-form__submit {flex-basis: 65%; /* Changed to 65% */ padding-left: 15px; padding-right: 15px; }}"
+      ".quantity-and-atc-wrapper{display:flex!important;border:1px solid #000;border-radius:4px;overflow:hidden;background-color:#000;color:#fff;transition:background-color .3s ease,color .3s ease}",
+      ".quantity-and-atc-wrapper:hover{background-color:#fff;color:#000}",
+      ".quantity-and-atc-wrapper .quantity{display:flex;align-items:center;flex:0 0 30%;border-right:1px solid #444;transition:border-color .3s ease}",
+      ".quantity-and-atc-wrapper:hover .quantity{border-right-color:#eee}",
+      ".quantity-and-atc-wrapper .quantity__input{background:0 0;border:none;color:inherit;padding:10px 2px;font-size:16px;width:33%;text-align:center;-moz-appearance:textfield}",
+      ".quantity-and-atc-wrapper .quantity__button{background:0 0;border:none;color:inherit;padding:10px 12px;font-size:18px;line-height:1;cursor:pointer}",
+      ".quantity-and-atc-wrapper .quantity__input::-webkit-outer-spin-button,.quantity-and-atc-wrapper .quantity__input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}",
+      ".quantity-and-atc-wrapper .product-form__submit{flex:1 1 70%;background-color:transparent;color:inherit;border:none;font-family:'Poppins',sans-serif;text-transform:uppercase;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center}",
+      "@media screen and (max-width:749px){.quantity-and-atc-wrapper .quantity{flex-basis:35%}.quantity-and-atc-wrapper .product-form__submit{flex-basis:65%;padding-left:15px;padding-right:15px}}"
     ]
   }
 }
