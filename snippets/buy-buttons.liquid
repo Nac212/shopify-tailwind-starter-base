@@ -76,7 +76,7 @@
     </quantity-input>
 
     {% comment %} This is the new wrapper for the button {% endcomment %}
-    <div class="product-form__submit-wrapper">
+    
       <button
   id="ProductSubmitButton-{{ section_id }}"
   type="submit"
@@ -94,7 +94,6 @@
         </span>
       </button>
     </div>
-  </div>
 
   {%- if show_dynamic_checkout -%}
     {{ form | payment_button }}
