@@ -554,9 +554,9 @@ video {
   display: none;
 
 
-  /* --- Combined Quantity and Add to Cart Button (Corrected) --- */
+/* --- Combined Quantity and Add to Cart Button --- */
 .quantity-and-atc-wrapper {
-  display: flex;
+  display: flex !important; /* Using !important just in case */
   border: 1px solid #000;
   border-radius: 4px;
   overflow: hidden;
@@ -611,17 +611,12 @@ video {
   font-weight: 500;
   letter-spacing: 1px;
   cursor: pointer;
-  /* THIS LINE RESTORES THE SMOOTH HOVER EFFECT */
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* THE HOVER EFFECT */
+/* The Hover Effect */
 .quantity-and-atc-wrapper .product-form__submit:hover {
-  background-color: #fff; /* White background on hover */
-  color: #000; /* Black text on hover */
-
-/* --- Layout Fix --- */
-.quantity-and-atc-wrapper {
-  display: flex !important;
+  background-color: #fff;
+  color: #000;
 }
 }
