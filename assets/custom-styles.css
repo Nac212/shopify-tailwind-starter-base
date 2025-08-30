@@ -1,13 +1,13 @@
-/* --- Combined Quantity & ATC Button (Seamless Hover) --- */
+/* --- Combined Quantity & ATC Button (Gray Border) --- */
 .quantity-and-atc-wrapper{
     display:flex!important;
-    border:1px solid #000; /* Default border */
+    border:1px solid #a9a9a9; /* UPDATED: Dark gray border */
     border-radius:4px;
     overflow:hidden;
-    transition:border-color .2s ease; /* Animate border color */
+    transition:border-color .2s ease;
 }
 .quantity-and-atc-wrapper:hover{
-    border-color:#fff; /* Make border white on hover, effectively "removing" it on a white background */
+    border-color:#a9a9a9; /* BORDER REMAINS on hover */
 }
 
 /* Background and text color transitions for children */
@@ -24,17 +24,16 @@
     color:#000!important; /* All text becomes black on hover */
 }
 
-
 /* --- Quantity Section --- */
 .quantity-and-atc-wrapper .quantity{
     display:flex;
     align-items:center;
     flex:0 0 30%;
-    border-right:1px solid #444; /* Default subtle divider */
+    border-right:1px solid #333; /* UPDATED: Darker divider for contrast */
     transition:border-right-color .2s ease,background-color .2s ease;
 }
 .quantity-and-atc-wrapper:hover .quantity{
-    border-right-color:#ccc; /* Lighter divider on hover */
+    border-right-color:#ddd; /* UPDATED: Light gray divider on hover */
 }
 
 .quantity-and-atc-wrapper .quantity__input{
