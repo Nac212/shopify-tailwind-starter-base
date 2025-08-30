@@ -1,0 +1,267 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "main": {
+      "type": "main-product",
+      "blocks": {
+        "vendor": {
+          "type": "text",
+          "disabled": true,
+          "settings": {
+            "text": "{{ product.vendor }}",
+            "text_style": "uppercase"
+          }
+        },
+        "title": {
+          "type": "title",
+          "settings": {
+            "title_font": "bebas_neue_n4",
+            "title_font_size": 32,
+            "title_font_size_mobile": 24
+          }
+        },
+        "caption": {
+          "type": "text",
+          "settings": {
+            "text": "{{ product.metafields.descriptors.subtitle.value }}",
+            "text_style": "subtitle"
+          }
+        },
+        "price": {
+          "type": "price",
+          "settings": {}
+        },
+        "variant_picker": {
+          "type": "variant_picker",
+          "settings": {
+            "picker_type": "dropdown",
+            "swatch_shape": "circle"
+          }
+        },
+        "quantity_selector": {
+          "type": "quantity_selector",
+          "settings": {}
+        },
+        "buy_buttons": {
+          "type": "buy_buttons",
+          "settings": {
+            "show_dynamic_checkout": false,
+            "show_gift_card_recipient": true
+          }
+        },
+        "essential_upsell_frequently_bought_together_app_block_Di6FYN": {
+          "type": "shopify:\/\/apps\/essential-upsell\/blocks\/frequently-bought-together-app-block\/50627fd9-24fd-4250-8614-accc12826d80",
+          "settings": {}
+        },
+        "description": {
+          "type": "description",
+          "disabled": true,
+          "settings": {
+            "description_font": "helvetica_n4",
+            "description_font_size": 16,
+            "description_font_size_mobile": 14
+          }
+        },
+        "tab_item_zMTLBY": {
+          "type": "tab_item",
+          "settings": {
+            "tab_header": "Details",
+            "tab_content": ""
+          }
+        },
+        "tab_item_YTUJqA": {
+          "type": "tab_item",
+          "settings": {
+            "tab_header": "CARE",
+            "tab_content": "<p>Content for this tab.<\/p>"
+          }
+        },
+        "tab_item_x3pmDz": {
+          "type": "tab_item",
+          "settings": {
+            "tab_header": "Shipping",
+            "tab_content": "<p>Content for this tab.<\/p>"
+          }
+        },
+        "tab_item_yzAt8z": {
+          "type": "tab_item",
+          "settings": {
+            "tab_header": "Returns",
+            "tab_content": "<p>Content for this tab.<\/p>"
+          }
+        },
+        "tab_item_Pnpi6M": {
+          "type": "tab_item",
+          "settings": {
+            "tab_header": "FALIENNE GUARANTEE",
+            "tab_content": "<p>Content for this tab.<\/p>"
+          }
+        },
+        "custom_liquid_gqRyCT": {
+          "type": "custom_liquid",
+          "disabled": true,
+          "settings": {
+            "custom_liquid": "{% comment %}\n  This Liquid snippet creates a tabbed widget for a product page.\n  It includes sections for Details & Care, Shipping, Returns, and a custom \"Falienne Guarantee\".\n  The tab content is populated with placeholder text.\n  This is a self-contained section that can be included in any product template.\n{% endcomment %}\n\n<style>\n  \/* Basic styling for the tabbed widget *\/\n  .tab-widget-container {\n    width: 100%;\n    font-family: 'Inter', sans-serif;\n    color: #333;\n    border-top: 1px solid #ddd;\n    border-bottom: 1px solid #ddd;\n    margin: 2rem 0;\n  }\n  \n  .tab-headers {\n    display: flex;\n    justify-content: flex-start;\n    align-items: center;\n    border-bottom: 1px solid #ddd;\n    overflow-x: auto;\n    white-space: nowrap;\n    -webkit-overflow-scrolling: touch;\n    padding: 0 1rem;\n  }\n  \n  .tab-header {\n    cursor: pointer;\n    padding: 1rem 1.5rem;\n    font-size: 0.9rem;\n    text-transform: uppercase;\n    font-weight: 500;\n    transition: color 0.2s ease, border-color 0.2s ease;\n    border-bottom: 2px solid transparent;\n  }\n  \n  .tab-header.active {\n    color: #000;\n    border-color: #000;\n  }\n  \n  .tab-content-container {\n    padding: 2rem 1.5rem;\n    background-color: #f9f9f9;\n  }\n  \n  .tab-content {\n    display: none;\n    line-height: 1.6;\n    font-size: 1rem;\n  }\n  \n  .tab-content.active {\n    display: block;\n  }\n<\/style>\n\n<div class=\"tab-widget-container\">\n  \n  <div class=\"tab-headers\">\n    <div class=\"tab-header active\" data-tab=\"details-care\">Details & Care<\/div>\n    <div class=\"tab-header\" data-tab=\"shipping\">Shipping<\/div>\n    <div class=\"tab-header\" data-tab=\"returns\">Returns<\/div>\n    <div class=\"tab-header\" data-tab=\"guarantee\">Falienne Guarantee<\/div>\n  <\/div>\n  \n  <div class=\"tab-content-container\">\n    <div class=\"tab-content active\" data-tab-content=\"details-care\">\n      <p>This is the placeholder text for Details & Care. It will include information specific to this product, such as materials, dimensions, and cleaning instructions. These details will be unique for each item in the store.<\/p>\n    <\/div>\n    \n    <div class=\"tab-content\" data-tab-content=\"shipping\">\n      <p>This is the placeholder text for Shipping. We offer free standard shipping on all orders over $50 within the contiguous United States. Expedited shipping options are also available for an additional fee at checkout. Orders are typically processed and shipped within 1-2 business days. You will receive a confirmation email with tracking information as soon as your order ships.<\/p>\n    <\/div>\n    \n    <div class=\"tab-content\" data-tab-content=\"returns\">\n      <p>This is the placeholder text for Returns. We want you to be completely satisfied with your purchase. If for any reason you are not, we accept returns of unused and undamaged items within 30 days of the original purchase date. Please visit our returns portal to initiate the process and receive a prepaid shipping label.<\/p>\n    <\/div>\n    \n    <div class=\"tab-content\" data-tab-content=\"guarantee\">\n      <p>This is the placeholder text for the Falienne Guarantee. We stand behind the quality and craftsmanship of all our products. We offer a lifetime guarantee against any manufacturing defects, ensuring that your piece will remain beautiful for years to come. Our commitment to excellence is our promise to you.<\/p>\n    <\/div>\n  <\/div>\n  \n<\/div>\n\n<script>\n  \/\/ JavaScript to handle the tab functionality\n  document.addEventListener('DOMContentLoaded', () => {\n    const tabHeaders = document.querySelectorAll('.tab-header');\n    const tabContents = document.querySelectorAll('.tab-content');\n    \n    tabHeaders.forEach(header => {\n      header.addEventListener('click', () => {\n        \/\/ Deactivate all headers and content\n        tabHeaders.forEach(h => h.classList.remove('active'));\n        tabContents.forEach(c => c.classList.remove('active'));\n        \n        \/\/ Activate the clicked header\n        header.classList.add('active');\n        \n        \/\/ Find and activate the corresponding content\n        const tabName = header.dataset.tab;\n        const targetContent = document.querySelector(`.tab-content[data-tab-content=\"${tabName}\"]`);\n        if (targetContent) {\n          targetContent.classList.add('active');\n        }\n      });\n    });\n  });\n<\/script>"
+          }
+        },
+        "share": {
+          "type": "share",
+          "disabled": true,
+          "settings": {
+            "share_label": "Share"
+          }
+        }
+      },
+      "block_order": [
+        "vendor",
+        "title",
+        "caption",
+        "price",
+        "variant_picker",
+        "quantity_selector",
+        "buy_buttons",
+        "essential_upsell_frequently_bought_together_app_block_Di6FYN",
+        "description",
+        "tab_item_zMTLBY",
+        "tab_item_YTUJqA",
+        "tab_item_x3pmDz",
+        "tab_item_yzAt8z",
+        "tab_item_Pnpi6M",
+        "custom_liquid_gqRyCT",
+        "share"
+      ],
+      "settings": {
+        "tab_font": "poppins_n4",
+        "tab_header_font_size": 11,
+        "tab_header_font_size_mobile": 9,
+        "tab_content_font_size": 11,
+        "tab_content_font_size_mobile": 9,
+        "enable_sticky_info": true,
+        "color_scheme": "",
+        "media_size": "medium",
+        "constrain_to_viewport": true,
+        "media_fit": "contain",
+        "gallery_layout": "thumbnail",
+        "media_position": "left",
+        "image_zoom": "none",
+        "mobile_thumbnails": "hide",
+        "hide_variants": false,
+        "enable_video_looping": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "image-with-text": {
+      "type": "image-with-text",
+      "blocks": {
+        "image-with-text-0": {
+          "type": "heading",
+          "settings": {
+            "heading": "Image with text",
+            "heading_size": "h1"
+          }
+        },
+        "image-with-text-1": {
+          "type": "text",
+          "settings": {
+            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.<\/p>",
+            "text_style": "body"
+          }
+        }
+      },
+      "block_order": [
+        "image-with-text-0",
+        "image-with-text-1"
+      ],
+      "settings": {
+        "height": "small",
+        "desktop_image_width": "medium",
+        "layout": "text_first",
+        "desktop_content_position": "top",
+        "desktop_content_alignment": "left",
+        "content_layout": "no-overlap",
+        "section_color_scheme": "",
+        "color_scheme": "scheme-2",
+        "image_behavior": "none",
+        "mobile_content_alignment": "left",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "multicolumn": {
+      "type": "multicolumn",
+      "blocks": {
+        "column-0": {
+          "type": "column",
+          "settings": {
+            "title": "Free Shipping",
+            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.<\/p>",
+            "link_label": "",
+            "link": ""
+          }
+        },
+        "column-1": {
+          "type": "column",
+          "settings": {
+            "title": "Hassle-Free Exchanges",
+            "text": "<p>Pair text with an image to focus on your chosen product, collection, or blog post. Add details on availability, style, or even provide a review.<\/p>",
+            "link_label": "",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "column-0",
+        "column-1"
+      ],
+      "settings": {
+        "title": "",
+        "heading_size": "h1",
+        "image_width": "full",
+        "image_ratio": "adapt",
+        "columns_desktop": 2,
+        "column_alignment": "left",
+        "background_style": "none",
+        "button_label": "",
+        "button_link": "",
+        "color_scheme": "scheme-1",
+        "columns_mobile": "1",
+        "swipe_on_mobile": false,
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    },
+    "related-products": {
+      "type": "related-products",
+      "settings": {
+        "heading": "You may also like",
+        "heading_size": "h2",
+        "products_to_show": 4,
+        "columns_desktop": 4,
+        "color_scheme": "scheme-1",
+        "image_ratio": "square",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "columns_mobile": "2",
+        "padding_top": 36,
+        "padding_bottom": 28
+      }
+    }
+  },
+  "order": [
+    "main",
+    "image-with-text",
+    "multicolumn",
+    "related-products"
+  ]
+}

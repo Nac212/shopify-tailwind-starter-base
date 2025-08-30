@@ -10,14 +10,223 @@
 {
   "order": [
     "image_banner",
-    "rich_text",
-    "featured_collection",
+    "custom_liquid_8X6qXm",
+    "1756241219fbed0124",
+    "1756235048663a7ff7",
     "collage",
     "video",
     "multicolumn",
-    "custom_liquid_fr4BWC"
+    "custom_liquid_fr4BWC",
+    "custom_liquid_Q3pEPN",
+    "custom_features_fLr3cR"
   ],
   "sections": {
+    "1756235048663a7ff7": {
+      "block_order": [
+        "ai_gen_block_5820fa6_Bgh9yX",
+        "ai_gen_block_4801728_97aLkP",
+        "ai_gen_block_4801728_PXzMGn"
+      ],
+      "blocks": {
+        "ai_gen_block_4801728_97aLkP": {
+          "blocks": {},
+          "settings": {
+            "aspect_ratio": "portrait",
+            "card_border_radius": 3,
+            "card_spacing": 8,
+            "collection": "full-collection",
+            "desktop_product_price_size": 12,
+            "desktop_product_title_size": 12,
+            "heading": "TRENDING PIECES",
+            "heading_center": true,
+            "heading_color": "#000000",
+            "heading_font": "bebas_neue_n4",
+            "heading_size": 38,
+            "manual_products": [],
+            "max_products_to_show": 9,
+            "mobile_aspect_ratio": "portrait",
+            "mobile_columns": 2.3,
+            "mobile_product_price_size": 11,
+            "mobile_product_title_size": 11,
+            "mobile_sale_badge_size": 6,
+            "product_font": "poppins_n4",
+            "product_text_center": true,
+            "product_title_color": "#000000",
+            "regular_price_color": "#000000",
+            "sale_badge_background_color": "#ffffff",
+            "sale_badge_border_color": "#000000",
+            "sale_badge_color": "#ff4949",
+            "sale_badge_position_left_desktop": 4,
+            "sale_badge_position_left_mobile": 2,
+            "sale_badge_position_top_desktop": 3,
+            "sale_badge_position_top_mobile": 2,
+            "sale_badge_size": 8,
+            "sale_badge_text": "ON SALE",
+            "sale_price_color": "#ff0000",
+            "section_padding_bottom": 0,
+            "section_padding_top": 44
+          },
+          "type": "ai_gen_block_4801728"
+        },
+        "ai_gen_block_4801728_PXzMGn": {
+          "blocks": {},
+          "settings": {
+            "aspect_ratio": "portrait",
+            "card_border_radius": 3,
+            "card_spacing": 8,
+            "collection": "full-collection",
+            "desktop_product_price_size": 12,
+            "desktop_product_title_size": 12,
+            "heading": "FALIENNE PICKS",
+            "heading_center": true,
+            "heading_color": "#000000",
+            "heading_font": "bebas_neue_n4",
+            "heading_size": 38,
+            "manual_products": [],
+            "max_products_to_show": 9,
+            "mobile_aspect_ratio": "portrait",
+            "mobile_columns": 2.3,
+            "mobile_product_price_size": 11,
+            "mobile_product_title_size": 11,
+            "mobile_sale_badge_size": 6,
+            "product_font": "poppins_n4",
+            "product_text_center": true,
+            "product_title_color": "#000000",
+            "regular_price_color": "#000000",
+            "sale_badge_background_color": "#ffffff",
+            "sale_badge_border_color": "#000000",
+            "sale_badge_color": "#ff4949",
+            "sale_badge_position_left_desktop": 4,
+            "sale_badge_position_left_mobile": 2,
+            "sale_badge_position_top_desktop": 3,
+            "sale_badge_position_top_mobile": 2,
+            "sale_badge_size": 8,
+            "sale_badge_text": "ON SALE",
+            "sale_price_color": "#ff0000",
+            "section_padding_bottom": 0,
+            "section_padding_top": 44
+          },
+          "type": "ai_gen_block_4801728"
+        },
+        "ai_gen_block_5820fa6_Bgh9yX": {
+          "blocks": {},
+          "settings": {
+            "card_border_color": "#e0e0e0",
+            "card_border_radius": 8,
+            "card_border_width": 1,
+            "card_shadow_blur": 8,
+            "card_shadow_color": "#0000001a",
+            "card_shadow_x": 0,
+            "card_shadow_y": 2,
+            "collection_1": "drop-earrings",
+            "collection_2": "drop-earrings",
+            "collection_3": "gold-earrings",
+            "collection_4": "silver-earrings",
+            "countdown_font_weight": "700",
+            "countdown_label_color": "#666666",
+            "countdown_label_size": 12,
+            "countdown_label_weight": "400",
+            "countdown_number_color": "#333333",
+            "countdown_number_size": 20,
+            "desktop_layout": "4",
+            "enable_card_styling": false,
+            "gutter_size": 8,
+            "headline_1": "Earrings",
+            "headline_2": "drops",
+            "headline_3": "hoops",
+            "headline_4": "twisted",
+            "headline_color_1": "#ffffff",
+            "headline_color_2": "#ffffff",
+            "headline_color_3": "#ffffff",
+            "headline_color_4": "#ffffff",
+            "headline_font_1": "bebas_neue_n4",
+            "headline_font_2": "bebas_neue_n4",
+            "headline_font_3": "bebas_neue_n4",
+            "headline_font_4": "bebas_neue_n4",
+            "headline_size_1": 26,
+            "headline_size_2": 26,
+            "headline_size_3": 26,
+            "headline_size_4": 26,
+            "headline_spacing_1": 1.3,
+            "headline_spacing_2": 1.3,
+            "headline_spacing_3": 1.3,
+            "headline_spacing_4": 1.3,
+            "headline_style_1": "normal",
+            "headline_style_2": "normal",
+            "headline_style_3": "normal",
+            "headline_style_4": "normal",
+            "headline_transform_1": "none",
+            "headline_transform_2": "none",
+            "headline_transform_3": "none",
+            "headline_transform_4": "none",
+            "headline_weight_1": "700",
+            "headline_weight_2": "700",
+            "headline_weight_3": "700",
+            "headline_weight_4": "700",
+            "image_1": "shopify://shop_images/RadiantLinkDropEarrings-Model-Silver.png",
+            "image_2": "shopify://shop_images/LuxePearlandCrystalDropEarrings-Model.jpg",
+            "image_3": "shopify://shop_images/RadiantLinkDropEarrings-Model.png",
+            "image_4": "shopify://shop_images/TwistedCordHoops-Model.png",
+            "mobile_layout": "2",
+            "seasonal_bg_color": "#f0f0f0",
+            "seasonal_end_date": "",
+            "seasonal_font_size": 14,
+            "seasonal_font_weight": "400",
+            "seasonal_message": "",
+            "seasonal_start_date": "",
+            "seasonal_text_color": "#333333",
+            "show_countdown": true,
+            "show_product_1": false,
+            "show_product_2": false,
+            "show_product_3": false,
+            "show_product_4": false,
+            "sub_color_1": "#ffffff",
+            "sub_color_2": "#ffffff",
+            "sub_color_3": "#ffffff",
+            "sub_color_4": "#ffffff",
+            "sub_font_1": "bebas_neue_n4",
+            "sub_font_2": "bebas_neue_n4",
+            "sub_font_3": "bebas_neue_n4",
+            "sub_font_4": "bebas_neue_n4",
+            "sub_size_1": 14,
+            "sub_size_2": 14,
+            "sub_size_3": 14,
+            "sub_size_4": 14,
+            "sub_spacing_1": 0,
+            "sub_spacing_2": 0.7,
+            "sub_spacing_3": 0.7,
+            "sub_spacing_4": 0.7,
+            "sub_style_1": "normal",
+            "sub_style_2": "normal",
+            "sub_style_3": "normal",
+            "sub_style_4": "normal",
+            "sub_text_1": "SUMMER FAVES",
+            "sub_text_2": "for every occasion",
+            "sub_text_3": "timeless",
+            "sub_text_4": "subtle",
+            "sub_transform_1": "none",
+            "sub_transform_2": "none",
+            "sub_transform_3": "none",
+            "sub_transform_4": "none",
+            "sub_weight_1": "400",
+            "sub_weight_2": "400",
+            "sub_weight_3": "400",
+            "sub_weight_4": "400",
+            "video_1": "",
+            "video_2": "",
+            "video_3": "",
+            "video_4": ""
+          },
+          "type": "ai_gen_block_5820fa6"
+        }
+      },
+      "settings": {},
+      "type": "_blocks"
+    },
+    "1756241219fbed0124": {
+      "settings": {},
+      "type": "_blocks"
+    },
     "collage": {
       "block_order": [
         "collection-0",
@@ -57,6 +266,97 @@
       },
       "type": "collage"
     },
+    "custom_features_fLr3cR": {
+      "block_order": [
+        "feature_xkfFEx",
+        "feature_Jp3EKn",
+        "feature_cDqDMn",
+        "feature_YJwhrr"
+      ],
+      "blocks": {
+        "feature_Jp3EKn": {
+          "settings": {
+            "heading": "Handcrafted Quality",
+            "icon_select": "payment",
+            "icon_svg": "",
+            "link_url": "",
+            "subheading": "Made to endure."
+          },
+          "type": "feature"
+        },
+        "feature_YJwhrr": {
+          "settings": {
+            "heading": "1 Year Guarantee",
+            "icon_select": "gift",
+            "icon_svg": "",
+            "link_url": "",
+            "subheading": "Peace of mind with every purchase."
+          },
+          "type": "feature"
+        },
+        "feature_cDqDMn": {
+          "settings": {
+            "heading": "Free Shipping",
+            "icon_select": "shipping",
+            "icon_svg": "",
+            "link_url": "",
+            "subheading": "On orders over £60."
+          },
+          "type": "feature"
+        },
+        "feature_xkfFEx": {
+          "settings": {
+            "heading": "Easy Returns",
+            "icon_select": "returns",
+            "icon_svg": "",
+            "link_url": "",
+            "subheading": "30 day return policy."
+          },
+          "type": "feature"
+        }
+      },
+      "name": "Custom Features",
+      "settings": {
+        "heading_color": "#333333",
+        "heading_font": "poppins_n4",
+        "heading_font_size_desktop": 15,
+        "heading_font_size_mobile": 12,
+        "icon_size_desktop": 38,
+        "icon_size_mobile": 38,
+        "logo": "shopify://shop_images/Falienne_Logo_-_Single_Falienne_-_1000x_30b8a000-8eb8-4e77-b01a-2332de12d542.png",
+        "logo_bottom_margin": 0,
+        "logo_position": 50,
+        "logo_width": 180,
+        "padding_bottom": 0,
+        "padding_top": 6,
+        "show_divider": true,
+        "subheading_color": "#777777",
+        "subheading_font": "poppins_n4",
+        "subheading_font_size_desktop": 11,
+        "subheading_font_size_mobile": 12
+      },
+      "type": "custom-features"
+    },
+    "custom_liquid_8X6qXm": {
+      "name": "t:sections.custom-liquid.presets.name",
+      "settings": {
+        "color_scheme": "",
+        "custom_liquid": "<div class=\"infinite-logo-section\">\n  <div class=\"infinite-logo-container\">\n    <div class=\"infinite-logo-wrapper\">\n      <div class=\"logo-item\">\n        <img src=\"https://cdn.shopify.com/s/files/1/0822/5711/7519/files/gempages_558209203332711667-e853a0cb-ce68-46c1-9f25-8e924a0e4e08.svg?v=1742249255\" alt=\"Belle Logo\">\n      </div>\n      <div class=\"logo-item\">\n        <img src=\"https://cdn.shopify.com/s/files/1/0822/5711/7519/files/gempages_558209203332711667-6e4f5f1c-fcf1-43b6-bc7a-ad74b4800cd1.svg?v=1742249254\" alt=\"Popsugar Logo\">\n      </div>\n      <div class=\"logo-item\">\n        <img src=\"https://cdn.shopify.com/s/files/1/0822/5711/7519/files/gempages_558209203332711667-b20be269-deaa-4247-a8d2-b633aa3d4cfc.svg?v=1742249254\" alt=\"Collective Logo\">\n      </div>\n      <div class=\"logo-item\">\n        <img src=\"https://cdn.shopify.com/s/files/1/0822/5711/7519/files/gempages_558209203332711667-6e4f5f1c-fcf1-43b6-bc7a-ad74b4800cd1.svg?v=1742249254\" alt=\"Broadsheet Logo\">\n      </div>\n      <div class=\"logo-item\">\n        <img src=\"https://cdn.shopify.com/s/files/1/0822/5711/7519/files/gempages_558209203332711667-1167677f-a45f-4c19-be3c-9c611aba9b3c.svg?v=1742249254\" alt=\"Marie Claire Logo\">\n      </div>\n      <div class=\"logo-item\">\n        <img src=\"https://cdn.shopify.com/s/files/1/0822/5711/7519/files/gempages_558209203332711667-e853a0cb-ce68-46c1-9f25-8e924a0e4e08.svg?v=1742249255\" alt=\"Belle Logo\">\n      </div>\n      <div class=\"logo-item\">\n        <img src=\"https://cdn.shopify.com/s/files/1/0822/5711/7519/files/gempages_558209203332711667-6e4f5f1c-fcf1-43b6-bc7a-ad74b4800cd1.svg?v=1742249254\" alt=\"Popsugar Logo\">\n      </div>\n      <div class=\"logo-item\">\n        <img src=\"https://cdn.shopify.com/s/files/1/0822/5711/7519/files/gempages_558209203332711667-b20be269-deaa-4247-a8d2-b633aa3d4cfc.svg?v=1742249254\" alt=\"Collective Logo\">\n      </div>\n      <div class=\"logo-item\">\n        <img src=\"https://cdn.shopify.com/s/files/1/0822/5711/7519/files/gempages_558209203332711667-6e4f5f1c-fcf1-43b6-bc7a-ad74b4800cd1.svg?v=1742249254\" alt=\"Broadsheet Logo\">\n      </div>\n      <div class=\"logo-item\">\n        <img src=\"https://cdn.shopify.com/s/files/1/0822/5711/7519/files/gempages_558209203332711667-1167677f-a45f-4c19-be3c-9c611aba9b3c.svg?v=1742249254\" alt=\"Marie Claire Logo\">\n      </div>\n    </div>\n  </div>\n</div>\n\n<style>\n  .infinite-logo-section {\n    padding: 15px 0;\n    overflow: hidden;\n  }\n  \n  .infinite-logo-container {\n    width: 100%;\n  }\n\n  .infinite-logo-wrapper {\n    display: flex;\n    align-items: center;\n    gap: 30px;\n    animation: scroll-logos 40s linear infinite;\n    width: max-content;\n  }\n  \n  .logo-item {\n    flex-shrink: 0;\n    padding: 0 15px;\n  }\n  \n  .logo-item img {\n    max-height: 50px;\n    max-width: 150px;\n    width: auto;\n    height: auto;\n    object-fit: contain;\n    filter: grayscale(100%);\n    opacity: 0.7;\n    transition: opacity 0.3s ease-in-out, filter 0.3s ease-in-out;\n  }\n\n  .logo-item img:hover {\n    filter: none;\n    opacity: 1;\n  }\n\n  @keyframes scroll-logos {\n    from {\n      transform: translateX(0);\n    }\n    to {\n      transform: translateX(-50%);\n    }\n  }\n\n  @media (max-width: 768px) {\n    .infinite-logo-wrapper {\n      gap: 20px;\n      animation: scroll-logos-mobile 30s linear infinite;\n    }\n    \n    /* NEW: Mobile container width */\n    .infinite-logo-container {\n      padding: 0 20px;\n    }\n\n    @keyframes scroll-logos-mobile {\n      from {\n        transform: translateX(0);\n      }\n      to {\n        transform: translateX(-50%);\n      }\n    }\n  }\n</style>",
+        "padding_bottom": 0,
+        "padding_top": 0
+      },
+      "type": "custom-liquid"
+    },
+    "custom_liquid_Q3pEPN": {
+      "name": "t:sections.custom-liquid.presets.name",
+      "settings": {
+        "color_scheme": "",
+        "custom_liquid": "",
+        "padding_bottom": 52,
+        "padding_top": 40
+      },
+      "type": "custom-liquid"
+    },
     "custom_liquid_fr4BWC": {
       "disabled": true,
       "name": "t:sections.custom-liquid.presets.name",
@@ -67,34 +367,6 @@
         "padding_top": 40
       },
       "type": "custom-liquid"
-    },
-    "featured_collection": {
-      "settings": {
-        "collection": "all",
-        "color_scheme": "scheme-1",
-        "columns_desktop": 4,
-        "columns_mobile": "2",
-        "description": "",
-        "description_style": "body",
-        "enable_desktop_slider": false,
-        "full_width": true,
-        "heading_size": "h2",
-        "image_ratio": "adapt",
-        "image_shape": "default",
-        "padding_bottom": 0,
-        "padding_top": 0,
-        "products_to_show": 8,
-        "quick_add": "none",
-        "show_description": false,
-        "show_rating": false,
-        "show_secondary_image": true,
-        "show_vendor": false,
-        "show_view_all": false,
-        "swipe_on_mobile": false,
-        "title": "",
-        "view_all_style": "solid"
-      },
-      "type": "featured-collection"
     },
     "image_banner": {
       "block_order": [
@@ -133,6 +405,7 @@
         "color_scheme": "scheme-3",
         "desktop_content_alignment": "center",
         "desktop_content_position": "bottom-center",
+        "image": "shopify://shop_images/gempages_558209203332711667-498f1535-2116-4f75-89a9-fd0c35cdda89.png",
         "image_behavior": "none",
         "image_height": "large",
         "image_overlay_opacity": 40,
@@ -195,36 +468,6 @@
         "title": ""
       },
       "type": "multicolumn"
-    },
-    "rich_text": {
-      "block_order": [
-        "heading",
-        "text"
-      ],
-      "blocks": {
-        "heading": {
-          "settings": {
-            "heading": "Talk about your brand",
-            "heading_size": "h1"
-          },
-          "type": "heading"
-        },
-        "text": {
-          "settings": {
-            "text": "<p>Share information about your brand with your customers. Describe a product, make announcements, or welcome customers to your store.</p>"
-          },
-          "type": "text"
-        }
-      },
-      "settings": {
-        "color_scheme": "scheme-1",
-        "content_alignment": "center",
-        "desktop_content_position": "center",
-        "full_width": true,
-        "padding_bottom": 0,
-        "padding_top": 40
-      },
-      "type": "rich-text"
     },
     "video": {
       "settings": {

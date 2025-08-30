@@ -1,0 +1,93 @@
+/*
+ * ------------------------------------------------------------
+ * IMPORTANT: The contents of this file are auto-generated.
+ *
+ * This file may be updated by the Shopify admin theme editor
+ * or related systems. Please exercise caution as any changes
+ * made to this file may be overwritten.
+ * ------------------------------------------------------------
+ */
+{
+  "sections": {
+    "banner": {
+      "type": "main-collection-banner",
+      "settings": {
+        "show_collection_description": true,
+        "text_alignment": "left",
+        "title_font": "bebas_neue_n4",
+        "title_size": 34,
+        "title_bottom_margin": 0,
+        "description_font": "sans-serif",
+        "description_size": 12,
+        "mobile_title_size": 23,
+        "mobile_description_size": 12,
+        "show_collection_image": false,
+        "color_scheme": "scheme-1"
+      }
+    },
+    "1756302626fcef5bd3": {
+      "type": "_blocks",
+      "blocks": {
+        "ai_gen_block_f8e394a_8aVqJF": {
+          "type": "ai_gen_block_f8e394a",
+          "settings": {
+            "collection": "{{ closest.collection }}",
+            "products_to_show": 16,
+            "columns_desktop": 4,
+            "columns_tablet": 2,
+            "columns_mobile": 2,
+            "grid_gap": 8,
+            "image_aspect_ratio": "1\/1",
+            "image_fit": "cover",
+            "image_background_color": "#ffffff",
+            "text_spacing": 12,
+            "show_hover_image": true,
+            "hover_transition_duration": 0.2,
+            "text_alignment": "center",
+            "content_gap": 4,
+            "title_font": "poppins_n4",
+            "title_font_size": 12,
+            "title_font_size_mobile": 8,
+            "title_color": "#000000",
+            "title_hover_color": "#666666",
+            "price_font": "poppins_n4",
+            "price_font_size": 12,
+            "price_font_size_mobile": 8,
+            "price_color": "#666666"
+          },
+          "blocks": {}
+        }
+      },
+      "block_order": [
+        "ai_gen_block_f8e394a_8aVqJF"
+      ],
+      "settings": {}
+    },
+    "product-grid": {
+      "type": "main-collection-product-grid",
+      "disabled": true,
+      "settings": {
+        "products_per_page": 16,
+        "columns_desktop": 4,
+        "color_scheme": "",
+        "image_ratio": "adapt",
+        "image_shape": "default",
+        "show_secondary_image": true,
+        "show_vendor": false,
+        "show_rating": false,
+        "quick_add": "none",
+        "enable_filtering": true,
+        "filter_type": "drawer",
+        "enable_sorting": true,
+        "columns_mobile": "2",
+        "padding_top": 36,
+        "padding_bottom": 36
+      }
+    }
+  },
+  "order": [
+    "banner",
+    "1756302626fcef5bd3",
+    "product-grid"
+  ]
+}
