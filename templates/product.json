@@ -39,16 +39,6 @@
           "type": "price",
           "settings": {}
         },
-        "promo_block_Aiq6U4": {
-          "type": "promo_block",
-          "settings": {
-            "promo_heading": "<p>WANT A FREE GIFT?</p>",
-            "promo_subheading": "<p>SPEND £100+ AND CHOOSE YOURS AT CHECKOUT.</p>",
-            "promo_link": "",
-            "promo_background": "#d1e8e8",
-            "promo_text_color": "#333333"
-          }
-        },
         "variant_picker": {
           "type": "variant_picker",
           "settings": {
@@ -68,8 +58,19 @@
             "show_gift_card_recipient": true
           }
         },
+        "promo_block_Aiq6U4": {
+          "type": "promo_block",
+          "settings": {
+            "promo_heading": "<p>WANT A FREE GIFT?</p>",
+            "promo_subheading": "<p>SPEND £100+ AND CHOOSE YOURS AT CHECKOUT.</p>",
+            "promo_link": "",
+            "promo_background": "#d1e8e8",
+            "promo_text_color": "#333333"
+          }
+        },
         "essential_upsell_frequently_bought_together_app_block_Di6FYN": {
           "type": "shopify://apps/essential-upsell/blocks/frequently-bought-together-app-block/50627fd9-24fd-4250-8614-accc12826d80",
+          "disabled": true,
           "settings": {}
         },
         "description": {
@@ -136,10 +137,10 @@
         "title",
         "caption",
         "price",
-        "promo_block_Aiq6U4",
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
+        "promo_block_Aiq6U4",
         "essential_upsell_frequently_bought_together_app_block_Di6FYN",
         "description",
         "tab_item_zMTLBY",
