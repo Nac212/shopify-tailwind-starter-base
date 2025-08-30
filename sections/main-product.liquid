@@ -885,6 +885,41 @@
     {
       "type": "@app"
     },
+      {
+  "type": "promo_block",
+  "name": "Promo Block",
+  "settings": [
+    {
+      "type": "richtext",
+      "id": "promo_heading",
+      "label": "Heading",
+      "default": "<p>WANT A FREE GIFT?</p>"
+    },
+    {
+      "type": "richtext",
+      "id": "promo_subheading",
+      "label": "Subheading",
+      "default": "<p>SPEND £100+ AND CHOOSE YOURS AT CHECKOUT.</p>"
+    },
+    {
+      "type": "url",
+      "id": "promo_link",
+      "label": "Link (Optional)"
+    },
+    {
+      "type": "color",
+      "id": "promo_background",
+      "label": "Background Color",
+      "default": "#d1e8e8"
+    },
+    {
+      "type": "color",
+      "id": "promo_text_color",
+      "label": "Text Color",
+      "default": "#333333"
+    }
+  ]
+    },
     {
       "type": "text",
       "name": "t:sections.main-product.blocks.text.name",
@@ -1513,3 +1548,4 @@
   ]
 }
 {% endschema %}
+
