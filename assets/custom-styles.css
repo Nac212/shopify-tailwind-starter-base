@@ -4,26 +4,24 @@
     border:1px solid #a9a9a9;
     border-radius:4px;
     overflow:hidden;
-    transition:border-color .2s ease;
 }
 .quantity-and-atc-wrapper:hover{
     border-color:#a9a9a9;
 }
 
-/* Background and text color transitions for children */
+/* Give each child its own background and transition for synchronized hover */
 .quantity-and-atc-wrapper .quantity,
-.product-form__submit-wrapper{
+.quantity-and-atc-wrapper .product-form__submit{
     background-color:#000;
     transition:background-color .2s ease;
 }
 .quantity-and-atc-wrapper:hover .quantity,
-.quantity-and-atc-wrapper:hover .product-form__submit-wrapper{
+.quantity-and-atc-wrapper:hover .product-form__submit{
     background-color:#fff;
 }
 .quantity-and-atc-wrapper:hover *{
     color:#000!important;
 }
-
 
 /* --- Quantity Section --- */
 .quantity-and-atc-wrapper .quantity{
@@ -63,13 +61,8 @@
 }
 
 /* --- Add to Cart Button Section --- */
-.product-form__submit-wrapper{
-    flex:1 1 70%;
-}
 .quantity-and-atc-wrapper .product-form__submit{
-    width:100%;
-    height:100%;
-    background-color:transparent!important;
+    flex:1 1 70%;
     color:#fff;
     border:none;
     font-family:'Poppins',sans-serif;
@@ -86,25 +79,17 @@
     .quantity-and-atc-wrapper .quantity{
         flex-basis:35%;
     }
-    .product-form__submit-wrapper{
-        flex-basis:65%;
-    }
     .quantity-and-atc-wrapper .product-form__submit{
+        flex-basis:65%;
         padding:0 15px;
     }
 }
 
-/* --- NEW: Fix for "stuck" color after click --- */
+/* --- Fix for "stuck" color after click --- */
 .quantity-and-atc-wrapper .product-form__submit:focus-visible,
-.quantity-and-atc-wrapper .quantity__button:focus-visible {
-    outline: none;
-    box-shadow: none;
-}
+.quantity-and-atc-wrapper .quantity__button:focus-visible,
 .quantity-and-atc-wrapper .product-form__submit:focus,
 .quantity-and-atc-wrapper .quantity__button:focus {
     outline: none;
     box-shadow: none;
-
-
-    .quantity-and-atc-wrapper{display:flex!important;border:1px solid #a9a9a9;border-radius:4px;overflow:hidden}.quantity-and-atc-wrapper:hover{border-color:#a9a9a9}.quantity-and-atc-wrapper .quantity,.quantity-and-atc-wrapper .product-form__submit{background-color:#000;transition:background-color .2s ease}.quantity-and-atc-wrapper:hover .quantity,.quantity-and-atc-wrapper:hover .product-form__submit{background-color:#fff}.quantity-and-atc-wrapper:hover *{color:#000!important}.quantity-and-atc-wrapper .quantity{display:flex;align-items:center;flex:0 0 30%;border-right:1px solid #ddd;transition:border-right-color .2s ease,background-color .2s ease}.quantity-and-atc-wrapper:hover .quantity{border-right-color:#ddd}.quantity-and-atc-wrapper .quantity__input{color:#fff;background:0 0;border:0;padding:10px 2px;font-size:16px;width:33%;text-align:center;-moz-appearance:textfield}.quantity-and-atc-wrapper .quantity__button{color:#fff;background:0 0;border:0;padding:10px 12px;font-size:18px;line-height:1;cursor:pointer}.quantity-and-atc-wrapper .quantity__input::-webkit-outer-spin-button,.quantity-and-atc-wrapper .quantity__input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}.quantity-and-atc-wrapper .product-form__submit{flex:1 1 70%;color:#fff;border:0;font-family:'Poppins',sans-serif;text-transform:uppercase;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center}@media screen and (max-width:749px){.quantity-and-atc-wrapper .quantity{flex-basis:35%}.quantity-and-atc-wrapper .product-form__submit{flex-basis:65%;padding:0 15px}}
 }
