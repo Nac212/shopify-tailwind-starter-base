@@ -11,6 +11,10 @@
   "name": "t:sections.header.name",
   "type": "header",
   "sections": {
+    "1756582329d23640b8": {
+      "type": "_blocks",
+      "settings": {}
+    },
     "announcement-bar": {
       "type": "announcement-bar",
       "blocks": {
@@ -64,6 +68,7 @@
     }
   },
   "order": [
+    "1756582329d23640b8",
     "announcement-bar",
     "header"
   ]
