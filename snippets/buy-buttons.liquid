@@ -75,22 +75,24 @@
       </button>
     </quantity-input>
 
-    {% comment %} This is the Add to Cart Button {% endcomment %}
-    <button
-      id="ProductSubmitButton-{{ section_id }}"
-      type="submit"
-      name="add"
-      class="product-form__submit button add-to-cart-custom"
-      {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}
-    >
-      <span>
-        {%- if product.selected_or_first_available_variant.available -%}
-          {{ 'products.product.add_to_cart' | t }}
-        {%- else -%}
-          {{ 'products.product.sold_out' | t }}
-        {%- endif -%}
-      </span>
-    </button>
+    {% comment %} This is the new wrapper for the button {% endcomment %}
+    <div class="product-form__submit-wrapper">
+      <button
+        id="ProductSubmitButton-{{ section_id }}"
+        type="submit"
+        name="add"
+        class="product-form__submit button add-to-cart-custom"
+        {% if product.selected_or_first_available_variant.available == false %}disabled{% endif %}
+      >
+        <span>
+          {%- if product.selected_or_first_available_variant.available -%}
+            {{ 'products.product.add_to_cart' | t }}
+          {%- else -%}
+            {{ 'products.product.sold_out' | t }}
+          {%- endif -%}
+        </span>
+      </button>
+    </div>
   </div>
 
   {%- if show_dynamic_checkout -%}
