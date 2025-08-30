@@ -3845,4 +3845,10 @@ details-disclosure > details {
 .quantity-and-atc-wrapper .product-form__submit:hover {
   background-color: #fff; /* White background on hover */
   color: #000; /* Black text on hover */
+
+/* --- Layout Fix --- */
+.quantity-and-atc-wrapper {
+  display: flex !important;
+}
+
 }
