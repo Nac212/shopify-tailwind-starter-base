@@ -1,6 +1,7 @@
-/* --- Combined Quantity & ATC Button (Final Version) --- */
+/* --- Combined Quantity & ATC Button (Grid Layout) --- */
 .quantity-and-atc-wrapper{
-    display:flex!important;
+    display: grid !important; /* CHANGED from flex to grid */
+    grid-template-columns: 30% 70%; /* Set the 30/70 split here */
     border:1px solid #a9a9a9;
     border-radius:4px;
     overflow:hidden;
@@ -9,7 +10,7 @@
     border-color:#a9a9a9;
 }
 
-/* Give each child its own background and transition for synchronized hover */
+/* Background and text color transitions for children */
 .quantity-and-atc-wrapper .quantity,
 .quantity-and-atc-wrapper .product-form__submit{
     background-color:#000;
@@ -27,9 +28,8 @@
 .quantity-and-atc-wrapper .quantity{
     display:flex;
     align-items:center;
-    flex:0 0 30%;
     border-right:1px solid #ddd;
-    transition:border-right-color .2s ease,background-color .2s ease;
+    /* REMOVED flex-basis, as grid handles width now */
 }
 .quantity-and-atc-wrapper:hover .quantity{
     border-right-color:#ddd;
@@ -62,7 +62,6 @@
 
 /* --- Add to Cart Button Section --- */
 .quantity-and-atc-wrapper .product-form__submit{
-    flex:1 1 70%;
     color:#fff;
     border:none;
     font-family:'Poppins',sans-serif;
@@ -72,15 +71,15 @@
     display:flex;
     align-items:center;
     justify-content:center;
+    /* REMOVED flex-basis, as grid handles width now */
 }
 
 /* --- Mobile Styles (35/65 Split) --- */
 @media screen and (max-width:749px){
-    .quantity-and-atc-wrapper .quantity{
-        flex-basis:35%;
+    .quantity-and-atc-wrapper {
+        grid-template-columns: 35% 65%; /* Adjust grid for mobile */
     }
     .quantity-and-atc-wrapper .product-form__submit{
-        flex-basis:65%;
         padding:0 15px;
     }
 }
