@@ -3786,8 +3786,8 @@ details-disclosure > details {
 }
 
 .product-form__submit.button--full-width {
-  margin-left: auto;
-  margin-right: auto;
-  width: auto;
-  min-width: 250px; /* Adjust this value if you want the button wider or narrower */
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: auto !important;
+  min-width: 250px !important;
 }
