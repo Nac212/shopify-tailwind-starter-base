@@ -93,6 +93,86 @@
 {%- for block in section.blocks -%}
   {%- case block.type -%}
     {%- when '@app' -%}
+{%- when 'product_features' -%}
+  <div class="features-grid-wrapper" {{ block.shopify_attributes }}>
+    <style>
+      .features-grid-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1px;
+        background-color: #e0e0e0;
+        border: 1px solid #e0e0e0;
+        margin: 20px 0;
+        width: 100%;
+      }
+      .feature-grid-item {
+        display: flex;
+        align-items: center;
+        padding: 2.5rem;
+        background-color: #ffffff;
+      }
+      .feature-grid-icon {
+        margin-right: 1.5rem;
+      }
+      .feature-grid-icon svg {
+        width: 2rem;
+        height: 2rem;
+        color: #111111;
+      }
+      .feature-grid-text h3 {
+        margin: 0 0 0.4rem 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #111111;
+      }
+      .feature-grid-text p {
+        margin: 0;
+        font-size: 0.95rem;
+        color: #555555;
+      }
+      @media (max-width: 768px) {
+        .features-grid-container {
+          grid-template-columns: 1fr;
+        }
+        .feature-grid-item {
+          padding: 1.5rem;
+        }
+      }
+    </style>
+
+    <div class="features-grid-container">
+      <div class="feature-grid-item">
+        <div class="feature-grid-icon">{{ block.settings.feature_1_icon }}</div>
+        <div class="feature-grid-text">
+          <h3>{{ block.settings.feature_1_heading }}</h3>
+          <p>{{ block.settings.feature_1_text }}</p>
+        </div>
+      </div>
+      <div class="feature-grid-item">
+        <div class="feature-grid-icon">{{ block.settings.feature_2_icon }}</div>
+        <div class="feature-grid-text">
+          <h3>{{ block.settings.feature_2_heading }}</h3>
+          <p>{{ block.settings.feature_2_text }}</p>
+        </div>
+      </div>
+      <div class="feature-grid-item">
+        <div class="feature-grid-icon">{{ block.settings.feature_3_icon }}</div>
+        <div class="feature-grid-text">
+          <h3>{{ block.settings.feature_3_heading }}</h3>
+          <p>{{ block.settings.feature_3_text }}</p>
+        </div>
+      </div>
+      <div class="feature-grid-item">
+        <div class="feature-grid-icon">{{ block.settings.feature_4_icon }}</div>
+        <div class="feature-grid-text">
+          <h3>{{ block.settings.feature_4_heading }}</h3>
+          <p>{{ block.settings.feature_4_text }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
       {%- when 'promo_block' -%}
   {%- style -%}
     {{ block.settings.heading_font | font_face }}
