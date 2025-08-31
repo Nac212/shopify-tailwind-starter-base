@@ -3785,13 +3785,7 @@ details-disclosure > details {
 
 }
 
-/* PART 1: This tells the container to center whatever is inside it. */
-.product-form__buttons {
-  display: flex;
-  justify-content: center;
-}
-
-/* PART 2: This tells the button to stop being 100% wide so it CAN be centered. */
-.product-form__submit.button--full-width {
-  min-width: 250px; /* Optional: Adjust this to make the button wider or narrower */
+.product-form .product-form__buttons {
+  max-width: 380px;
+  margin: 0 auto !important;
 }
