@@ -135,12 +135,12 @@
         "product_features_CjVRpR": {
           "type": "product_features",
           "settings": {
-            "background_color": "#ffffff",
+            "background_color": "#fffefa",
             "padding": 12,
             "heading_font": "poppins_n5",
             "text_font": "poppins_n4",
             "feature_1_heading": "Waterproof & Durable",
-            "feature_1_text": "Resists sweat, heat & moisture",
+            "feature_1_text": "Resists sweat, heat & moisture.",
             "feature_1_icon_svg": "",
             "feature_2_heading": "2-Year Warranty",
             "feature_2_text": "Hassle-free returns",
