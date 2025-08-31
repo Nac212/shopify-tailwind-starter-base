@@ -94,44 +94,73 @@
   {%- case block.type -%}
     {%- when '@app' -%}
 {%- when 'product_features' -%}
-  <div class="{% if block.settings.match_button_width %}product-form__input{% endif %}" {{ block.shopify_attributes }}>
+  <div class="features-block-outer-wrapper-{{ block.id }}" {{ block.shopify_attributes }}>
+    {%- style -%}
+      {{ block.settings.heading_font | font_face }}
+      {{ block.settings.text_font | font_face }}
 
-    <div class="features-grid-wrapper-{{ block.id }}">
-      {%- style -%}
-        {{ block.settings.heading_font | font_face }}
-        {{ block.settings.text_font | font_face }}
+      .features-grid-container-{{ block.id }} {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1px;
+        background-color: #e0e0e0;
+        border: 1px solid #e0e0e0;
+        width: 100%;
+      }
+      .features-grid-container-{{ block.id }} .feature-grid-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        background-color: {{ block.settings.background_color }};
+        padding: {{ block.settings.padding_desktop }}px;
+      }
+      .features-grid-container-{{ block.id }} .feature-grid-icon {
+        margin-bottom: 1.5rem;
+        flex-shrink: 0;
+      }
+      .features-grid-container-{{ block.id }} .feature-grid-icon svg,
+      .features-grid-container-{{ block.id }} .feature-grid-icon img {
+        width: 2rem;
+        height: auto;
+        color: #111111;
+        display: block;
+      }
+      .features-grid-container-{{ block.id }} .feature-grid-text h3 {
+        margin: 0 0 0.4rem 0;
+        color: #111111;
+        font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+        font-weight: {{ block.settings.heading_font.weight }};
+        font-style: {{ block.settings.heading_font.style }};
+        font-size: {{ block.settings.heading_font_size_desktop }}px;
+      }
+      .features-grid-container-{{ block.id }} .feature-grid-text p {
+        margin: 0;
+        color: #555555;
+        font-family: {{ block.settings.text_font.family }}, {{ block.settings.text_font.fallback_families }};
+        font-weight: {{ block.settings.text_font.weight }};
+        font-style: {{ block.settings.text_font.style }};
+        font-size: {{ block.settings.text_font_size_desktop }}px;
+      }
 
-        .features-grid-wrapper-{{ block.id }} .feature-grid-item {
-          background-color: {{ block.settings.background_color }};
-          padding: {{ block.settings.padding_desktop }}px;
+      @media screen and (max-width: 768px) {
+        .features-grid-container-{{ block.id }} {
+          grid-template-columns: repeat(2, 1fr);
         }
-        .features-grid-wrapper-{{ block.id }} .feature-grid-text h3 {
-          font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
-          font-weight: {{ block.settings.heading_font.weight }};
-          font-style: {{ block.settings.heading_font.style }};
-          font-size: {{ block.settings.heading_font_size_desktop }}px;
+        .features-grid-container-{{ block.id }} .feature-grid-item {
+          padding: {{ block.settings.padding_mobile }}px;
         }
-        .features-grid-wrapper-{{ block.id }} .feature-grid-text p {
-          font-family: {{ block.settings.text_font.family }}, {{ block.settings.text_font.fallback_families }};
-          font-weight: {{ block.settings.text_font.weight }};
-          font-style: {{ block.settings.text_font.style }};
-          font-size: {{ block.settings.text_font_size_desktop }}px;
+        .features-grid-container-{{ block.id }} .feature-grid-text h3 {
+          font-size: {{ block.settings.heading_font_size_mobile }}px;
         }
-
-        @media screen and (max-width: 768px) {
-          .features-grid-wrapper-{{ block.id }} .feature-grid-item {
-            padding: {{ block.settings.padding_mobile }}px;
-          }
-          .features-grid-wrapper-{{ block.id }} .feature-grid-text h3 {
-            font-size: {{ block.settings.heading_font_size_mobile }}px;
-          }
-          .features-grid-wrapper-{{ block.id }} .feature-grid-text p {
-            font-size: {{ block.settings.text_font_size_mobile }}px;
-          }
+        .features-grid-container-{{ block.id }} .feature-grid-text p {
+          font-size: {{ block.settings.text_font_size_mobile }}px;
         }
-      {%- endstyle -%}
+      }
+    {%- endstyle -%}
     
-      <div class="features-grid-container">
+    <div class="features-grid-container features-grid-container-{{ block.id }}">
         <div class="feature-grid-item">
           <div class="feature-grid-icon">
             {%- if block.settings.feature_1_icon_image != blank -%}
@@ -184,57 +213,59 @@
             <p>{{ block.settings.feature_4_text }}</p>
           </div>
         </div>
-      </div>
-
-      <style>
-        .features-grid-wrapper-{{ block.id }} {
-          margin-top: 20px;
-        }
-        .product-form__input .features-grid-wrapper-{{ block.id }} {
-          margin-top: 0;
-        }
-        .features-grid-container {
-          display: grid;
-          grid-template-columns: repeat(2, 1fr);
-          gap: 1px;
-          background-color: #e0e0e0;
-          border: 1px solid #e0e0e0;
-          width: 100%;
-        }
-        .feature-grid-item {
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          text-align: center;
-        }
-        .feature-grid-icon {
-          margin-bottom: 1.5rem;
-          flex-shrink: 0;
-        }
-        .feature-grid-icon svg,
-        .feature-grid-icon img {
-          width: 2rem;
-          height: auto;
-          color: #111111;
-          display: block;
-        }
-        .feature-grid-text h3 {
-          margin: 0 0 0.4rem 0;
-          color: #111111;
-        }
-        .feature-grid-text p {
-          margin: 0;
-          color: #555555;
-        }
-        @media (max-width: 768px) {
-          .features-grid-container {
-            grid-template-columns: repeat(2, 1fr);
-          }
-        }
-      </style>
     </div>
   </div>
+
+  {%- if block.settings.match_button_width -%}
+  <script>
+    (function() {
+      const alignFeatureGrid{{ block.id }} = () => {
+        try {
+          const blockElement = document.querySelector('.features-block-outer-wrapper-{{ block.id }}');
+          if (!blockElement) return;
+
+          const productInfoContainer = blockElement.closest('.product__info-container');
+          if (!productInfoContainer) return;
+          
+          const buyButtonsContainer = productInfoContainer.querySelector('.product-form__buttons');
+          if (buyButtonsContainer) {
+            const targetWidth = buyButtonsContainer.offsetWidth;
+            const gridContainer = blockElement.querySelector('.features-grid-container-{{ block.id }}');
+            
+            // Set margin on the outer wrapper to match form elements
+            blockElement.style.paddingLeft = buyButtonsContainer.offsetLeft + 'px';
+            blockElement.style.paddingRight = buyButtonsContainer.offsetLeft + 'px';
+            blockElement.style.marginTop = '1rem';
+          }
+        } catch (e) {
+          console.error('Error aligning feature grid:', e);
+        }
+      };
+
+      const debounce = (func, wait) => {
+        let timeout;
+        return function executedFunction(...args) {
+          const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+          };
+          clearTimeout(timeout);
+          timeout = setTimeout(later, wait);
+        };
+      };
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', alignFeatureGrid{{ block.id }});
+      } else {
+        alignFeatureGrid{{ block.id }}();
+      }
+      
+      window.addEventListener('resize', debounce(alignFeatureGrid{{ block.id }}, 150));
+      // Also run on variant change, as this can affect layout
+      document.addEventListener('variant:changed', debounce(alignFeatureGrid{{ block.id }}, 150));
+    })();
+  </script>
+  {%- endif -%}
 
 
       {%- when 'promo_block' -%}
