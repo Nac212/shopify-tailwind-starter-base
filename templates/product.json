@@ -76,6 +76,7 @@
             "feature_1_icon_svg": "",
             "feature_2_heading": "1-Year Warranty",
             "feature_2_text": "Peace of mind with every purchase.",
+            "feature_2_icon_image": "shopify://shop_images/icons8-warranty-50.png",
             "feature_2_icon_svg": "",
             "feature_3_heading": "Premium Materials",
             "feature_3_text": "Crafted for sensitive skin and lasting wear.",
@@ -83,6 +84,7 @@
             "feature_3_icon_svg": "",
             "feature_4_heading": "Handcrafted Quality",
             "feature_4_text": "Made with care, and designed to endure.",
+            "feature_4_icon_image": "shopify://shop_images/icons8-handmade-50.png",
             "feature_4_icon_svg": ""
           }
         },
