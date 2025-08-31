@@ -67,76 +67,6 @@
         "padding_bottom": 0
       }
     },
-    "custom_features_AY4QfN": {
-      "type": "custom-features",
-      "blocks": {
-        "feature_AAMbeT": {
-          "type": "feature",
-          "settings": {
-            "icon_select": "gift",
-            "icon_svg": "",
-            "heading": "Feature Heading",
-            "subheading": "Describe the feature here.",
-            "link_url": ""
-          }
-        },
-        "feature_dDNGRa": {
-          "type": "feature",
-          "settings": {
-            "icon_select": "gift",
-            "icon_svg": "",
-            "heading": "Feature Heading",
-            "subheading": "Describe the feature here.",
-            "link_url": ""
-          }
-        },
-        "feature_b9PqT6": {
-          "type": "feature",
-          "settings": {
-            "icon_select": "gift",
-            "icon_svg": "",
-            "heading": "Feature Heading",
-            "subheading": "Describe the feature here.",
-            "link_url": ""
-          }
-        },
-        "feature_YGEEhQ": {
-          "type": "feature",
-          "settings": {
-            "icon_select": "gift",
-            "icon_svg": "",
-            "heading": "Feature Heading",
-            "subheading": "Describe the feature here.",
-            "link_url": ""
-          }
-        }
-      },
-      "block_order": [
-        "feature_AAMbeT",
-        "feature_dDNGRa",
-        "feature_b9PqT6",
-        "feature_YGEEhQ"
-      ],
-      "name": "Custom Features",
-      "settings": {
-        "show_divider": true,
-        "logo_width": 150,
-        "logo_position": 50,
-        "padding_top": 40,
-        "padding_bottom": 40,
-        "logo_bottom_margin": 30,
-        "heading_font": "sans-serif",
-        "heading_color": "#333333",
-        "subheading_font": "sans-serif",
-        "subheading_color": "#777777",
-        "icon_size_desktop": 48,
-        "heading_font_size_desktop": 16,
-        "subheading_font_size_desktop": 14,
-        "icon_size_mobile": 40,
-        "heading_font_size_mobile": 14,
-        "subheading_font_size_mobile": 12
-      }
-    },
     "1756241219fbed0124": {
       "type": "_blocks",
       "settings": {}
@@ -545,7 +475,6 @@
   "order": [
     "image_banner",
     "custom_liquid_8X6qXm",
-    "custom_features_AY4QfN",
     "1756241219fbed0124",
     "1756235048663a7ff7",
     "collage",
