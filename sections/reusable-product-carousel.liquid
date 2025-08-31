@@ -1,8 +1,8 @@
 {% comment %}
   Shopify section code corrected by Gemini.
-  - Final Fix: Sanitized the section.id used for the custom element tag name
-    to remove invalid characters ('__' and '--'). This resolves the
-    'Failed to execute 'define'' error and allows the script to run correctly.
+  - Final Fix: Re-wrapped the script in an IIFE (Immediately Invoked Function Expression)
+    to create a private scope. This prevents global variable collisions that were
+    stopping the script from executing, which is the root cause of the arrows not working.
 {% endcomment %}
 
 {% style %}
@@ -330,163 +330,165 @@
 </div>
 
 <script>
+(function() {
   const carouselTagName = `product-carousel-{{ section.id | replace: '__', '-' | replace: '--', '-' }}`;
 
-  if (!customElements.get(carouselTagName)) {
-    class ProductCarousel extends HTMLElement {
-      constructor() {
-        super();
-        this.track = null;
-        this.pagination = null;
-        this.arrowLeft = null;
-        this.arrowRight = null;
-        this.cards = [];
-        this.debouncedOnResize = this.debounce(this.onResize.bind(this), 250);
-      }
+  if (customElements.get(carouselTagName)) {
+    return;
+  }
 
-      connectedCallback() {
-        // This function runs when the element is added to the page.
-        // It's safer to query for elements here.
-        this.track = this.querySelector('[data-track]');
-        this.pagination = this.querySelector('[data-pagination]');
-        this.arrowLeft = this.querySelector('[data-side-arrow-left]');
-        this.arrowRight = this.querySelector('[data-side-arrow-right]');
-        this.cards = this.track ? Array.from(this.track.children) : [];
-
-        if (this.cards.length > 0) {
-          this.init();
-        }
-      }
-
-      init() {
-        this.updateProperties();
-        this.setupEventListeners();
-        this.setupPagination();
-        this.updateArrowState();
-        this.updatePaginationState();
-      }
-
-      setupEventListeners() {
-        this.arrowLeft.addEventListener('click', this.scrollLeftByOne.bind(this));
-        this.arrowRight.addEventListener('click', this.scrollRightByOne.bind(this));
-        this.track.addEventListener('scroll', this.updateArrowState.bind(this));
-        window.addEventListener('resize', this.debouncedOnResize);
-      }
-
-      disconnectedCallback() {
-         window.removeEventListener('resize', this.debouncedOnResize);
-      }
-
-      scrollLeftByOne() {
-        if (!this.cards[0]) return;
-        const itemWidth = this.cards[0].offsetWidth + {{ section.settings.card_spacing }};
-        this.track.scrollBy({ left: -itemWidth, behavior: 'smooth' });
-      }
-
-      scrollRightByOne() {
-        if (!this.cards[0]) return;
-        const itemWidth = this.cards[0].offsetWidth + {{ section.settings.card_spacing }};
-        this.track.scrollBy({ left: itemWidth, behavior: 'smooth' });
-      }
-
-      updateArrowState() {
-        requestAnimationFrame(() => {
-          if (!this.track) return;
-          const scrollLeft = this.track.scrollLeft;
-          const maxScroll = this.track.scrollWidth - this.track.clientWidth;
-
-          this.arrowLeft.classList.toggle('disabled', scrollLeft < 1);
-          this.arrowRight.classList.toggle('disabled', scrollLeft > maxScroll - 5);
-
-          this.updatePaginationOnScroll();
-        });
-      }
-
-      updateProperties() {
-        if (window.innerWidth <= 768) {
-          this.cardsPerPage = {{ section.settings.mobile_columns }};
-        } else {
-          this.cardsPerPage = 4.3;
-        }
-        this.totalPages = this.cards.length > 0 ? Math.ceil(this.cards.length / this.cardsPerPage) : 0;
-        this.currentPage = this.calculateCurrentPage();
-      }
-
-      onResize() {
-        this.updateProperties();
-        this.setupPagination();
-        this.updateArrowState();
-        this.updatePaginationState();
-      }
-
-      setupPagination() {
-        if (!this.pagination) return;
-        this.pagination.innerHTML = '';
-
-        if (this.totalPages <= 1) {
-            this.pagination.style.display = 'none';
-            return;
-        }
-
-        this.pagination.style.display = 'flex';
-        for (let i = 0; i < this.totalPages; i++) {
-          const item = document.createElement('div');
-          item.className = 'ai-product-carousel__pagination-item-{{ section.id }}';
-          item.addEventListener('click', () => this.goToPage(i));
-          this.pagination.appendChild(item);
-        }
-      }
-
-      updatePaginationOnScroll() {
-        let scrollTimeout;
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => {
-            this.currentPage = this.calculateCurrentPage();
-            this.updatePaginationState();
-        }, 150);
-      }
-
-      calculateCurrentPage() {
-        if (!this.track || !this.cards[0]) return 0;
-        const scrollLeft = this.track.scrollLeft;
-        const itemWidth = this.cards[0].offsetWidth + {{ section.settings.card_spacing }};
-        const page = Math.round(scrollLeft / (itemWidth * this.cardsPerPage));
-        return Math.max(0, Math.min(page, this.totalPages - 1));
-      }
-
-      updatePaginationState() {
-        if (!this.pagination) return;
-        const items = this.pagination.children;
-        for (let i = 0; i < items.length; i++) {
-          items[i].classList.toggle('active', i === this.currentPage);
-        }
-      }
-
-      goToPage(pageIndex) {
-        if (!this.track || !this.cards[0]) return;
-        const itemWidth = this.cards[0].offsetWidth + {{ section.settings.card_spacing }};
-        const scrollLeft = pageIndex * itemWidth * this.cardsPerPage;
-
-        this.track.scrollTo({ left: scrollLeft, behavior: 'smooth' });
-        this.currentPage = pageIndex;
-        this.updatePaginationState();
-      }
-
-      debounce(func, wait) {
-        let timeout;
-        return function executedFunction(...args) {
-          const later = () => {
-            clearTimeout(timeout);
-            func(...args);
-          };
-          clearTimeout(timeout);
-          timeout = setTimeout(later, wait);
-        };
-      };
+  class ProductCarousel extends HTMLElement {
+    constructor() {
+      super();
+      this.track = null;
+      this.pagination = null;
+      this.arrowLeft = null;
+      this.arrowRight = null;
+      this.cards = [];
+      this.debouncedOnResize = this.debounce(this.onResize.bind(this), 250);
     }
 
-    customElements.define(carouselTagName, ProductCarousel);
+    connectedCallback() {
+      this.track = this.querySelector('[data-track]');
+      this.pagination = this.querySelector('[data-pagination]');
+      this.arrowLeft = this.querySelector('[data-side-arrow-left]');
+      this.arrowRight = this.querySelector('[data-side-arrow-right]');
+      this.cards = this.track ? Array.from(this.track.children) : [];
+
+      if (this.cards.length > 0) {
+        this.init();
+      }
+    }
+
+    init() {
+      this.updateProperties();
+      this.setupEventListeners();
+      this.setupPagination();
+      this.updateArrowState();
+      this.updatePaginationState();
+    }
+
+    setupEventListeners() {
+      this.arrowLeft.addEventListener('click', this.scrollLeftByOne.bind(this));
+      this.arrowRight.addEventListener('click', this.scrollRightByOne.bind(this));
+      this.track.addEventListener('scroll', this.updateArrowState.bind(this));
+      window.addEventListener('resize', this.debouncedOnResize);
+    }
+
+    disconnectedCallback() {
+       window.removeEventListener('resize', this.debouncedOnResize);
+    }
+
+    scrollLeftByOne() {
+      if (!this.cards[0]) return;
+      const itemWidth = this.cards[0].offsetWidth + {{ section.settings.card_spacing }};
+      this.track.scrollBy({ left: -itemWidth, behavior: 'smooth' });
+    }
+
+    scrollRightByOne() {
+      if (!this.cards[0]) return;
+      const itemWidth = this.cards[0].offsetWidth + {{ section.settings.card_spacing }};
+      this.track.scrollBy({ left: itemWidth, behavior: 'smooth' });
+    }
+
+    updateArrowState() {
+      requestAnimationFrame(() => {
+        if (!this.track) return;
+        const scrollLeft = this.track.scrollLeft;
+        const maxScroll = this.track.scrollWidth - this.track.clientWidth;
+
+        this.arrowLeft.classList.toggle('disabled', scrollLeft < 1);
+        this.arrowRight.classList.toggle('disabled', scrollLeft > maxScroll - 5);
+
+        this.updatePaginationOnScroll();
+      });
+    }
+
+    updateProperties() {
+      if (window.innerWidth <= 768) {
+        this.cardsPerPage = {{ section.settings.mobile_columns }};
+      } else {
+        this.cardsPerPage = 4.3;
+      }
+      this.totalPages = this.cards.length > 0 ? Math.ceil(this.cards.length / this.cardsPerPage) : 0;
+      this.currentPage = this.calculateCurrentPage();
+    }
+
+    onResize() {
+      this.updateProperties();
+      this.setupPagination();
+      this.updateArrowState();
+      this.updatePaginationState();
+    }
+
+    setupPagination() {
+      if (!this.pagination) return;
+      this.pagination.innerHTML = '';
+
+      if (this.totalPages <= 1) {
+          this.pagination.style.display = 'none';
+          return;
+      }
+
+      this.pagination.style.display = 'flex';
+      for (let i = 0; i < this.totalPages; i++) {
+        const item = document.createElement('div');
+        item.className = 'ai-product-carousel__pagination-item-{{ section.id }}';
+        item.addEventListener('click', () => this.goToPage(i));
+        this.pagination.appendChild(item);
+      }
+    }
+
+    updatePaginationOnScroll() {
+      let scrollTimeout;
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+          this.currentPage = this.calculateCurrentPage();
+          this.updatePaginationState();
+      }, 150);
+    }
+
+    calculateCurrentPage() {
+      if (!this.track || !this.cards[0]) return 0;
+      const scrollLeft = this.track.scrollLeft;
+      const itemWidth = this.cards[0].offsetWidth + {{ section.settings.card_spacing }};
+      const page = Math.round(scrollLeft / (itemWidth * this.cardsPerPage));
+      return Math.max(0, Math.min(page, this.totalPages - 1));
+    }
+
+    updatePaginationState() {
+      if (!this.pagination) return;
+      const items = this.pagination.children;
+      for (let i = 0; i < items.length; i++) {
+        items[i].classList.toggle('active', i === this.currentPage);
+      }
+    }
+
+    goToPage(pageIndex) {
+      if (!this.track || !this.cards[0]) return;
+      const itemWidth = this.cards[0].offsetWidth + {{ section.settings.card_spacing }};
+      const scrollLeft = pageIndex * itemWidth * this.cardsPerPage;
+
+      this.track.scrollTo({ left: scrollLeft, behavior: 'smooth' });
+      this.currentPage = pageIndex;
+      this.updatePaginationState();
+    }
+
+    debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    };
   }
+
+  customElements.define(carouselTagName, ProductCarousel);
+})();
 </script>
 
 
