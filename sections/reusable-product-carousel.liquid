@@ -1,8 +1,7 @@
 {% comment %}
-  Shopify section code corrected by Gemini.
-  - Final Fix: Re-wrapped the script in an IIFE (Immediately Invoked Function Expression)
-    to create a private scope. This prevents global variable collisions that were
-    stopping the script from executing, which is the root cause of the arrows not working.
+  Shopify section code with extensive logging for diagnostics.
+  - This version is designed to output detailed information to the browser console
+    to pinpoint the exact point of failure in the script.
 {% endcomment %}
 
 {% style %}
@@ -331,149 +330,98 @@
 
 <script>
 (function() {
+  console.log("Carousel Script: Starting for section {{ section.id }}");
+
   const carouselTagName = `product-carousel-{{ section.id | replace: '__', '-' | replace: '--', '-' }}`;
+  console.log(`Carousel Script: Determined tag name: ${carouselTagName}`);
 
   if (customElements.get(carouselTagName)) {
+    console.warn(`Carousel Script: Custom element ${carouselTagName} is already defined. Skipping.`);
     return;
   }
 
   class ProductCarousel extends HTMLElement {
     constructor() {
       super();
+      console.log(`Carousel Class [${carouselTagName}]: constructor() called.`);
       this.track = null;
-      this.pagination = null;
       this.arrowLeft = null;
       this.arrowRight = null;
       this.cards = [];
-      this.debouncedOnResize = this.debounce(this.onResize.bind(this), 250);
     }
 
     connectedCallback() {
-      this.track = this.querySelector('[data-track]');
-      this.pagination = this.querySelector('[data-pagination]');
-      this.arrowLeft = this.querySelector('[data-side-arrow-left]');
-      this.arrowRight = this.querySelector('[data-side-arrow-right]');
-      this.cards = this.track ? Array.from(this.track.children) : [];
-
-      if (this.cards.length > 0) {
-        this.init();
-      }
-    }
-
-    init() {
-      this.updateProperties();
-      this.setupEventListeners();
-      this.setupPagination();
-      this.updateArrowState();
-      this.updatePaginationState();
-    }
-
-    setupEventListeners() {
-      this.arrowLeft.addEventListener('click', this.scrollLeftByOne.bind(this));
-      this.arrowRight.addEventListener('click', this.scrollRightByOne.bind(this));
-      this.track.addEventListener('scroll', this.updateArrowState.bind(this));
-      window.addEventListener('resize', this.debouncedOnResize);
-    }
-
-    disconnectedCallback() {
-       window.removeEventListener('resize', this.debouncedOnResize);
-    }
-
-    scrollLeftByOne() {
-      if (!this.cards[0]) return;
-      const itemWidth = this.cards[0].offsetWidth + {{ section.settings.card_spacing }};
-      this.track.scrollBy({ left: -itemWidth, behavior: 'smooth' });
-    }
-
-    scrollRightByOne() {
-      if (!this.cards[0]) return;
-      const itemWidth = this.cards[0].offsetWidth + {{ section.settings.card_spacing }};
-      this.track.scrollBy({ left: itemWidth, behavior: 'smooth' });
-    }
-
-    updateArrowState() {
+      console.log(`Carousel Class [${carouselTagName}]: connectedCallback() started.`);
+      // Use requestAnimationFrame to ensure the DOM is ready for querying
       requestAnimationFrame(() => {
-        if (!this.track) return;
-        const scrollLeft = this.track.scrollLeft;
-        const maxScroll = this.track.scrollWidth - this.track.clientWidth;
+        console.log(`Carousel Class [${carouselTagName}]: requestAnimationFrame callback fired.`);
+        this.track = this.querySelector('[data-track]');
+        this.arrowLeft = this.querySelector('[data-side-arrow-left]');
+        this.arrowRight = this.querySelector('[data-side-arrow-right]');
+        this.cards = this.track ? Array.from(this.track.children) : [];
 
-        this.arrowLeft.classList.toggle('disabled', scrollLeft < 1);
-        this.arrowRight.classList.toggle('disabled', scrollLeft > maxScroll - 5);
+        console.log(`Carousel Class [${carouselTagName}]: Elements found:`, {
+          track: this.track,
+          arrowLeft: this.arrowLeft,
+          arrowRight: this.arrowRight,
+          cardCount: this.cards.length
+        });
 
-        this.updatePaginationOnScroll();
+        if (this.cards.length > 0 && this.arrowLeft && this.arrowRight) {
+          this.init();
+        } else {
+          console.error(`Carousel Class [${carouselTagName}]: Initialization failed. Missing essential elements.`);
+        }
       });
     }
 
-    updateProperties() {
-      if (window.innerWidth <= 768) {
-        this.cardsPerPage = {{ section.settings.mobile_columns }};
-      } else {
-        this.cardsPerPage = 4.3;
+    init() {
+      console.log(`Carousel Class [${carouselTagName}]: init() started.`);
+      this.setupEventListeners();
+      // Any other setup logic can go here
+    }
+
+    setupEventListeners() {
+      console.log(`Carousel Class [${carouselTagName}]: setupEventListeners() started.`);
+      if (!this.arrowLeft || !this.arrowRight) {
+        console.error(`Carousel Class [${carouselTagName}]: Arrows not found, cannot add listeners.`);
+        return;
       }
-      this.totalPages = this.cards.length > 0 ? Math.ceil(this.cards.length / this.cardsPerPage) : 0;
-      this.currentPage = this.calculateCurrentPage();
+      this.arrowLeft.addEventListener('click', this.scrollLeftByOne.bind(this));
+      this.arrowRight.addEventListener('click', this.scrollRightByOne.bind(this));
+      console.log(`Carousel Class [${carouselTagName}]: Click listeners attached to arrows.`);
     }
-
-    onResize() {
-      this.updateProperties();
-      this.setupPagination();
-      this.updateArrowState();
-      this.updatePaginationState();
-    }
-
-    setupPagination() {
-      if (!this.pagination) return;
-      this.pagination.innerHTML = '';
-
-      if (this.totalPages <= 1) {
-          this.pagination.style.display = 'none';
-          return;
+    
+    scrollLeftByOne(event) {
+      event.preventDefault();
+      console.log(`Carousel Action [${carouselTagName}]: Left arrow clicked.`);
+      if (!this.cards[0]) {
+        console.error(`Carousel Action [${carouselTagName}]: No cards found to measure.`);
+        return;
       }
+      const cardWidth = this.cards[0].offsetWidth;
+      const spacing = {{ section.settings.card_spacing }};
+      const itemWidth = cardWidth + spacing;
+      console.log(`Carousel Action [${carouselTagName}]: Scrolling left by ${itemWidth}px (Card: ${cardWidth}px, Spacing: ${spacing}px)`);
+      this.track.scrollBy({ left: -itemWidth, behavior: 'smooth' });
+    }
 
-      this.pagination.style.display = 'flex';
-      for (let i = 0; i < this.totalPages; i++) {
-        const item = document.createElement('div');
-        item.className = 'ai-product-carousel__pagination-item-{{ section.id }}';
-        item.addEventListener('click', () => this.goToPage(i));
-        this.pagination.appendChild(item);
+    scrollRightByOne(event) {
+      event.preventDefault();
+      console.log(`Carousel Action [${carouselTagName}]: Right arrow clicked.`);
+      if (!this.cards[0]) {
+        console.error(`Carousel Action [${carouselTagName}]: No cards found to measure.`);
+        return;
       }
+      const cardWidth = this.cards[0].offsetWidth;
+      const spacing = {{ section.settings.card_spacing }};
+      const itemWidth = cardWidth + spacing;
+      console.log(`Carousel Action [${carouselTagName}]: Scrolling right by ${itemWidth}px (Card: ${cardWidth}px, Spacing: ${spacing}px)`);
+      this.track.scrollBy({ left: itemWidth, behavior: 'smooth' });
     }
 
-    updatePaginationOnScroll() {
-      let scrollTimeout;
-      clearTimeout(scrollTimeout);
-      scrollTimeout = setTimeout(() => {
-          this.currentPage = this.calculateCurrentPage();
-          this.updatePaginationState();
-      }, 150);
-    }
-
-    calculateCurrentPage() {
-      if (!this.track || !this.cards[0]) return 0;
-      const scrollLeft = this.track.scrollLeft;
-      const itemWidth = this.cards[0].offsetWidth + {{ section.settings.card_spacing }};
-      const page = Math.round(scrollLeft / (itemWidth * this.cardsPerPage));
-      return Math.max(0, Math.min(page, this.totalPages - 1));
-    }
-
-    updatePaginationState() {
-      if (!this.pagination) return;
-      const items = this.pagination.children;
-      for (let i = 0; i < items.length; i++) {
-        items[i].classList.toggle('active', i === this.currentPage);
-      }
-    }
-
-    goToPage(pageIndex) {
-      if (!this.track || !this.cards[0]) return;
-      const itemWidth = this.cards[0].offsetWidth + {{ section.settings.card_spacing }};
-      const scrollLeft = pageIndex * itemWidth * this.cardsPerPage;
-
-      this.track.scrollTo({ left: scrollLeft, behavior: 'smooth' });
-      this.currentPage = pageIndex;
-      this.updatePaginationState();
-    }
-
+    // --- Other methods from previous version can be added back later if needed ---
+    // For now, we are focusing only on the arrow click functionality.
     debounce(func, wait) {
       let timeout;
       return function executedFunction(...args) {
@@ -487,7 +435,10 @@
     };
   }
 
+  console.log(`Carousel Script: About to define custom element ${carouselTagName}.`);
   customElements.define(carouselTagName, ProductCarousel);
+  console.log(`Carousel Script: Successfully defined ${carouselTagName}.`);
+
 })();
 </script>
 
