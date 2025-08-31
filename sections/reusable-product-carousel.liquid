@@ -1,8 +1,8 @@
 {% comment %}
   Shopify section code corrected by Gemini.
-  - Arrow Fix: Moved JavaScript initialization to connectedCallback to ensure
-    DOM elements are rendered before their dimensions are measured. This fixes
-    the issue where arrows would not scroll.
+  - Final Arrow Fix: Rewrote the JavaScript to use connectedCallback for initialization.
+    This is the standard practice and ensures the script runs only after the
+    HTML elements are rendered and measurable, fixing the scroll issue.
 {% endcomment %}
 
 {% style %}
@@ -330,23 +330,31 @@
 </div>
 
 <script>
-  (function() {
-    class ProductCarousel{{ section.id | replace: "-", "_" }} extends HTMLElement {
+  const carouselTagName = `product-carousel-{{ section.id }}`;
+
+  if (!customElements.get(carouselTagName)) {
+    class ProductCarousel extends HTMLElement {
       constructor() {
         super();
-        this.initialized = false;
+        // Define properties, but don't query the DOM yet
+        this.track = null;
+        this.pagination = null;
+        this.arrowLeft = null;
+        this.arrowRight = null;
+        this.cards = [];
+        this.debouncedOnResize = this.debounce(this.onResize.bind(this), 250);
+      }
+
+      connectedCallback() {
+        // Now that the element is in the DOM, we can safely find and measure elements.
         this.track = this.querySelector('[data-track]');
         this.pagination = this.querySelector('[data-pagination]');
         this.arrowLeft = this.querySelector('[data-side-arrow-left]');
         this.arrowRight = this.querySelector('[data-side-arrow-right]');
         this.cards = this.track ? Array.from(this.track.children) : [];
-        this.debouncedOnResize = this.debounce(this.onResize.bind(this), 250);
-      }
 
-      connectedCallback() {
-        if (!this.initialized && this.cards.length > 0) {
+        if (this.cards.length > 0) {
           this.init();
-          this.initialized = true;
         }
       }
 
@@ -366,9 +374,7 @@
       }
 
       disconnectedCallback() {
-         if (this.cards.length > 0) {
-            window.removeEventListener('resize', this.debouncedOnResize);
-         }
+         window.removeEventListener('resize', this.debouncedOnResize);
       }
 
       scrollLeftByOne() {
@@ -389,8 +395,9 @@
           const scrollLeft = this.track.scrollLeft;
           const maxScroll = this.track.scrollWidth - this.track.clientWidth;
 
-          this.arrowLeft.classList.toggle('disabled', scrollLeft <= 1);
-          this.arrowRight.classList.toggle('disabled', scrollLeft >= maxScroll - 5);
+          // Use a small tolerance for floating point inaccuracies
+          this.arrowLeft.classList.toggle('disabled', scrollLeft < 1);
+          this.arrowRight.classList.toggle('disabled', scrollLeft > maxScroll - 5);
 
           this.updatePaginationOnScroll();
         });
@@ -479,9 +486,10 @@
       };
     }
 
-    customElements.define('product-carousel-{{ section.id }}', ProductCarousel{{ section.id | replace: "-", "_" }});
-  })();
+    customElements.define(carouselTagName, ProductCarousel);
+  }
 </script>
+
 
 {% schema %}
   {
