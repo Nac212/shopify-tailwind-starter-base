@@ -3781,11 +3781,13 @@ details-disclosure > details {
   color: #000000;   /* Sets the text color to black */
 
 
-.product-form__submit.button--full-width {
-  margin-left: auto;
-  margin-right: auto;
-  width: auto;
-  min-width: 250px; /* Adjust this value if you want the button wider or narrower */
+  
+
 }
 
+.product-form__submit.button--full-width {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: auto !important;
+  min-width: 250px !important;
 }
