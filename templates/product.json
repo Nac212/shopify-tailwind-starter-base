@@ -39,6 +39,13 @@
           "type": "price",
           "settings": {}
         },
+        "custom_liquid_aqqkiE": {
+          "type": "custom_liquid",
+          "name": "Divider",
+          "settings": {
+            "custom_liquid": "<style>\n  .custom-horizontal-rule {\n    display: block;\n    border: 0;\n    border-top: 1px solid #e0e0e0; /* Adjust color here */\n    margin: 24px 0; /* Adjust spacing here */\n    padding: 0;\n  }\n</style>\n\n<hr class=\"custom-horizontal-rule\">"
+          }
+        },
         "variant_picker": {
           "type": "variant_picker",
           "settings": {
@@ -56,6 +63,13 @@
           "settings": {
             "show_dynamic_checkout": false,
             "show_gift_card_recipient": true
+          }
+        },
+        "custom_liquid_D9zGtX": {
+          "type": "custom_liquid",
+          "name": "Divider",
+          "settings": {
+            "custom_liquid": "<style>\n  .custom-horizontal-rule {\n    display: block;\n    border: 0;\n    border-top: 1px solid #e0e0e0; /* Adjust color here */\n    margin: 24px 0; /* Adjust spacing here */\n    padding: 0;\n  }\n</style>\n\n<hr class=\"custom-horizontal-rule\">"
           }
         },
         "product_features_CjVRpR": {
@@ -96,6 +110,13 @@
             "description_font": "helvetica_n4",
             "description_font_size": 16,
             "description_font_size_mobile": 14
+          }
+        },
+        "custom_liquid_egLXTL": {
+          "type": "custom_liquid",
+          "name": "Divider",
+          "settings": {
+            "custom_liquid": "<style>\n  .custom-horizontal-rule {\n    display: block;\n    border: 0;\n    border-top: 1px solid #e0e0e0; /* Adjust color here */\n    margin: 24px 0; /* Adjust spacing here */\n    padding: 0;\n  }\n</style>\n\n<hr class=\"custom-horizontal-rule\">"
           }
         },
         "tab_item_zMTLBY": {
@@ -178,11 +199,14 @@
         "title",
         "caption",
         "price",
+        "custom_liquid_aqqkiE",
         "variant_picker",
         "quantity_selector",
         "buy_buttons",
+        "custom_liquid_D9zGtX",
         "product_features_CjVRpR",
         "description",
+        "custom_liquid_egLXTL",
         "tab_item_zMTLBY",
         "tab_item_YTUJqA",
         "tab_item_x3pmDz",
