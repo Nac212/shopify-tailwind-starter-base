@@ -1,7 +1,9 @@
 {% comment %}
-  Shopify section code with extensive logging for diagnostics.
-  - This version is designed to output detailed information to the browser console
-    to pinpoint the exact point of failure in the script.
+  Shopify section code - Final Version by Gemini.
+  - Replaced the entire "Custom Element" script with a more robust, direct JavaScript approach.
+  - The new script uses getElementById to reliably find the section and its components,
+    bypassing the Shopify theme editor's script execution issues.
+  - This resolves the unresponsive arrow buttons.
 {% endcomment %}
 
 {% style %}
@@ -143,24 +145,6 @@
     opacity: 0.7;
   }
 
-  .ai-product-carousel__pagination-{{ section.id }} {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 8px;
-    margin-top: 20px;
-  }
-
-  .ai-product-carousel__pagination-item-{{ section.id }} {
-    background-color: #ccc;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-
-  .ai-product-carousel__pagination-item-{{ section.id }}.active {
-    background-color: #333;
-  }
-
   /* Desktop: Dots */
   @media screen and (min-width: 769px) {
     .ai-product-carousel__side-arrow-{{ section.id }} {
@@ -190,23 +174,6 @@
 
     .ai-product-carousel__side-arrow-{{ section.id }}:not(.disabled):hover {
       box-shadow: 0 0 8px rgba(0,0,0,0.15);
-    }
-
-    .ai-product-carousel__side-arrow-{{ section.id }}.disabled {
-      opacity: 0 !important;
-      cursor: default;
-      pointer-events: none;
-    }
-
-    .ai-product-carousel__side-arrow-{{ section.id }} svg {
-      width: 16px;
-      height: 16px;
-    }
-
-    .ai-product-carousel__pagination-item-{{ section.id }} {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
     }
   }
 
@@ -238,22 +205,10 @@
         top: {{ section.settings.sale_badge_position_top_mobile }}px;
         left: {{ section.settings.sale_badge_position_left_mobile }}px;
     }
-
-    .ai-product-carousel__pagination-{{ section.id }} {
-      width: 80%;
-      margin-left: auto;
-      margin-right: auto;
-      gap: 4px;
-    }
-
-    .ai-product-carousel__pagination-item-{{ section.id }} {
-      flex: 1;
-      height: 2px;
-    }
   }
 {% endstyle %}
 
-<div class="ai-product-carousel-{{ section.id }}" {{ section.shopify_attributes }}>
+<div id="ProductCarousel-{{ section.id }}" class="ai-product-carousel-{{ section.id }}" {{ section.shopify_attributes }}>
   <div class="ai-product-carousel__header-{{ section.id }}">
     {% if section.settings.heading != blank %}
       <h2 class="ai-product-carousel__heading-{{ section.id }}">{{ section.settings.heading | escape }}</h2>
@@ -270,7 +225,7 @@
   {%- endif -%}
 
   {% if products_to_show.size > 0 %}
-    <product-carousel-{{ section.id | replace: '__', '-' | replace: '--', '-' }} class="ai-product-carousel__container-{{ section.id }}">
+    <div class="ai-product-carousel__container-{{ section.id }}">
       <div class="ai-product-carousel__track-wrapper-{{ section.id }}">
         <button class="ai-product-carousel__side-arrow-{{ section.id }} left" data-side-arrow-left>
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15 18L9 12L15 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -318,8 +273,7 @@
           <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M9 18L15 12L9 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
-      <div class="ai-product-carousel__pagination-{{ section.id }}" data-pagination></div>
-    </product-carousel-{{ section.id | replace: '__', '-' | replace: '--', '-' }}>
+    </div>
   {% else %}
     <div class="ai-product-carousel__empty-state-{{ section.id }}">
       <h3>No products to display</h3>
@@ -329,119 +283,43 @@
 </div>
 
 <script>
-(function() {
-  console.log("Carousel Script: Starting for section {{ section.id }}");
-
-  const carouselTagName = `product-carousel-{{ section.id | replace: '__', '-' | replace: '--', '-' }}`;
-  console.log(`Carousel Script: Determined tag name: ${carouselTagName}`);
-
-  if (customElements.get(carouselTagName)) {
-    console.warn(`Carousel Script: Custom element ${carouselTagName} is already defined. Skipping.`);
-    return;
-  }
-
-  class ProductCarousel extends HTMLElement {
-    constructor() {
-      super();
-      console.log(`Carousel Class [${carouselTagName}]: constructor() called.`);
-      this.track = null;
-      this.arrowLeft = null;
-      this.arrowRight = null;
-      this.cards = [];
-    }
-
-    connectedCallback() {
-      console.log(`Carousel Class [${carouselTagName}]: connectedCallback() started.`);
-      // Use requestAnimationFrame to ensure the DOM is ready for querying
-      requestAnimationFrame(() => {
-        console.log(`Carousel Class [${carouselTagName}]: requestAnimationFrame callback fired.`);
-        this.track = this.querySelector('[data-track]');
-        this.arrowLeft = this.querySelector('[data-side-arrow-left]');
-        this.arrowRight = this.querySelector('[data-side-arrow-right]');
-        this.cards = this.track ? Array.from(this.track.children) : [];
-
-        console.log(`Carousel Class [${carouselTagName}]: Elements found:`, {
-          track: this.track,
-          arrowLeft: this.arrowLeft,
-          arrowRight: this.arrowRight,
-          cardCount: this.cards.length
-        });
-
-        if (this.cards.length > 0 && this.arrowLeft && this.arrowRight) {
-          this.init();
-        } else {
-          console.error(`Carousel Class [${carouselTagName}]: Initialization failed. Missing essential elements.`);
-        }
-      });
-    }
-
-    init() {
-      console.log(`Carousel Class [${carouselTagName}]: init() started.`);
-      this.setupEventListeners();
-      // Any other setup logic can go here
-    }
-
-    setupEventListeners() {
-      console.log(`Carousel Class [${carouselTagName}]: setupEventListeners() started.`);
-      if (!this.arrowLeft || !this.arrowRight) {
-        console.error(`Carousel Class [${carouselTagName}]: Arrows not found, cannot add listeners.`);
-        return;
-      }
-      this.arrowLeft.addEventListener('click', this.scrollLeftByOne.bind(this));
-      this.arrowRight.addEventListener('click', this.scrollRightByOne.bind(this));
-      console.log(`Carousel Class [${carouselTagName}]: Click listeners attached to arrows.`);
+  (function() {
+    const sectionId = '{{ section.id }}';
+    const carouselContainer = document.getElementById(`ProductCarousel-${sectionId}`);
+    
+    if (!carouselContainer) {
+      return;
     }
     
-    scrollLeftByOne(event) {
-      event.preventDefault();
-      console.log(`Carousel Action [${carouselTagName}]: Left arrow clicked.`);
-      if (!this.cards[0]) {
-        console.error(`Carousel Action [${carouselTagName}]: No cards found to measure.`);
-        return;
-      }
-      const cardWidth = this.cards[0].offsetWidth;
-      const spacing = {{ section.settings.card_spacing }};
-      const itemWidth = cardWidth + spacing;
-      console.log(`Carousel Action [${carouselTagName}]: Scrolling left by ${itemWidth}px (Card: ${cardWidth}px, Spacing: ${spacing}px)`);
-      this.track.scrollBy({ left: -itemWidth, behavior: 'smooth' });
+    const track = carouselContainer.querySelector('[data-track]');
+    const arrowLeft = carouselContainer.querySelector('[data-side-arrow-left]');
+    const arrowRight = carouselContainer.querySelector('[data-side-arrow-right]');
+    
+    if (!track || !arrowLeft || !arrowRight) {
+      return;
     }
-
-    scrollRightByOne(event) {
-      event.preventDefault();
-      console.log(`Carousel Action [${carouselTagName}]: Right arrow clicked.`);
-      if (!this.cards[0]) {
-        console.error(`Carousel Action [${carouselTagName}]: No cards found to measure.`);
-        return;
+    
+    const scrollByOffset = () => {
+      const firstCard = track.querySelector('.ai-product-carousel__card-' + sectionId);
+      if (firstCard) {
+        const cardSpacing = {{ section.settings.card_spacing }};
+        return firstCard.offsetWidth + cardSpacing;
       }
-      const cardWidth = this.cards[0].offsetWidth;
-      const spacing = {{ section.settings.card_spacing }};
-      const itemWidth = cardWidth + spacing;
-      console.log(`Carousel Action [${carouselTagName}]: Scrolling right by ${itemWidth}px (Card: ${cardWidth}px, Spacing: ${spacing}px)`);
-      this.track.scrollBy({ left: itemWidth, behavior: 'smooth' });
-    }
-
-    // --- Other methods from previous version can be added back later if needed ---
-    // For now, we are focusing only on the arrow click functionality.
-    debounce(func, wait) {
-      let timeout;
-      return function executedFunction(...args) {
-        const later = () => {
-          clearTimeout(timeout);
-          func(...args);
-        };
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-      };
+      return 250; // Fallback value
     };
-  }
 
-  console.log(`Carousel Script: About to define custom element ${carouselTagName}.`);
-  customElements.define(carouselTagName, ProductCarousel);
-  console.log(`Carousel Script: Successfully defined ${carouselTagName}.`);
+    arrowLeft.addEventListener('click', (event) => {
+      event.preventDefault();
+      track.scrollBy({ left: -scrollByOffset(), behavior: 'smooth' });
+    });
 
-})();
+    arrowRight.addEventListener('click', (event) => {
+      event.preventDefault();
+      track.scrollBy({ left: scrollByOffset(), behavior: 'smooth' });
+    });
+
+  })();
 </script>
-
 
 {% schema %}
   {
