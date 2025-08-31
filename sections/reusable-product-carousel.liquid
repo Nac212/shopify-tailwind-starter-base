@@ -1,8 +1,8 @@
 {% comment %}
   Shopify section code corrected by Gemini.
-  - Final Arrow Fix: Rewrote the JavaScript to use connectedCallback for initialization.
-    This is the standard practice and ensures the script runs only after the
-    HTML elements are rendered and measurable, fixing the scroll issue.
+  - Final Arrow Fix: Rewrote the JavaScript to use requestAnimationFrame for initialization.
+    This solves the race condition by ensuring the script runs only after the
+    HTML elements are fully rendered and measurable, fixing the scroll issue.
 {% endcomment %}
 
 {% style %}
@@ -336,7 +336,6 @@
     class ProductCarousel extends HTMLElement {
       constructor() {
         super();
-        // Define properties, but don't query the DOM yet
         this.track = null;
         this.pagination = null;
         this.arrowLeft = null;
@@ -346,16 +345,17 @@
       }
 
       connectedCallback() {
-        // Now that the element is in the DOM, we can safely find and measure elements.
-        this.track = this.querySelector('[data-track]');
-        this.pagination = this.querySelector('[data-pagination]');
-        this.arrowLeft = this.querySelector('[data-side-arrow-left]');
-        this.arrowRight = this.querySelector('[data-side-arrow-right]');
-        this.cards = this.track ? Array.from(this.track.children) : [];
+        requestAnimationFrame(() => {
+          this.track = this.querySelector('[data-track]');
+          this.pagination = this.querySelector('[data-pagination]');
+          this.arrowLeft = this.querySelector('[data-side-arrow-left]');
+          this.arrowRight = this.querySelector('[data-side-arrow-right]');
+          this.cards = this.track ? Array.from(this.track.children) : [];
 
-        if (this.cards.length > 0) {
-          this.init();
-        }
+          if (this.cards.length > 0) {
+            this.init();
+          }
+        });
       }
 
       init() {
@@ -395,7 +395,6 @@
           const scrollLeft = this.track.scrollLeft;
           const maxScroll = this.track.scrollWidth - this.track.clientWidth;
 
-          // Use a small tolerance for floating point inaccuracies
           this.arrowLeft.classList.toggle('disabled', scrollLeft < 1);
           this.arrowRight.classList.toggle('disabled', scrollLeft > maxScroll - 5);
 
