@@ -103,6 +103,31 @@
             "feature_4_icon_svg": ""
           }
         },
+        "promo_block_Aiq6U4": {
+          "type": "promo_block",
+          "settings": {
+            "promo_heading": "<p><strong>WANT A FREE GIFT?</strong></p>",
+            "promo_subheading": "<p>SPEND £100+ AND CHOOSE YOURS AT CHECKOUT.</p>",
+            "promo_link": "",
+            "heading_font": "poppins_n4",
+            "subheading_font": "poppins_n5",
+            "promo_background": "#000000",
+            "promo_heading_color": "#ffffff",
+            "promo_subheading_color": "#ffffff",
+            "animation_style": "shimmer",
+            "shimmer_color": "#ffffff",
+            "shimmer_opacity": 100,
+            "match_button_width": true,
+            "padding_vertical_desktop": 11,
+            "padding_horizontal_desktop": 20,
+            "padding_vertical_mobile": 7,
+            "padding_horizontal_mobile": 15,
+            "heading_font_size": 12,
+            "heading_font_size_mobile": 12,
+            "subheading_font_size": 10,
+            "subheading_font_size_mobile": 9
+          }
+        },
         "description": {
           "type": "description",
           "disabled": true,
@@ -154,31 +179,6 @@
             "tab_content": "<p>Content for this tab.</p>"
           }
         },
-        "promo_block_Aiq6U4": {
-          "type": "promo_block",
-          "settings": {
-            "promo_heading": "<p><strong>WANT A FREE GIFT?</strong></p>",
-            "promo_subheading": "<p>SPEND £100+ AND CHOOSE YOURS AT CHECKOUT.</p>",
-            "promo_link": "",
-            "heading_font": "poppins_n4",
-            "subheading_font": "poppins_n4",
-            "promo_background": "#000000",
-            "promo_heading_color": "#ffffff",
-            "promo_subheading_color": "#ffffff",
-            "animation_style": "shimmer",
-            "shimmer_color": "#ffffff",
-            "shimmer_opacity": 100,
-            "match_button_width": true,
-            "padding_vertical_desktop": 11,
-            "padding_horizontal_desktop": 20,
-            "padding_vertical_mobile": 7,
-            "padding_horizontal_mobile": 15,
-            "heading_font_size": 12,
-            "heading_font_size_mobile": 12,
-            "subheading_font_size": 10,
-            "subheading_font_size_mobile": 9
-          }
-        },
         "custom_liquid_gqRyCT": {
           "type": "custom_liquid",
           "disabled": true,
@@ -205,6 +205,7 @@
         "buy_buttons",
         "custom_liquid_D9zGtX",
         "product_features_CjVRpR",
+        "promo_block_Aiq6U4",
         "description",
         "custom_liquid_egLXTL",
         "tab_item_zMTLBY",
@@ -212,7 +213,6 @@
         "tab_item_x3pmDz",
         "tab_item_yzAt8z",
         "tab_item_Pnpi6M",
-        "promo_block_Aiq6U4",
         "custom_liquid_gqRyCT",
         "share"
       ],
