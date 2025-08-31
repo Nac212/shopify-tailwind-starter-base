@@ -123,6 +123,18 @@
         font-size: {{ block.settings.subheading_font_size }}px;
       }
 
+       /* --- Shimmer Customization --- */
+      {%- assign shimmer_alpha = block.settings.shimmer_opacity | divided_by: 100.0 -%}
+      #PromoBlock--{{ block.id }}.promo-animation--shimmer .promo-block-content::before {
+        background: linear-gradient(
+          120deg,
+          {{ block.settings.shimmer_color | color_modify: 'alpha', 0.0 }} 0%,
+          {{ block.settings.shimmer_color | color_modify: 'alpha', shimmer_alpha }} 50%,
+          {{ block.settings.shimmer_color | color_modify: 'alpha', 0.0 }} 100%
+        );
+      }
+
+
       @media screen and (max-width: 749px) {
         #PromoBlock--{{ block.id }} .promo-block-content {
             padding: {{ block.settings.padding_vertical_mobile }}px {{ block.settings.padding_horizontal_mobile }}px;
@@ -207,7 +219,6 @@
           content: "";
           position: absolute;
           inset: 0;
-          background: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.28) 50%, rgba(255,255,255,0) 100%);
           transform: translateX(-100%);
           pointer-events: none;
           opacity: 0;
@@ -1103,6 +1114,24 @@
         }
       ],
       "default": "none"
+    },
+    {
+      "type": "color",
+      "id": "shimmer_color",
+      "label": "Shimmer Color",
+      "default": "#FFFFFF",
+      "info": "Only for the 'Shimmer' animation."
+    },
+    {
+      "type": "range",
+      "id": "shimmer_opacity",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "%",
+      "label": "Shimmer Opacity",
+      "default": 30,
+      "info": "Controls the intensity of the shimmer. Only for the 'Shimmer' animation."
     },
     {
       "type": "header",
