@@ -1,8 +1,6 @@
 {% comment %}
   Shopify section code corrected by Gemini.
-  - Final Arrow Fix: Rewrote the JavaScript to use requestAnimationFrame for initialization.
-    This solves the race condition by ensuring the script runs only after the
-    HTML elements are fully rendered and measurable, fixing the scroll issue.
+  - Added console.log() statements for debugging the arrow navigation.
 {% endcomment %}
 
 {% style %}
@@ -345,17 +343,15 @@
       }
 
       connectedCallback() {
-        requestAnimationFrame(() => {
-          this.track = this.querySelector('[data-track]');
-          this.pagination = this.querySelector('[data-pagination]');
-          this.arrowLeft = this.querySelector('[data-side-arrow-left]');
-          this.arrowRight = this.querySelector('[data-side-arrow-right]');
-          this.cards = this.track ? Array.from(this.track.children) : [];
+        this.track = this.querySelector('[data-track]');
+        this.pagination = this.querySelector('[data-pagination]');
+        this.arrowLeft = this.querySelector('[data-side-arrow-left]');
+        this.arrowRight = this.querySelector('[data-side-arrow-right]');
+        this.cards = this.track ? Array.from(this.track.children) : [];
 
-          if (this.cards.length > 0) {
-            this.init();
-          }
-        });
+        if (this.cards.length > 0) {
+          this.init();
+        }
       }
 
       init() {
@@ -378,15 +374,39 @@
       }
 
       scrollLeftByOne() {
-        if (!this.cards[0]) return;
-        const itemWidth = this.cards[0].offsetWidth + {{ section.settings.card_spacing }};
-        this.track.scrollBy({ left: -itemWidth, behavior: 'smooth' });
+        console.log("Left arrow clicked. Attempting to scroll...");
+        if (!this.cards[0]) {
+          console.error("Error: First product card not found (scrollLeftByOne).");
+          return;
+        }
+        const cardWidth = this.cards[0].offsetWidth;
+        const spacing = {{ section.settings.card_spacing }};
+        const itemWidth = cardWidth + spacing;
+        console.log(`Calculated scroll distance: -${itemWidth}px (Card: ${cardWidth}px, Spacing: ${spacing}px)`);
+
+        if (itemWidth > spacing) {
+            this.track.scrollBy({ left: -itemWidth, behavior: 'smooth' });
+        } else {
+            console.error("Scroll distance is too small. Aborting scroll.");
+        }
       }
 
       scrollRightByOne() {
-        if (!this.cards[0]) return;
-        const itemWidth = this.cards[0].offsetWidth + {{ section.settings.card_spacing }};
-        this.track.scrollBy({ left: itemWidth, behavior: 'smooth' });
+        console.log("Right arrow clicked. Attempting to scroll...");
+        if (!this.cards[0]) {
+          console.error("Error: First product card not found (scrollRightByOne).");
+          return;
+        }
+        const cardWidth = this.cards[0].offsetWidth;
+        const spacing = {{ section.settings.card_spacing }};
+        const itemWidth = cardWidth + spacing;
+        console.log(`Calculated scroll distance: ${itemWidth}px (Card: ${cardWidth}px, Spacing: ${spacing}px)`);
+
+        if (itemWidth > spacing) {
+            this.track.scrollBy({ left: itemWidth, behavior: 'smooth' });
+        } else {
+            console.error("Scroll distance is too small. Aborting scroll.");
+        }
       }
 
       updateArrowState() {
