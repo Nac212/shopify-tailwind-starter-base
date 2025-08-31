@@ -136,7 +136,7 @@
           "type": "product_features",
           "settings": {
             "background_color": "#ffffff",
-            "padding": 22,
+            "padding": 12,
             "heading_font": "poppins_n5",
             "text_font": "poppins_n4",
             "feature_1_heading": "Waterproof & Durable",
