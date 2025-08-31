@@ -83,11 +83,6 @@
             "subheading_font_size_mobile": 9
           }
         },
-        "essential_upsell_frequently_bought_together_app_block_Di6FYN": {
-          "type": "shopify://apps/essential-upsell/blocks/frequently-bought-together-app-block/50627fd9-24fd-4250-8614-accc12826d80",
-          "disabled": true,
-          "settings": {}
-        },
         "description": {
           "type": "description",
           "disabled": true,
@@ -136,9 +131,14 @@
           "type": "product_features",
           "settings": {
             "background_color": "#fffefa",
-            "padding": 12,
             "heading_font": "poppins_n5",
             "text_font": "poppins_n4",
+            "padding_desktop": 10,
+            "heading_font_size_desktop": 12,
+            "text_font_size_desktop": 10,
+            "padding_mobile": 10,
+            "heading_font_size_mobile": 12,
+            "text_font_size_mobile": 10,
             "feature_1_heading": "Waterproof & Durable",
             "feature_1_text": "Resists sweat, heat & moisture.",
             "feature_1_icon_svg": "",
@@ -177,7 +177,6 @@
         "quantity_selector",
         "buy_buttons",
         "promo_block_Aiq6U4",
-        "essential_upsell_frequently_bought_together_app_block_Di6FYN",
         "description",
         "tab_item_zMTLBY",
         "tab_item_YTUJqA",
