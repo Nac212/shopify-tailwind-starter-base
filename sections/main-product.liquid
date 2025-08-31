@@ -95,127 +95,144 @@
     {%- when '@app' -%}
 {%- when 'product_features' -%}
   <div class="{% if block.settings.match_button_width %}product-form__input{% endif %}" {{ block.shopify_attributes }}>
-    {%- style -%}
-      {{ block.settings.heading_font | font_face }}
-      {{ block.settings.text_font | font_face }}
 
-      .features-grid-container-{{ block.id }} {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 1px;
-        background-color: #e0e0e0;
-        border: 1px solid #e0e0e0;
-        width: 100%;
-      }
-      .product-form__input .features-grid-container-{{ block.id }} {
-        margin-top: 1rem;
-      }
-      .features-grid-container-{{ block.id }} .feature-grid-item {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        background-color: {{ block.settings.background_color }};
-        padding: {{ block.settings.padding_desktop }}px;
-      }
-      .features-grid-container-{{ block.id }} .feature-grid-icon {
-        margin-bottom: 1.5rem;
-        flex-shrink: 0;
-      }
-      .features-grid-container-{{ block.id }} .feature-grid-icon svg,
-      .features-grid-container-{{ block.id }} .feature-grid-icon img {
-        width: 2rem;
-        height: auto;
-        color: #111111;
-        display: block;
-      }
-      .features-grid-container-{{ block.id }} .feature-grid-text h3 {
-        margin: 0 0 0.4rem 0;
-        color: #111111;
-        font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
-        font-weight: {{ block.settings.heading_font.weight }};
-        font-style: {{ block.settings.heading_font.style }};
-        font-size: {{ block.settings.heading_font_size_desktop }}px;
-      }
-      .features-grid-container-{{ block.id }} .feature-grid-text p {
-        margin: 0;
-        color: #555555;
-        font-family: {{ block.settings.text_font.family }}, {{ block.settings.text_font.fallback_families }};
-        font-weight: {{ block.settings.text_font.weight }};
-        font-style: {{ block.settings.text_font.style }};
-        font-size: {{ block.settings.text_font_size_desktop }}px;
-      }
+    <div class="features-grid-wrapper-{{ block.id }}">
+      {%- style -%}
+        {{ block.settings.heading_font | font_face }}
+        {{ block.settings.text_font | font_face }}
 
-      @media screen and (max-width: 768px) {
-        .features-grid-container-{{ block.id }} {
+        .features-grid-wrapper-{{ block.id }} .feature-grid-item {
+          background-color: {{ block.settings.background_color }};
+          padding: {{ block.settings.padding_desktop }}px;
+        }
+        .features-grid-wrapper-{{ block.id }} .feature-grid-text h3 {
+          font-family: {{ block.settings.heading_font.family }}, {{ block.settings.heading_font.fallback_families }};
+          font-weight: {{ block.settings.heading_font.weight }};
+          font-style: {{ block.settings.heading_font.style }};
+          font-size: {{ block.settings.heading_font_size_desktop }}px;
+        }
+        .features-grid-wrapper-{{ block.id }} .feature-grid-text p {
+          font-family: {{ block.settings.text_font.family }}, {{ block.settings.text_font.fallback_families }};
+          font-weight: {{ block.settings.text_font.weight }};
+          font-style: {{ block.settings.text_font.style }};
+          font-size: {{ block.settings.text_font_size_desktop }}px;
+        }
+
+        @media screen and (max-width: 768px) {
+          .features-grid-wrapper-{{ block.id }} .feature-grid-item {
+            padding: {{ block.settings.padding_mobile }}px;
+          }
+          .features-grid-wrapper-{{ block.id }} .feature-grid-text h3 {
+            font-size: {{ block.settings.heading_font_size_mobile }}px;
+          }
+          .features-grid-wrapper-{{ block.id }} .feature-grid-text p {
+            font-size: {{ block.settings.text_font_size_mobile }}px;
+          }
+        }
+      {%- endstyle -%}
+    
+      <div class="features-grid-container">
+        <div class="feature-grid-item">
+          <div class="feature-grid-icon">
+            {%- if block.settings.feature_1_icon_image != blank -%}
+              <img src="{{ block.settings.feature_1_icon_image | image_url: width: 100 }}" alt="{{ block.settings.feature_1_heading | escape }}" loading="lazy">
+            {%- elsif block.settings.feature_1_icon_svg != blank -%}
+              {{ block.settings.feature_1_icon_svg }}
+            {%- endif -%}
+          </div>
+          <div class="feature-grid-text">
+            <h3>{{ block.settings.feature_1_heading }}</h3>
+            <p>{{ block.settings.feature_1_text }}</p>
+          </div>
+        </div>
+        <div class="feature-grid-item">
+          <div class="feature-grid-icon">
+            {%- if block.settings.feature_2_icon_image != blank -%}
+              <img src="{{ block.settings.feature_2_icon_image | image_url: width: 100 }}" alt="{{ block.settings.feature_2_heading | escape }}" loading="lazy">
+            {%- elsif block.settings.feature_2_icon_svg != blank -%}
+              {{ block.settings.feature_2_icon_svg }}
+            {%- endif -%}
+          </div>
+          <div class="feature-grid-text">
+            <h3>{{ block.settings.feature_2_heading }}</h3>
+            <p>{{ block.settings.feature_2_text }}</p>
+          </div>
+        </div>
+        <div class="feature-grid-item">
+          <div class="feature-grid-icon">
+            {%- if block.settings.feature_3_icon_image != blank -%}
+              <img src="{{ block.settings.feature_3_icon_image | image_url: width: 100 }}" alt="{{ block.settings.feature_3_heading | escape }}" loading="lazy">
+            {%- elsif block.settings.feature_3_icon_svg != blank -%}
+              {{ block.settings.feature_3_icon_svg }}
+            {%- endif -%}
+          </div>
+          <div class="feature-grid-text">
+            <h3>{{ block.settings.feature_3_heading }}</h3>
+            <p>{{ block.settings.feature_3_text }}</p>
+          </div>
+        </div>
+        <div class="feature-grid-item">
+          <div class="feature-grid-icon">
+            {%- if block.settings.feature_4_icon_image != blank -%}
+              <img src="{{ block.settings.feature_4_icon_image | image_url: width: 100 }}" alt="{{ block.settings.feature_4_heading | escape }}" loading="lazy">
+            {%- elsif block.settings.feature_4_icon_svg != blank -%}
+              {{ block.settings.feature_4_icon_svg }}
+            {%- endif -%}
+          </div>
+          <div class="feature-grid-text">
+            <h3>{{ block.settings.feature_4_heading }}</h3>
+            <p>{{ block.settings.feature_4_text }}</p>
+          </div>
+        </div>
+      </div>
+
+      <style>
+        .features-grid-wrapper-{{ block.id }} {
+          margin-top: 20px;
+        }
+        .product-form__input .features-grid-wrapper-{{ block.id }} {
+          margin-top: 0;
+        }
+        .features-grid-container {
+          display: grid;
           grid-template-columns: repeat(2, 1fr);
+          gap: 1px;
+          background-color: #e0e0e0;
+          border: 1px solid #e0e0e0;
+          width: 100%;
         }
-        .features-grid-container-{{ block.id }} .feature-grid-item {
-          padding: {{ block.settings.padding_mobile }}px;
+        .feature-grid-item {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+          text-align: center;
         }
-        .features-grid-container-{{ block.id }} .feature-grid-text h3 {
-          font-size: {{ block.settings.heading_font_size_mobile }}px;
+        .feature-grid-icon {
+          margin-bottom: 1.5rem;
+          flex-shrink: 0;
         }
-        .features-grid-container-{{ block.id }} .feature-grid-text p {
-          font-size: {{ block.settings.text_font_size_mobile }}px;
+        .feature-grid-icon svg,
+        .feature-grid-icon img {
+          width: 2rem;
+          height: auto;
+          color: #111111;
+          display: block;
         }
-      }
-    {%- endstyle -%}
-
-    <div class="features-grid-container features-grid-container-{{ block.id }}">
-      <div class="feature-grid-item">
-        <div class="feature-grid-icon">
-          {%- if block.settings.feature_1_icon_image != blank -%}
-            <img src="{{ block.settings.feature_1_icon_image | image_url: width: 100 }}" alt="{{ block.settings.feature_1_heading | escape }}" loading="lazy">
-          {%- elsif block.settings.feature_1_icon_svg != blank -%}
-            {{ block.settings.feature_1_icon_svg }}
-          {%- endif -%}
-        </div>
-        <div class="feature-grid-text">
-          <h3>{{ block.settings.feature_1_heading }}</h3>
-          <p>{{ block.settings.feature_1_text }}</p>
-        </div>
-      </div>
-      <div class="feature-grid-item">
-        <div class="feature-grid-icon">
-          {%- if block.settings.feature_2_icon_image != blank -%}
-            <img src="{{ block.settings.feature_2_icon_image | image_url: width: 100 }}" alt="{{ block.settings.feature_2_heading | escape }}" loading="lazy">
-          {%- elsif block.settings.feature_2_icon_svg != blank -%}
-            {{ block.settings.feature_2_icon_svg }}
-          {%- endif -%}
-        </div>
-        <div class="feature-grid-text">
-          <h3>{{ block.settings.feature_2_heading }}</h3>
-          <p>{{ block.settings.feature_2_text }}</p>
-        </div>
-      </div>
-      <div class="feature-grid-item">
-        <div class="feature-grid-icon">
-          {%- if block.settings.feature_3_icon_image != blank -%}
-            <img src="{{ block.settings.feature_3_icon_image | image_url: width: 100 }}" alt="{{ block.settings.feature_3_heading | escape }}" loading="lazy">
-          {%- elsif block.settings.feature_3_icon_svg != blank -%}
-            {{ block.settings.feature_3_icon_svg }}
-          {%- endif -%}
-        </div>
-        <div class="feature-grid-text">
-          <h3>{{ block.settings.feature_3_heading }}</h3>
-          <p>{{ block.settings.feature_3_text }}</p>
-        </div>
-      </div>
-      <div class="feature-grid-item">
-        <div class="feature-grid-icon">
-          {%- if block.settings.feature_4_icon_image != blank -%}
-            <img src="{{ block.settings.feature_4_icon_image | image_url: width: 100 }}" alt="{{ block.settings.feature_4_heading | escape }}" loading="lazy">
-          {%- elsif block.settings.feature_4_icon_svg != blank -%}
-            {{ block.settings.feature_4_icon_svg }}
-          {%- endif -%}
-        </div>
-        <div class="feature-grid-text">
-          <h3>{{ block.settings.feature_4_heading }}</h3>
-          <p>{{ block.settings.feature_4_text }}</p>
-        </div>
-      </div>
+        .feature-grid-text h3 {
+          margin: 0 0 0.4rem 0;
+          color: #111111;
+        }
+        .feature-grid-text p {
+          margin: 0;
+          color: #555555;
+        }
+        @media (max-width: 768px) {
+          .features-grid-container {
+            grid-template-columns: repeat(2, 1fr);
+          }
+        }
+      </style>
     </div>
   </div>
 
