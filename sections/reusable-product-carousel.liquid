@@ -360,13 +360,13 @@
       }
 
       scrollLeftByOne() {
-        const itemWidth = this.cards[0].offsetWidth + {{ section.settings.card_spacing }};
-        this.track.scrollBy({ left: -itemWidth, behavior: 'smooth' });
+        const scrollAmount = this.track.clientWidth;
+        this.track.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
       }
 
       scrollRightByOne() {
-        const itemWidth = this.cards[0].offsetWidth + {{ section.settings.card_spacing }};
-        this.track.scrollBy({ left: itemWidth, behavior: 'smooth' });
+        const scrollAmount = this.track.clientWidth;
+        this.track.scrollBy({ left: scrollAmount, behavior: 'smooth' });
       }
 
       updateArrowState() {
@@ -800,3 +800,4 @@
     ]
   }
 {% endschema %}
+
