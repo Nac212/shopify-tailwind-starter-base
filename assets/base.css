@@ -3786,6 +3786,6 @@ details-disclosure > details {
 }
 
 .product-form .product-form__buttons {
-  max-width: 430px;
+  max-width: 200px;
   margin: 0 auto !important;
 }
