@@ -69,7 +69,7 @@
             "promo_background": "#000000",
             "promo_heading_color": "#ffffff",
             "promo_subheading_color": "#ffffff",
-            "animation_style": "shimmer",
+            "animation_style": "grow",
             "match_button_width": true,
             "padding_vertical_desktop": 11,
             "padding_horizontal_desktop": 20,
