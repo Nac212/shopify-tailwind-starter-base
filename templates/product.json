@@ -132,6 +132,27 @@
             "tab_content": "<p>Content for this tab.</p>"
           }
         },
+        "product_features_CjVRpR": {
+          "type": "product_features",
+          "settings": {
+            "background_color": "#ffffff",
+            "padding": 22,
+            "heading_font": "poppins_n5",
+            "text_font": "poppins_n4",
+            "feature_1_heading": "Waterproof & Durable",
+            "feature_1_text": "Resists sweat, heat & moisture",
+            "feature_1_icon_svg": "",
+            "feature_2_heading": "2-Year Warranty",
+            "feature_2_text": "Hassle-free returns",
+            "feature_2_icon_svg": "",
+            "feature_3_heading": "Premium Materials",
+            "feature_3_text": "No tarnishing or discolouration",
+            "feature_3_icon_svg": "",
+            "feature_4_heading": "Luxury Packaging",
+            "feature_4_text": "Gift box available",
+            "feature_4_icon_svg": ""
+          }
+        },
         "custom_liquid_gqRyCT": {
           "type": "custom_liquid",
           "disabled": true,
@@ -163,6 +184,7 @@
         "tab_item_x3pmDz",
         "tab_item_yzAt8z",
         "tab_item_Pnpi6M",
+        "product_features_CjVRpR",
         "custom_liquid_gqRyCT",
         "share"
       ],
