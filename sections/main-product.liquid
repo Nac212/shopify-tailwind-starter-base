@@ -136,7 +136,7 @@
       }
     {%- endstyle -%}
 
-    <div id="PromoBlock--{{ block.id }}" class="promo-block-wrapper">
+    <div id="PromoBlock--{{ block.id }}" class="promo-block-wrapper promo-animation--{{ block.settings.animation_style }}">
       {%- if block.settings.promo_link != blank -%}
         <a href="{{ block.settings.promo_link }}" class="promo-block-link">
       {%- endif -%}
@@ -169,6 +169,9 @@
         .promo-block-content {
           text-align: center;
           border-radius: var(--buttons-radius);
+          position: relative;
+          overflow: hidden;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .promo-block-heading {
           font-weight: bold;
@@ -181,6 +184,42 @@
         .promo-block-heading > *:last-child,
         .promo-block-subheading > *:last-child {
           margin-bottom: 0;
+        }
+
+        /* --- Animation Styles --- */
+
+        /* Grow Effect */
+        .promo-animation--grow .promo-block-content:hover {
+          transform: scale(1.03);
+        }
+
+        /* Lift Effect */
+        .promo-animation--lift .promo-block-content {
+          box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+        .promo-animation--lift .promo-block-content:hover {
+          box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+          transform: translateY(-2px);
+        }
+
+        /* Shimmer Effect */
+        .promo-animation--shimmer .promo-block-content::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(120deg, rgba(255,255,255,0) 0%, rgba(255,255,255,.28) 50%, rgba(255,255,255,0) 100%);
+          transform: translateX(-100%);
+          pointer-events: none;
+          opacity: 0;
+        }
+        .promo-animation--shimmer .promo-block-content:hover::before {
+          animation: promoSweep 900ms ease;
+          opacity: 1;
+        }
+
+        @keyframes promoSweep {
+          0% { transform: translateX(-100%) skewX(-20deg); opacity: 0.3; }
+          100% { transform: translateX(100%) skewX(-20deg); opacity: 0; }
         }
       </style>
     </div>
