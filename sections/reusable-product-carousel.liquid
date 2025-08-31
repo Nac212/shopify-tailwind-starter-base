@@ -4,6 +4,7 @@
   - The new script uses getElementById to reliably find the section and its components,
     bypassing the Shopify theme editor's script execution issues.
   - This resolves the unresponsive arrow buttons.
+  - Restored the original CSS for the arrow icon size.
 {% endcomment %}
 
 {% style %}
@@ -174,6 +175,11 @@
 
     .ai-product-carousel__side-arrow-{{ section.id }}:not(.disabled):hover {
       box-shadow: 0 0 8px rgba(0,0,0,0.15);
+    }
+    
+    .ai-product-carousel__side-arrow-{{ section.id }} svg {
+      width: 16px;
+      height: 16px;
     }
   }
 
