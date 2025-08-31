@@ -1,7 +1,8 @@
 {% comment %}
   Shopify section code corrected by Gemini.
-  - Final fix: Removed the incorrect 'blocks' structure.
-  - The section now correctly uses 'section.settings' and renders its content directly.
+  - Arrow Fix: Moved JavaScript initialization to connectedCallback to ensure
+    DOM elements are rendered before their dimensions are measured. This fixes
+    the issue where arrows would not scroll.
 {% endcomment %}
 
 {% style %}
@@ -333,16 +334,20 @@
     class ProductCarousel{{ section.id | replace: "-", "_" }} extends HTMLElement {
       constructor() {
         super();
+        this.initialized = false;
         this.track = this.querySelector('[data-track]');
         this.pagination = this.querySelector('[data-pagination]');
         this.arrowLeft = this.querySelector('[data-side-arrow-left]');
         this.arrowRight = this.querySelector('[data-side-arrow-right]');
         this.cards = this.track ? Array.from(this.track.children) : [];
-
-        if (this.cards.length === 0) return;
-
         this.debouncedOnResize = this.debounce(this.onResize.bind(this), 250);
-        this.init();
+      }
+
+      connectedCallback() {
+        if (!this.initialized && this.cards.length > 0) {
+          this.init();
+          this.initialized = true;
+        }
       }
 
       init() {
@@ -357,14 +362,23 @@
         this.arrowLeft.addEventListener('click', this.scrollLeftByOne.bind(this));
         this.arrowRight.addEventListener('click', this.scrollRightByOne.bind(this));
         this.track.addEventListener('scroll', this.updateArrowState.bind(this));
+        window.addEventListener('resize', this.debouncedOnResize);
+      }
+
+      disconnectedCallback() {
+         if (this.cards.length > 0) {
+            window.removeEventListener('resize', this.debouncedOnResize);
+         }
       }
 
       scrollLeftByOne() {
+        if (!this.cards[0]) return;
         const itemWidth = this.cards[0].offsetWidth + {{ section.settings.card_spacing }};
         this.track.scrollBy({ left: -itemWidth, behavior: 'smooth' });
       }
 
       scrollRightByOne() {
+        if (!this.cards[0]) return;
         const itemWidth = this.cards[0].offsetWidth + {{ section.settings.card_spacing }};
         this.track.scrollBy({ left: itemWidth, behavior: 'smooth' });
       }
@@ -375,24 +389,11 @@
           const scrollLeft = this.track.scrollLeft;
           const maxScroll = this.track.scrollWidth - this.track.clientWidth;
 
-          this.arrowLeft.classList.toggle('disabled', scrollLeft <= 0);
+          this.arrowLeft.classList.toggle('disabled', scrollLeft <= 1);
           this.arrowRight.classList.toggle('disabled', scrollLeft >= maxScroll - 5);
 
           this.updatePaginationOnScroll();
         });
-      }
-
-      connectedCallback() {
-        if (this.cards.length > 0) {
-            window.addEventListener('resize', this.debouncedOnResize);
-            this.updateArrowState();
-        }
-      }
-
-      disconnectedCallback() {
-         if (this.cards.length > 0) {
-            window.removeEventListener('resize', this.debouncedOnResize);
-         }
       }
 
       updateProperties() {
@@ -478,7 +479,7 @@
       };
     }
 
-    customElements.define('product-carousel-{{ section.id | replace: "-", "_" }}', ProductCarousel{{ section.id | replace: "-", "_" }});
+    customElements.define('product-carousel-{{ section.id }}', ProductCarousel{{ section.id | replace: "-", "_" }});
   })();
 </script>
 
@@ -800,3 +801,4 @@
     ]
   }
 {% endschema %}
+
