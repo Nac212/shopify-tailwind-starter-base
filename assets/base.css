@@ -3785,9 +3785,7 @@ details-disclosure > details {
 
 }
 
-.product-form__submit.button--full-width {
-  margin-left: auto !important;
-  margin-right: auto !important;
-  width: auto !important;
-  min-width: 250px !important;
+.product-form__buttons {
+  display: flex;
+  justify-content: center;
 }
