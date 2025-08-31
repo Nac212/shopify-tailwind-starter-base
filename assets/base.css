@@ -3793,6 +3793,5 @@ details-disclosure > details {
 
 /* PART 2: This tells the button to stop being 100% wide so it CAN be centered. */
 .product-form__submit.button--full-width {
-  width: auto; /* This overrides the "full-width" style */
   min-width: 250px; /* Optional: Adjust this to make the button wider or narrower */
 }
