@@ -3781,5 +3781,9 @@ details-disclosure > details {
   color: #000000;   /* Sets the text color to black */
 
 
+  .product-form__buttons {
+  display: flex;
+  justify-content: center;
+}
 
 }
