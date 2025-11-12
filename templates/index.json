@@ -189,7 +189,7 @@
           "type": "ai_gen_block_4801728",
           "settings": {
             "heading": "TRENDING PIECES",
-            "collection": "full-collection",
+            "collection": "full-jewellery-collection",
             "manual_products": [],
             "max_products_to_show": 9,
             "section_padding_top": 44,
@@ -229,7 +229,7 @@
           "type": "ai_gen_block_4801728",
           "settings": {
             "heading": "FALIENNE PICKS",
-            "collection": "full-collection",
+            "collection": "full-jewellery-collection",
             "manual_products": [],
             "max_products_to_show": 9,
             "section_padding_top": 44,
